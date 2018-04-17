@@ -3,19 +3,13 @@ package com.excilys.cdb.main.java.service;
 import java.util.List;
 
 import com.excilys.cdb.main.java.dao.CompanyDao;
-import com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl;
 import com.excilys.cdb.main.java.model.Company;
 
 public class CompanyService {
 	
 	
-	private CompanyDao companyDao;
+	private CompanyDao companyDao = CompanyDao.INSTANCE;
 	
-	
-	public CompanyService() {
-		companyDao = new CompanyDaoImpl();
-		
-	}
 	
 	/**
 	 * retrieve all companies.

@@ -3,28 +3,24 @@ package com.excilys.cdb.main.java.service;
 import java.util.List;
 
 import com.excilys.cdb.main.java.dao.ComputerDao;
-import com.excilys.cdb.main.java.dao.impl.ComputerDaoImpl;
 import com.excilys.cdb.main.java.model.Computer;
 
 public class ComputerService {
 
-	private ComputerDao computerDao;
-
-	public ComputerService() {
-		computerDao = new ComputerDaoImpl();
-	}
+	private ComputerDao computerDao = ComputerDao.INSTANCE;
 
 	/**
 	 * Save a Computer into Database.
 	 * @param Computer
 	 * @return
+	 * @throws DatabaseException 
 	 * @throws SaveException 
 	 */
-	public void save(Computer computer) throws SaveException {
+	public void save(Computer computer) throws DatabaseException  {
 
 		// if save fail
 		if(!computerDao.create(computer)) {
-			throw new SaveException();
+			throw new DatabaseException();
 		}
 
 	}
@@ -35,11 +31,11 @@ public class ComputerService {
 	 * @return
 	 * @throws UpdateException 
 	 */
-	public void update(Computer computer) throws UpdateException {
+	public void update(Computer computer) throws DatabaseException {
 
 		// if update fail
 		if(!computerDao.update(computer)) {
-			throw new UpdateException();
+			throw new DatabaseException();
 		}
 	}
 
@@ -48,10 +44,10 @@ public class ComputerService {
 	 * @param Computer
 	 * @throws RemoveException 
 	 */
-	public void remove(Computer computer) throws RemoveException {
+	public void remove(Computer computer) throws DatabaseException {
 		// if remove fail
 		if(!computerDao.remove(computer)) {
-			throw new RemoveException();
+			throw new DatabaseException();
 		}
 	}
 
@@ -59,23 +55,35 @@ public class ComputerService {
 	 * Remove the Computer with the given id.
 	 * @param id
 	 */
-	public void removeById(Long id)throws RemoveException {
+	public void removeById(Long id)throws DatabaseException {
 		// if remove fail
 		if(!computerDao.removeById(id)) {
-			throw new RemoveException();
+			throw new DatabaseException();
 		}
 	}
 	/**
 	 * retrieve all computers.
 	 * @return
 	 */
-	public List<Computer> findAll();
+	public List<Computer> findAll(){
+		return computerDao.findAll();
+	}
 
 	/**
 	 * retrieve the computer with the given id.
 	 * @param id
 	 * @return
+	 * @throws FindException 
 	 */
-	public Computer findById(Long id);
+	public Computer findById(Long id) throws DatabaseException {
+		
+		Computer computer = computerDao.findById(id);
+		
+		if(computer == null) {
+			throw new DatabaseException();
+		}
+		
+		return computerDao.findById(id);
+	}
 
 }
