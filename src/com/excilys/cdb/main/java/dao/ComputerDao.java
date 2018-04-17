@@ -3,6 +3,8 @@
  */
 package com.excilys.cdb.main.java.dao;
 
+import java.util.List;
+
 import com.excilys.cdb.main.java.model.Computer;
 
 /**
@@ -18,25 +20,38 @@ public interface ComputerDao {
 	 * @param Computer
 	 * @return
 	 */
-	public Computer create(Computer computer);
+	public boolean create(Computer computer);
 	
 	/**
 	 * Update the given Computer into database.
 	 * @param Computer
 	 * @return
 	 */
-	public Computer update(Computer computer);
+	public boolean update(Computer computer);
 	
 	/**
 	 * Remove the given Computer.
 	 * @param Computer
 	 */
-	public void remove(Computer computer);
+	public boolean remove(Computer computer);
 	
 	/**
 	 * Remove the Computer with the given id.
 	 * @param id
 	 */
-	public void removeById(Long id);
+	public boolean removeById(Long id);
+	
+	/**
+	 * retrieve all computers.
+	 * @return
+	 */
+	public List<Computer> findAll();
+	
+	/**
+	 * retrieve the computer with the given id.
+	 * @param id
+	 * @return
+	 */
+	public Computer findById(Long id);
 
 }

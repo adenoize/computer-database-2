@@ -24,8 +24,8 @@ import com.excilys.cdb.main.java.model.Company;
 public class CompanyDaoImpl implements CompanyDao {
 
 	
-	private final String LIST_COMPANIES = "SELECT * FROM company;";
-	private final String FIND_BY_ID     = "SELECT * FROM company WHERE id = ?";
+	private static final String FIND_ALL = "SELECT * FROM company;";
+	private static final String FIND_BY_ID     = "SELECT * FROM company WHERE id = ?";
 	
 	
 	private JdbcTool jdbcTool;
@@ -41,10 +41,10 @@ public class CompanyDaoImpl implements CompanyDao {
 	
 	
 	/* (non-Javadoc)
-	 * @see com.excilys.cdb.main.java.dao.CompanyDao#getAll()
+	 * @see com.excilys.cdb.main.java.dao.CompanyDao#findAll()
 	 */
 	@Override
-	public List<Company> findAll() throws SQLException{
+	public List<Company> findAll(){
 		
 		Connection connection = null;
 		List<Company> companies = new ArrayList<Company>();
@@ -53,7 +53,7 @@ public class CompanyDaoImpl implements CompanyDao {
 	   
 			connection = jdbcTool.newConnection();
 	        Statement st = connection.createStatement();
-	        ResultSet rs = st.executeQuery(LIST_COMPANIES);
+	        ResultSet rs = st.executeQuery(FIND_ALL);
 
 	        while (rs.next()) {
 	        	Company company = new Company();
@@ -64,7 +64,9 @@ public class CompanyDaoImpl implements CompanyDao {
 	           
 	        }
 	        
-	    } finally {
+	    } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 	        // close connection
 	        jdbcTool.close(connection);
 	    }
@@ -73,10 +75,10 @@ public class CompanyDaoImpl implements CompanyDao {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.excilys.cdb.main.java.dao.CompanyDao#getById(java.lang.Long)
+	 * @see com.excilys.cdb.main.java.dao.CompanyDao#findById(java.lang.Long)
 	 */
 	@Override
-	public Company findById(Long id) throws SQLException {
+	public Company findById(Long id){
 		Connection connection = null;
 		Company company = null;
 		try{
@@ -93,7 +95,9 @@ public class CompanyDaoImpl implements CompanyDao {
 	        	       
 	        }
 	        
-	    } finally {
+	    } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 	        // close connection
 	        jdbcTool.close(connection);
 	    }

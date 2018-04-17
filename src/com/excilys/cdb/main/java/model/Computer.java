@@ -1,6 +1,6 @@
 package com.excilys.cdb.main.java.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Class Computer.
