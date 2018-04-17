@@ -19,13 +19,13 @@ public interface CompanyDao {
 	 * retrieve all companies.
 	 * @return
 	 */
-	public List<Company> findAll() throws SQLException;
+	public List<Company> findAll();
 	
 	/**
 	 * retrieve the company with the given id.
 	 * @param id
 	 * @return
 	 */
-	public Company findById(Long id) throws SQLException;
+	public Company findById(Long id);
 	
 }
