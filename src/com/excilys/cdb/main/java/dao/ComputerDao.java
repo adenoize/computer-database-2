@@ -29,7 +29,6 @@ public enum ComputerDao {
 	private static final String FIND_ALL = "SELECT * FROM computer";
 	private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
 	
-	
 	private JdbcTool jdbcTool;
 	
 	
