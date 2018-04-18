@@ -4,21 +4,14 @@
 package com.excilys.cdb.test.java.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.excilys.cdb.main.java.dao.CompanyDao;
-import com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl;
 import com.excilys.cdb.main.java.model.Company;
 
 /**
@@ -27,36 +20,8 @@ import com.excilys.cdb.main.java.model.Company;
  */
 class CompanyDaoImplTest {
 	
-	private static CompanyDao companyDao;
+	private static CompanyDao companyDao = CompanyDao.INSTANCE;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-		companyDao = new CompanyDaoImpl();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeEach
-	void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterEach
-	void tearDown() throws Exception {
-	}
 
 	/**
 	 * Test method for {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findAll()}.

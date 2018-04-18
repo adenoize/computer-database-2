@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class JdbcTool {
 	
-	private String url        = "jdbc:mysql://localhost/computer-database-db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	private String url        = "jdbc:mysql://localhost/computer-database-db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8";
 	private String user       = "admincdb";
 	private String password   = "qwerty1234";
 	private String driverName = "com.mysql.cj.jdbc.Driver";

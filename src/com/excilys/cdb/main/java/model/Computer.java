@@ -18,6 +18,8 @@ public class Computer {
 	
 	public Computer() {
 		super();
+		this.id = 0L;
+		
 	}
 	
 
@@ -26,6 +28,7 @@ public class Computer {
 	 */
 	public Computer(String name) {
 		super();
+		this.id = 0L;
 		this.name = name;
 	}
 
@@ -39,6 +42,7 @@ public class Computer {
 	 */
 	public Computer(String name, Date introduced, Date discontinued, Long company) {
 		super();
+		this.id = 0L;
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
