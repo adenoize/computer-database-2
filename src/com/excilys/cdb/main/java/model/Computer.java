@@ -18,8 +18,7 @@ public class Computer {
 	
 	public Computer() {
 		super();
-		this.id = 0L;
-		
+		this.id = 0L;		
 	}
 	
 
