@@ -8,6 +8,7 @@ import java.sql.Date;
 import com.excilys.cdb.main.java.model.Computer;
 import com.excilys.cdb.main.java.service.ComputerService;
 import com.excilys.cdb.main.java.service.DatabaseException;
+import com.excilys.cdb.main.java.ui.CommandLineInterface;
 
 /**
  * @author Aurelien Denoize
@@ -20,10 +21,9 @@ public class Cdb {
 	 */
 	public static void main(String[] args) {
 
-		//		CompanyService cs = new CompanyService();
-		//		System.out.println(cs.findAll());
-		//		System.out.println(cs.findById(44L));
-
+		CommandLineInterface cli = new CommandLineInterface();
+		
+		cli.run(args);
 
 	}
 

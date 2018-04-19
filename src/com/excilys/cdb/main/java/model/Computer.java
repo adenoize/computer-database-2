@@ -18,8 +18,7 @@ public class Computer {
 	
 	public Computer() {
 		super();
-		this.id = 0L;
-		
+		this.id = 0L;		
 	}
 	
 
@@ -192,8 +191,7 @@ public class Computer {
 	 */
 	@Override
 	public String toString() {
-		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", company=" + company + "]";
+		return "Computer " + id +" "+ name + ", introduced=" + introduced + ", discontinued=" + discontinued;
 	}
 	
 	
