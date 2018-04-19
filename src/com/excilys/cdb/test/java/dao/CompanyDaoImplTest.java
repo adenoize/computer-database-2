@@ -7,12 +7,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import com.excilys.cdb.main.java.dao.CompanyDao;
 import com.excilys.cdb.main.java.model.Company;
+import com.excilys.cdb.main.java.model.Page;
 
 /**
  * @author Aurelien Denoize
@@ -30,8 +29,8 @@ class CompanyDaoImplTest {
 	@Test
 	void testFindAll() throws Exception {
 		
-		List<Company> companies = companyDao.findAll();
-		assertEquals("Number of companies should be 42",42,companies.size());
+		Page<Company> page = companyDao.getPage(0);
+		assertEquals("Number of companies should be 10",10,page.getPage().size());
 	}
 
 	/**

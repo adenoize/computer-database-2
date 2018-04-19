@@ -1,9 +1,9 @@
 package com.excilys.cdb.main.java.service;
 
-import java.util.List;
-
+import com.excilys.cdb.main.java.constante.Constante;
 import com.excilys.cdb.main.java.dao.ComputerDao;
 import com.excilys.cdb.main.java.model.Computer;
+import com.excilys.cdb.main.java.model.Page;
 
 public class ComputerService {
 
@@ -65,8 +65,11 @@ public class ComputerService {
 	 * retrieve all computers.
 	 * @return
 	 */
-	public List<Computer> findAll(){
-		return computerDao.findAll();
+	public Page<Computer> getPage(int page){
+		
+		int offset = Constante.LIMIT_PAGE * page;
+		
+		return computerDao.getPage(offset);
 	}
 
 	/**

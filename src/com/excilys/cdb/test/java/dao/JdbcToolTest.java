@@ -17,16 +17,7 @@ import com.excilys.cdb.main.java.dao.JdbcTool;
  */
 class JdbcToolTest {
 	
-	private JdbcTool jdbcTool;
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeEach
-	void setUp() throws Exception {
-		jdbcTool = new JdbcTool();
-		jdbcTool.init();
-	}
+	private JdbcTool jdbcTool = JdbcTool.INSTANCE;
 
 	/**
 	 * Test method for {@link com.excilys.cdb.main.java.dao.JdbcTool#newConnection()}.

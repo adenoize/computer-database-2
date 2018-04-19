@@ -150,84 +150,75 @@ public class CommandLineInterface {
 	/**
 	 * List computers 
 	 */
-	@SuppressWarnings("unchecked")
 	private void listComputer() {
-		
-		
-		Page page = cliController.listComputer();
-		String choice = null;
-		List<Computer> computers = (List<Computer>) page.getPage();
-		
-		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-		System.out.println("  ==============================================");
-		for (Computer computer : computers) {
-			System.out.println(printComputer(computer));
-		}
-		
-		
+
+
+		String choice = "";
+		int currentPage = 0;
+		Page<Computer> page = null;
+		List<Computer> computers = null;
+
 		Scanner sc=new Scanner(System.in);   
-		
+
 		do {
 			
-			choice=sc.next();
+
+			page = cliController.listComputer(currentPage);
+			computers = page.getPage();
 			
-			if(choice.equals("n")) {
-				computers = (List<Computer>) page.next();
-			}
-			else if(choice.equals("p")) {
-				computers = (List<Computer>) page.previous();
-			}
 			
-			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-			System.out.println("  ==============================================");
-			for (Computer computer : computers) {
-				System.out.println(printComputer(computer));
+			if(choice.equals("n") && !page.isEmpty()) {
+				currentPage++;
+			}
+			else if(choice.equals("p") && currentPage > 0) {
+				currentPage--;
 			}			
 			
+			for (Computer computer : computers) {
+				System.out.println(computer);
+			}
+
+			choice=sc.next();
+			
+
 		}while(!choice.equals("q"));
-		
-		sc.close();  
-		
+
+		sc.close();    
+
 	}
 	/**
 	 * List companies 
 	 */
-	@SuppressWarnings("unchecked")
 	private void listCompany() {
 
-		
-		Page page = cliController.listCompany();
-		String choice = null;
-		List<Company> companies = (List<Company>) page.getPage();
-		
-		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-		System.out.println("  ==============================================");
-		for (Company company : companies) {
-			System.out.println(company);
-		}
-		
+		String choice = "";
+		int currentPage = 0;
+		Page<Company> page = null;
+		List<Company> companies = null;
 
 		Scanner sc=new Scanner(System.in);   
- 
+
 		do {
+
+			page = cliController.listCompany(currentPage);
+			companies = page.getPage();
 			
-			choice=sc.next();
-			
-			if(choice.equals("n")) {
-				companies = (List<Company>) page.next();
+			if(choice.equals("n") && !page.isEmpty()) {
+				currentPage++;
 			}
-			else if(choice.equals("p")) {
-				companies = (List<Company>) page.previous();
+			else if(choice.equals("p") && currentPage> 0) {
+					currentPage--;
 			}
-			
-			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-			System.out.println("  ==============================================");
+
+				
 			for (Company company : companies) {
 				System.out.println(company);
-			}			
+			}
+
+			choice=sc.next();
 
 		}while(!choice.equals("q"));
-			
+
 		sc.close();  
 
 	}
@@ -282,17 +273,17 @@ public class CommandLineInterface {
 		System.out.println("cbdCli --list --computer");
 		System.out.println("cbdCli --list --company");	
 	}
-	
+
 	private String printComputer(Computer computer) {
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(" Computer id=" + computer.getId());
 		sb.append(" " + computer.getName());
 		sb.append(" introduced=" + computer.getId());
 		sb.append(" discontinued=" + computer.getId());
 		if(computer.getCompany() != null)
-		sb.append(" brand=" + computer.getCompany());
-		
+			sb.append(" brand=" + computer.getCompany());
+
 		return sb.toString();
 	}
 
