@@ -5,10 +5,15 @@ package com.excilys.cdb.main.java.ui;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Scanner;
 
 import com.excilys.cdb.main.java.controller.CliController;
+import com.excilys.cdb.main.java.model.Company;
+import com.excilys.cdb.main.java.model.Computer;
+import com.excilys.cdb.main.java.model.Page;
 
 /**
  * @author Aurelien Denoize
@@ -53,6 +58,8 @@ public class CommandLineInterface {
 
 	}
 
+
+
 	/**
 	 * Add new Computer.
 	 */
@@ -67,27 +74,27 @@ public class CommandLineInterface {
 		}
 
 		final String[] tab = arg.split("=");
-		
+
 		if(!tab[0].equals("name")) {
 			System.err.println("Bad parameter: " + arg);
 			printHelp();
 			return;
 		}
-		
-		
+
+
 		Map<String, String> parameters = parseParameters();
 		parameters.put(tab[0], tab[1]);
-		
+
 		System.out.println(cliController.addComputer(parameters));
-		
+
 
 	}
-	
+
 	/**
 	 * Update a Computer
 	 */
 	private void updateComputer() {
-		
+
 		String arg = args.poll();
 
 		int id = 0;
@@ -99,13 +106,13 @@ public class CommandLineInterface {
 			printHelp();
 			return;
 		}
-		
-		
+
+
 		Map<String, String> parameters = parseParameters();
-		
+
 		System.out.println(cliController.updateComputer(arg, parameters));
 	}
-	
+
 	/**
 	 * remove a computer
 	 */
@@ -121,14 +128,107 @@ public class CommandLineInterface {
 			printHelp();
 			return;
 		}
-		
+
 		System.out.println(cliController.removeComputer(arg));
 
 	}
 
-
 	private void list() {
-		// TODO Auto-generated method stub
+
+		String arg = args.poll();
+
+		switch (arg) {
+		case "--computer": listComputer(); break;
+		case "--company": listCompany(); break;
+
+		default:
+			break;
+		}
+
+	}
+
+	/**
+	 * List computers 
+	 */
+	@SuppressWarnings("unchecked")
+	private void listComputer() {
+		
+		
+		Page page = cliController.listComputer();
+		String choice = null;
+		List<Computer> computers = (List<Computer>) page.getPage();
+		
+		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
+		System.out.println("  ==============================================");
+		for (Computer computer : computers) {
+			System.out.println(printComputer(computer));
+		}
+		
+		
+		Scanner sc=new Scanner(System.in);   
+		
+		do {
+			
+			choice=sc.next();
+			
+			if(choice.equals("n")) {
+				computers = (List<Computer>) page.next();
+			}
+			else if(choice.equals("p")) {
+				computers = (List<Computer>) page.previous();
+			}
+			
+			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
+			System.out.println("  ==============================================");
+			for (Computer computer : computers) {
+				System.out.println(printComputer(computer));
+			}			
+			
+		}while(!choice.equals("q"));
+		
+		sc.close();  
+		
+	}
+	/**
+	 * List companies 
+	 */
+	@SuppressWarnings("unchecked")
+	private void listCompany() {
+
+		
+		Page page = cliController.listCompany();
+		String choice = null;
+		List<Company> companies = (List<Company>) page.getPage();
+		
+		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
+		System.out.println("  ==============================================");
+		for (Company company : companies) {
+			System.out.println(company);
+		}
+		
+
+		Scanner sc=new Scanner(System.in);   
+ 
+		do {
+			
+			choice=sc.next();
+			
+			if(choice.equals("n")) {
+				companies = (List<Company>) page.next();
+			}
+			else if(choice.equals("p")) {
+				companies = (List<Company>) page.previous();
+			}
+			
+			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
+			System.out.println("  ==============================================");
+			for (Company company : companies) {
+				System.out.println(company);
+			}			
+
+		}while(!choice.equals("q"));
+			
+		sc.close();  
 
 	}
 
@@ -181,6 +281,19 @@ public class CommandLineInterface {
 		System.out.println("cdbCli --show (id)");
 		System.out.println("cbdCli --list --computer");
 		System.out.println("cbdCli --list --company");	
+	}
+	
+	private String printComputer(Computer computer) {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(" Computer id=" + computer.getId());
+		sb.append(" " + computer.getName());
+		sb.append(" introduced=" + computer.getId());
+		sb.append(" discontinued=" + computer.getId());
+		if(computer.getCompany() != null)
+		sb.append(" brand=" + computer.getCompany());
+		
+		return sb.toString();
 	}
 
 }

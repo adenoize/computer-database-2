@@ -8,7 +8,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
+import com.excilys.cdb.main.java.model.Company;
 import com.excilys.cdb.main.java.model.Computer;
+import com.excilys.cdb.main.java.model.PageCompany;
+import com.excilys.cdb.main.java.model.PageComputer;
+import com.excilys.cdb.main.java.service.CompanyService;
 import com.excilys.cdb.main.java.service.ComputerService;
 import com.excilys.cdb.main.java.service.DatabaseException;
 
@@ -20,6 +24,7 @@ public class CliController {
 
 
 	ComputerService computerService = new ComputerService();
+	CompanyService companyService = new CompanyService();
 
 
 	/**
@@ -189,6 +194,18 @@ public class CliController {
 		
 		return "Computer is remove";
 	}
+	
+	public PageCompany listCompany() {
+		
+		return new PageCompany(companyService.findAll());
+	}
+	
+	public PageComputer listComputer() {
+	
+		return new PageComputer(computerService.findAll());
+	}
+	
+	
 
 
 	/**
@@ -196,6 +213,7 @@ public class CliController {
 	 */
 	public String showComputer(String id) {
 
+		//TODO
 		Long computerId = new Long(id);
 		String result = "";
 
@@ -209,6 +227,10 @@ public class CliController {
 		}
 
 		return result;
+	}
+	
+	public Company getCompany(Long id) {
+		return companyService.findById(id);
 	}
 
 
