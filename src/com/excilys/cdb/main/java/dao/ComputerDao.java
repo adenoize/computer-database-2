@@ -178,7 +178,7 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+ 
 		return new Page<Computer>(computers);
 	}
 

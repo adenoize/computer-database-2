@@ -54,7 +54,7 @@ public class CliController {
 					return "Error on date";
 				}
 
-			}
+			} 
 			break;
 			case "discontinued": 
 
@@ -72,7 +72,6 @@ public class CliController {
 			{
 				try {
 					Long company_id = Long.parseLong(value);
-
 					computer.setCompany(company_id);
 
 				}catch (NumberFormatException  e) {
