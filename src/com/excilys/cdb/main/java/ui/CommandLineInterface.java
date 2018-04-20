@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.excilys.cdb.main.java.ui;
 
 import java.util.HashMap;
@@ -150,84 +147,88 @@ public class CommandLineInterface {
 	/**
 	 * List computers 
 	 */
-	@SuppressWarnings("unchecked")
 	private void listComputer() {
-		
-		
-		Page page = cliController.listComputer();
-		String choice = null;
-		List<Computer> computers = (List<Computer>) page.getPage();
-		
-		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-		System.out.println("  ==============================================");
-		for (Computer computer : computers) {
-			System.out.println(printComputer(computer));
-		}
-		
+
+
+		String choice = "";
+		int currentPage = 0;
+		Page<Computer> page = null;
+		List<Computer> computers = null;
+
+		System.out.println("Page mode (enter 'n' for next and 'p' for previous page : ");
 		
 		Scanner sc=new Scanner(System.in);   
-		
+		page = cliController.listComputer(currentPage);
 		do {
 			
-			choice=sc.next();
+
 			
-			if(choice.equals("n")) {
-				computers = (List<Computer>) page.next();
-			}
-			else if(choice.equals("p")) {
-				computers = (List<Computer>) page.previous();
-			}
 			
-			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-			System.out.println("  ==============================================");
-			for (Computer computer : computers) {
-				System.out.println(printComputer(computer));
+			
+			if(choice.equals("n") && !page.isEmpty()) {
+				currentPage++;
+			}
+			else if(choice.equals("p") && currentPage > 0) {
+				currentPage--;
 			}			
 			
+			page = cliController.listComputer(currentPage);
+			computers = page.getPage();
+			
+			for (Computer computer : computers) {
+				System.out.println(computer);
+			}
+
+			System.out.println("enter 'n' for next and 'p' for previous page :");
+			choice=sc.next();
+			
+
 		}while(!choice.equals("q"));
-		
-		sc.close();  
-		
+
+		sc.close();    
+
 	}
 	/**
 	 * List companies 
 	 */
-	@SuppressWarnings("unchecked")
 	private void listCompany() {
 
+		String choice = "";
+		int currentPage = 0;
+		Page<Company> page = null;
+		List<Company> companies = null;
 		
-		Page page = cliController.listCompany();
-		String choice = null;
-		List<Company> companies = (List<Company>) page.getPage();
+		page = cliController.listCompany(currentPage);
 		
-		System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-		System.out.println("  ==============================================");
-		for (Company company : companies) {
-			System.out.println(company);
-		}
+		
+		System.out.print("Page mode (enter 'n' for next and 'p' for previous page : ");
 		
 
 		Scanner sc=new Scanner(System.in);   
- 
+		page = cliController.listCompany(currentPage);
 		do {
+
 			
-			choice=sc.next();
 			
-			if(choice.equals("n")) {
-				companies = (List<Company>) page.next();
+			if(choice.equals("n") && !page.isEmpty()) {
+				currentPage++;
 			}
-			else if(choice.equals("p")) {
-				companies = (List<Company>) page.previous();
+			else if(choice.equals("p") && currentPage> 0) {
+					currentPage--;
 			}
-			
-			System.out.print("Page "+ (page.getCurrentPage()) +"/"+ (page.getTotalPage()));
-			System.out.println("  ==============================================");
+
+			page = cliController.listCompany(currentPage);
+			companies = page.getPage();
+				
 			for (Company company : companies) {
 				System.out.println(company);
-			}			
+			}
 
-		}while(!choice.equals("q"));
+			System.out.print("enter 'n' for next and 'p' for previous page :");
+			choice=sc.next();
 			
+		}while(!choice.equals("q"));
+
 		sc.close();  
 
 	}
@@ -281,19 +282,6 @@ public class CommandLineInterface {
 		System.out.println("cdbCli --show (id)");
 		System.out.println("cbdCli --list --computer");
 		System.out.println("cbdCli --list --company");	
-	}
-	
-	private String printComputer(Computer computer) {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(" Computer id=" + computer.getId());
-		sb.append(" " + computer.getName());
-		sb.append(" introduced=" + computer.getId());
-		sb.append(" discontinued=" + computer.getId());
-		if(computer.getCompany() != null)
-		sb.append(" brand=" + computer.getCompany());
-		
-		return sb.toString();
 	}
 
 }

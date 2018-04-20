@@ -10,12 +10,17 @@ import java.sql.SQLException;
  * @author Aurelien Denoize
  *
  */
-public class JdbcTool {
+public enum JdbcTool {
+	INSTANCE;
 	
 	private String url        = "jdbc:mysql://localhost/computer-database-db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8";
 	private String user       = "admincdb";
 	private String password   = "qwerty1234";
 	private String driverName = "com.mysql.cj.jdbc.Driver";
+	
+	private JdbcTool() {
+		init();
+	}
 
 	/**
 	 * Load the driver.
@@ -38,7 +43,7 @@ public class JdbcTool {
 	/**
 	 * Initialize the JDBC Tool.
 	 */
-	public void init() {
+	private void init() {
 		try {
 			loadDriver();
 		} catch (ClassNotFoundException e) {

@@ -10,8 +10,7 @@ import java.util.Map;
 
 import com.excilys.cdb.main.java.model.Company;
 import com.excilys.cdb.main.java.model.Computer;
-import com.excilys.cdb.main.java.model.PageCompany;
-import com.excilys.cdb.main.java.model.PageComputer;
+import com.excilys.cdb.main.java.model.Page;
 import com.excilys.cdb.main.java.service.CompanyService;
 import com.excilys.cdb.main.java.service.ComputerService;
 import com.excilys.cdb.main.java.service.DatabaseException;
@@ -195,14 +194,14 @@ public class CliController {
 		return "Computer is remove";
 	}
 	
-	public PageCompany listCompany() {
+	public Page<Company> listCompany(int page) {
 		
-		return new PageCompany(companyService.findAll());
+		return companyService.getPage(page);
 	}
 	
-	public PageComputer listComputer() {
+	public Page<Computer> listComputer(int page) {
 	
-		return new PageComputer(computerService.findAll());
+		return computerService.getPage(page);
 	}
 	
 	

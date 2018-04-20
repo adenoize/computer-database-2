@@ -1,9 +1,9 @@
 package com.excilys.cdb.main.java.service;
 
-import java.util.List;
-
+import com.excilys.cdb.main.java.constante.Constante;
 import com.excilys.cdb.main.java.dao.CompanyDao;
 import com.excilys.cdb.main.java.model.Company;
+import com.excilys.cdb.main.java.model.Page;
 
 public class CompanyService {
 	
@@ -14,8 +14,11 @@ public class CompanyService {
 	/**
 	 * retrieve all companies.
 	 */
-	public List<Company> findAll(){
-		return companyDao.findAll();	
+	public Page<Company> getPage(int page){
+		
+		int offset = Constante.LIMIT_PAGE * page;
+		
+		return companyDao.getPage(offset);	
 	}
 	
 	/**

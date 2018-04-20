@@ -11,8 +11,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.cdb.main.java.constante.Constante;
+import com.excilys.cdb.main.java.mapper.CompanyMapper;
 import com.excilys.cdb.main.java.mapper.ComputerMapper;
+import com.excilys.cdb.main.java.model.Company;
 import com.excilys.cdb.main.java.model.Computer;
+import com.excilys.cdb.main.java.model.Page;
 
 /**
  * 
@@ -26,16 +30,15 @@ public enum ComputerDao {
 	private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
 	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	private static final String REMOVE = "DELETE FROM computer where id = ?";
-	private static final String FIND_ALL = "SELECT * FROM computer";
+	private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
 	private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
 
-	private JdbcTool jdbcTool;
+
 
 
 	private ComputerDao() {
 
-		jdbcTool = new JdbcTool();
-		jdbcTool.init();		
+				
 	}
 
 	/**
@@ -44,14 +47,14 @@ public enum ComputerDao {
 	 * @return
 	 */
 	public boolean create(Computer computer) {
-		Connection connection = null;
+
 
 		boolean isCreated = true;
 
-		try{
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
 
 			// open connection
-			connection = jdbcTool.newConnection();
+			;
 
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(CREATE);
@@ -65,11 +68,8 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isCreated = false;
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
-
+		
 		return isCreated;
 	}
 
@@ -79,13 +79,10 @@ public enum ComputerDao {
 	 * @return
 	 */
 	public boolean update(Computer computer) {
-		Connection connection = null;
+
 		boolean isCreated = true;
 
-		try{
-
-			// open connection
-			connection = jdbcTool.newConnection();
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
 
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(UPDATE);
@@ -100,9 +97,6 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isCreated = false;
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
 
 		return isCreated;
@@ -113,13 +107,10 @@ public enum ComputerDao {
 	 * @param Computer
 	 */
 	public boolean remove(Computer computer) {
-		Connection connection = null;
+	
 		boolean isCreated = true;
 
-		try{
-
-			// open connection
-			connection = jdbcTool.newConnection();
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
 
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(REMOVE);
@@ -131,9 +122,6 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isCreated = false;
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
 
 		return isCreated;
@@ -145,14 +133,11 @@ public enum ComputerDao {
 	 * @param id
 	 */
 	public boolean removeById(Long id) {
-		Connection connection = null;
+	
 		boolean isCreated = true;
 
-		try{
-
-			// open connection
-			connection = jdbcTool.newConnection();
-
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+			
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(REMOVE);
 
@@ -163,9 +148,6 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isCreated = false;
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
 
 		return isCreated;
@@ -173,19 +155,20 @@ public enum ComputerDao {
 	}
 
 	/**
-	 * retrieve all computers.
+	 * retrieve a page of companies.
 	 * @return
 	 */
-	public List<Computer> findAll() {
+	public Page<Computer> getPage(int offset){
 
-		Connection connection = null;
 		List<Computer> computers = new ArrayList<Computer>();
 
-		try{
-
-			connection = jdbcTool.newConnection();
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery(FIND_ALL);
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+			
+			PreparedStatement st = connection.prepareStatement(GET_PAGE);
+			st.setInt(1, Constante.LIMIT_PAGE);
+			st.setInt(2, offset);
+			ResultSet rs = st.executeQuery();
+			
 
 			while (rs.next()) {
 				computers.add(ComputerMapper.INSTANCE.map(rs));
@@ -193,13 +176,9 @@ public enum ComputerDao {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
 
-		return computers;
-
+		return new Page<Computer>(computers);
 	}
 
 	/**
@@ -209,12 +188,11 @@ public enum ComputerDao {
 	 */
 	public Computer findById(Long id) {
 
-		Connection connection = null;
+	
 		Computer computer = null;
 
-		try{
-
-			connection = jdbcTool.newConnection();
+		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+			
 			PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
 
 			st.setLong(1, id);
@@ -230,9 +208,6 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			// close connection
-			jdbcTool.close(connection);
 		}
 
 		return computer;

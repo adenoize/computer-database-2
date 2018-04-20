@@ -1,40 +1,46 @@
+/**
+ * 
+ */
 package com.excilys.cdb.main.java.model;
 
 import java.util.List;
 
-public interface Page {
-	
-	/**
-	 * Get the current page
-	 * @return
-	 */
-	public List<?> getPage();
-		
+/**
+ * @author Aurelien Denoize
+ *
+ */
+public class Page<T> {
+
+
+	private List<T> list;
+
+
+	public Page(List<T> listCompany) {
+
+		list = listCompany;
+	}
+
 
 	/**
-	 * Get the next page
+	 * Get the page
+	 * @param page the number of the page
 	 * @return
 	 */
-	public List<?> next();
+	public List<T> getPage() {
+		return list;
+	}
+
+
 
 	/**
-	 * Get the previous page
+	 * check if the list is empty
 	 * @return
 	 */
-	public List<?> previous();
+	public boolean isEmpty() {
+		return list.isEmpty();
+	}
 
-	/**
-	 * Get the current page
-	 * @return
-	 */
-	public int getCurrentPage();
 
-	/**
-	 * Return the number of pages
-	 * @return
-	 */
-	public int getTotalPage();
-	
-	
+
 
 }
