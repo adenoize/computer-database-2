@@ -1,8 +1,11 @@
 package com.excilys.cdb.main.java.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Class JDBCTool;
@@ -12,11 +15,13 @@ import java.sql.SQLException;
  */
 public enum JdbcTool {
 	INSTANCE;
+
+	private final String filename = "datasource.properties";
+	private String driverName;
+	private String url;
+	private String user;       
+	private String password;  
 	
-	private String url        = "jdbc:mysql://localhost/computer-database-db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8";
-	private String user       = "admincdb";
-	private String password   = "qwerty1234";
-	private String driverName = "com.mysql.cj.jdbc.Driver";
 	
 	private JdbcTool() {
 		init();
@@ -27,7 +32,7 @@ public enum JdbcTool {
 	 * @throws ClassNotFoundException
 	 */
 	private void loadDriver() throws ClassNotFoundException {
-	    Class.forName(driverName);
+		 Class.forName(driverName);
 	}
 
 	/**
@@ -44,6 +49,32 @@ public enum JdbcTool {
 	 * Initialize the JDBC Tool.
 	 */
 	private void init() {
+		
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+
+			
+    		prop.load(getClass().getClassLoader().getResourceAsStream(filename));
+    		
+			url = prop.getProperty("url");
+			user = prop.getProperty("user");
+			password = prop.getProperty("password");
+			driverName = prop.getProperty("driverName");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		try {
 			loadDriver();
 		} catch (ClassNotFoundException e) {

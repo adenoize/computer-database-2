@@ -24,8 +24,8 @@ public enum ComputerMapper {
 			
 				computer.setId(resultSet.getLong("id"));
 				computer.setName(resultSet.getString("name"));
-				computer.setIntroduced(resultSet.getDate("introduced"));
-				computer.setDiscontinued(resultSet.getDate("discontinued"));
+				computer.setIntroduced((resultSet.getDate("introduced") != null ? resultSet.getDate("introduced").toLocalDate() : null));
+				computer.setDiscontinued((resultSet.getDate("discontinued") != null ? resultSet.getDate("discontinued").toLocalDate() : null));
 				computer.setCompany(resultSet.getLong("company_id"));
 			
 		} catch (SQLException e) {

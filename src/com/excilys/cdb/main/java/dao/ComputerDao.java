@@ -4,6 +4,7 @@
 package com.excilys.cdb.main.java.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,8 +60,8 @@ public enum ComputerDao {
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(CREATE);
 			st.setString(1, computer.getName());
-			st.setDate(2, computer.getIntroduced());
-			st.setDate(3, computer.getDiscontinued());
+			st.setDate(2, Date.valueOf(computer.getIntroduced()));
+			st.setDate(3, Date.valueOf(computer.getDiscontinued()));
 			st.setLong(4, computer.getCompany());
 
 			st.executeUpdate();
@@ -87,8 +88,8 @@ public enum ComputerDao {
 			// prepare query
 			PreparedStatement st = connection.prepareStatement(UPDATE);
 			st.setString(1, computer.getName());
-			st.setDate(2, computer.getIntroduced());
-			st.setDate(3, computer.getDiscontinued());
+			st.setDate(2,  Date.valueOf(computer.getIntroduced()));
+			st.setDate(3,  Date.valueOf(computer.getDiscontinued()));
 			st.setLong(4, computer.getCompany());
 			st.setLong(5, computer.getId());
 
@@ -177,7 +178,7 @@ public enum ComputerDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+ 
 		return new Page<Computer>(computers);
 	}
 
