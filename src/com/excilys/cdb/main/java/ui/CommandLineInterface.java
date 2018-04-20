@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.excilys.cdb.main.java.ui;
 
 import java.util.HashMap;
@@ -158,13 +155,14 @@ public class CommandLineInterface {
 		Page<Computer> page = null;
 		List<Computer> computers = null;
 
+		System.out.println("Page mode (enter 'n' for next and 'p' for previous page : ");
+		
 		Scanner sc=new Scanner(System.in);   
-
+		page = cliController.listComputer(currentPage);
 		do {
 			
 
-			page = cliController.listComputer(currentPage);
-			computers = page.getPage();
+			
 			
 			
 			if(choice.equals("n") && !page.isEmpty()) {
@@ -174,10 +172,14 @@ public class CommandLineInterface {
 				currentPage--;
 			}			
 			
+			page = cliController.listComputer(currentPage);
+			computers = page.getPage();
+			
 			for (Computer computer : computers) {
 				System.out.println(computer);
 			}
 
+			System.out.println("enter 'n' for next and 'p' for previous page :");
 			choice=sc.next();
 			
 
@@ -195,13 +197,18 @@ public class CommandLineInterface {
 		int currentPage = 0;
 		Page<Company> page = null;
 		List<Company> companies = null;
+		
+		page = cliController.listCompany(currentPage);
+		
+		
+		System.out.print("Page mode (enter 'n' for next and 'p' for previous page : ");
+		
 
 		Scanner sc=new Scanner(System.in);   
-
+		page = cliController.listCompany(currentPage);
 		do {
 
-			page = cliController.listCompany(currentPage);
-			companies = page.getPage();
+			
 			
 			if(choice.equals("n") && !page.isEmpty()) {
 				currentPage++;
@@ -210,13 +217,16 @@ public class CommandLineInterface {
 					currentPage--;
 			}
 
+			page = cliController.listCompany(currentPage);
+			companies = page.getPage();
 				
 			for (Company company : companies) {
 				System.out.println(company);
 			}
 
+			System.out.print("enter 'n' for next and 'p' for previous page :");
 			choice=sc.next();
-
+			
 		}while(!choice.equals("q"));
 
 		sc.close();  
@@ -272,19 +282,6 @@ public class CommandLineInterface {
 		System.out.println("cdbCli --show (id)");
 		System.out.println("cbdCli --list --computer");
 		System.out.println("cbdCli --list --company");	
-	}
-
-	private String printComputer(Computer computer) {
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(" Computer id=" + computer.getId());
-		sb.append(" " + computer.getName());
-		sb.append(" introduced=" + computer.getId());
-		sb.append(" discontinued=" + computer.getId());
-		if(computer.getCompany() != null)
-			sb.append(" brand=" + computer.getCompany());
-
-		return sb.toString();
 	}
 
 }
