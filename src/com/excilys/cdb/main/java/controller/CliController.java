@@ -6,6 +6,9 @@ package com.excilys.cdb.main.java.controller;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 import com.excilys.cdb.main.java.model.Company;
@@ -32,7 +35,7 @@ public class CliController {
 	public String addComputer(Map<String, String> args) {
 
 		Computer computer = new Computer();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		for(Map.Entry<String, String> entry : args.entrySet()) {
 			String key = entry.getKey();
@@ -45,10 +48,9 @@ public class CliController {
 			case "introduced": 
 			{
 				try {
-					java.util.Date date = sdf.parse(value);
-					Date introduced = new Date(date.getTime());
+					LocalDate introduced = LocalDate.parse(value, formatter);
 					computer.setIntroduced(introduced);
-				}catch (ParseException e) {
+				}catch (DateTimeParseException e) {
 					return "Error on date";
 				}
 
@@ -58,11 +60,10 @@ public class CliController {
 
 			{
 				try {
-					java.util.Date date = sdf.parse(value);
-					Date discontinued = new Date(date.getTime());
+					LocalDate discontinued = LocalDate.parse(value, formatter);
 					computer.setDiscontinued(discontinued);
 
-				}catch (ParseException e) {
+				}catch (DateTimeParseException e) {
 					return "Error on date";
 				}
 			}
@@ -104,7 +105,7 @@ public class CliController {
 
 
 		Computer computer = new Computer();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		try {
 			Long computerId = new Long(id);
@@ -124,24 +125,21 @@ public class CliController {
 			case "introduced": 
 			{
 				try {
-					java.util.Date date = sdf.parse(value);
-					Date introduced = new Date(date.getTime());
+					LocalDate introduced = LocalDate.parse(value, formatter);
 					computer.setIntroduced(introduced);
-				}catch (ParseException e) {
+				}catch (DateTimeParseException e) {
 					return "Error on date";
 				}
-
 			}
 			break;
 			case "discontinued": 
 
 			{
 				try {
-					java.util.Date date = sdf.parse(value);
-					Date discontinued = new Date(date.getTime());
+					LocalDate discontinued = LocalDate.parse(value, formatter);
 					computer.setDiscontinued(discontinued);
 
-				}catch (ParseException e) {
+				}catch (DateTimeParseException e) {
 					return "Error on date";
 				}
 			}
@@ -178,9 +176,9 @@ public class CliController {
 
 
 	public String removeComputer(String id) {
-		
+
 		Long computerId = null;
-		
+
 		try {
 			computerId = new Long(id);
 			computerService.removeById(computerId);
@@ -189,22 +187,22 @@ public class CliController {
 		} catch (DatabaseException e) {
 			return "An error occurred !";
 		}
-		
-		
+
+
 		return "Computer is remove";
 	}
-	
+
 	public Page<Company> listCompany(int page) {
-		
+
 		return companyService.getPage(page);
 	}
-	
+
 	public Page<Computer> listComputer(int page) {
-	
+
 		return computerService.getPage(page);
 	}
-	
-	
+
+
 
 
 	/**
@@ -227,7 +225,7 @@ public class CliController {
 
 		return result;
 	}
-	
+
 	public Company getCompany(Long id) {
 		return companyService.findById(id);
 	}

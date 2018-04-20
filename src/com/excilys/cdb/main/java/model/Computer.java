@@ -1,6 +1,7 @@
 package com.excilys.cdb.main.java.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * Class Computer.
@@ -12,8 +13,8 @@ public class Computer {
 	
 	private Long id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
+	private LocalDate introduced;
+	private LocalDate discontinued;
 	private Long company;
 	
 	public Computer() {
@@ -39,7 +40,7 @@ public class Computer {
 	 * @param discontinued
 	 * @param company
 	 */
-	public Computer(String name, Date introduced, Date discontinued, Long company) {
+	public Computer(String name, LocalDate introduced, LocalDate discontinued, Long company) {
 		super();
 		this.id = 0L;
 		this.name = name;
@@ -84,7 +85,7 @@ public class Computer {
 	/**
 	 * @return the introduced
 	 */
-	public Date getIntroduced() {
+	public LocalDate getIntroduced() {
 		return introduced;
 	}
 
@@ -92,7 +93,7 @@ public class Computer {
 	/**
 	 * @param introduced the introduced to set
 	 */
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(LocalDate introduced) {
 		this.introduced = introduced;
 	}
 
@@ -100,7 +101,7 @@ public class Computer {
 	/**
 	 * @return the discontinued
 	 */
-	public Date getDiscontinued() {
+	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
 
@@ -108,7 +109,7 @@ public class Computer {
 	/**
 	 * @param discontinued the discontinued to set
 	 */
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
 
