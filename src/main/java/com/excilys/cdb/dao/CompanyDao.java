@@ -45,6 +45,7 @@ public enum CompanyDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return new Page<Company>(new ArrayList<Company>());
         }
 
         return new Page<Company>(companies);

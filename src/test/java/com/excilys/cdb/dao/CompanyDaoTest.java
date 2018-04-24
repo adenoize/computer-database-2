@@ -2,6 +2,7 @@ package test.java.com.excilys.cdb.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -23,10 +24,23 @@ public class CompanyDaoTest {
      * @throws Exception An Exception
      */
     @Test
-    public void testFindAll() throws Exception {
+    public void testGetPage() throws Exception {
 
         Page<Company> page = companyDao.getPage(0);
         assertEquals("Number of companies should be 10", 10, page.getPage().size());
+    }
+
+    /**
+     * Test method for
+     * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findAll()}.
+     * @throws Exception An Exception
+     */
+    @Test
+    public void testGetPageFail() throws Exception {
+
+        Page<Company> page = companyDao.getPage(-1000);
+        assertTrue("Page should be empty", page.getPage().isEmpty());
+
     }
 
     /**
@@ -40,5 +54,17 @@ public class CompanyDaoTest {
         assertNotNull(company);
         assertTrue("Name should be Atari", company.getName().equals("Atari"));
     }
+
+    /**
+     * Test method for
+     * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findById(java.lang.Long)}.
+     * @throws Exception An Exception
+     */
+    @Test
+    public void testFindByIdFail() throws Exception {
+        Company company = companyDao.findById(-1L);
+        assertNull(company);
+    }
+
 
 }
