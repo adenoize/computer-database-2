@@ -1,6 +1,3 @@
-/**
- * 
- */
 package main.java.com.excilys.cdb.model;
 
 import java.util.List;
@@ -11,36 +8,31 @@ import java.util.List;
  */
 public class Page<T> {
 
+    private List<T> list;
 
-	private List<T> list;
+    /**
+     * Constructor with the given list.
+     * @param list list of elements of the page
+     */
+    public Page(List<T> list) {
 
+        this.list = list;
+    }
 
-	public Page(List<T> listCompany) {
+    /**
+     * Get the page.
+     * @return the list
+     */
+    public List<T> getPage() {
+        return list;
+    }
 
-		list = listCompany;
-	}
-
-
-	/**
-	 * Get the page
-	 * @param page the number of the page
-	 * @return
-	 */
-	public List<T> getPage() {
-		return list;
-	}
-
-
-
-	/**
-	 * check if the list is empty
-	 * @return
-	 */
-	public boolean isEmpty() {
-		return list.isEmpty();
-	}
-
-
-
+    /**
+     * Check if the list is empty.
+     * @return true if list is empty
+     */
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
 
 }

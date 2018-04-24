@@ -23,7 +23,6 @@ public class CliController {
 
     /**
      * Add new Computer.
-     * 
      * @param args
      *            list of values
      * @return the computer
@@ -90,7 +89,6 @@ public class CliController {
 
     /**
      * Update a Computer.
-     * 
      * @param id
      *            id of the computer
      * @param args
@@ -165,7 +163,8 @@ public class CliController {
 
     /**
      * Remove a computer.
-     * @param id the id of the computer
+     * @param id
+     *            the id of the computer
      * @return some messages
      */
     public String removeComputer(String id) {
@@ -185,8 +184,9 @@ public class CliController {
     }
 
     /**
-     * List all companies.
-     * @param page the number of the page
+     * List all companies per page.
+     * @param page
+     *            the number of the page
      * @return the page
      */
     public Page<Company> listCompany(int page) {
@@ -194,23 +194,30 @@ public class CliController {
         return companyService.getPage(page);
     }
 
+    /**
+     * List all computers per page.
+     * @param page
+     *            the number of the page
+     * @return the page
+     */
     public Page<Computer> listComputer(int page) {
 
         return computerService.getPage(page);
     }
 
     /**
-     * Show the Computer with the given id
+     * Show the Computer with the given id.
+     * @param id
+     *            the id of computer
+     * @return informations of the computer
      */
     public String showComputer(String id) {
 
-        // TODO
         Long computerId = new Long(id);
         String result = "";
 
         try {
             Computer computer = computerService.findById(computerId);
-            // TODO
             result = computer.toString();
 
         } catch (DatabaseException e) {
@@ -220,6 +227,12 @@ public class CliController {
         return result;
     }
 
+    /**
+     * Retrieve the company.
+     * @param id
+     *            the id of the company
+     * @return the company
+     */
     public Company getCompany(Long id) {
         return companyService.findById(id);
     }

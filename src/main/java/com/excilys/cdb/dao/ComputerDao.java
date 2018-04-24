@@ -1,6 +1,3 @@
-/**
- * 
- */
 package main.java.com.excilys.cdb.dao;
 
 import java.sql.Connection;
@@ -17,199 +14,168 @@ import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
 /**
- * 
- * 
+ * DAO about Computer.
  * @author Aurelien Denoize
  *
  */
 public enum ComputerDao {
-	INSTANCE;
+    INSTANCE;
 
-	private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
-	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
-	private static final String REMOVE = "DELETE FROM computer where id = ?";
-	private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
-	private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
+    private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
+    private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
+    private static final String REMOVE = "DELETE FROM computer where id = ?";
+    private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
+    private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
 
+    /**
+     * Make persistent the given Computer.
+     * @param computer the computer to persist
+     * @return the id of entity
+     */
+    public Long create(Computer computer) {
 
+        Long id = -1L;
 
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-	private ComputerDao() {
+            PreparedStatement st = connection.prepareStatement(CREATE);
+            st.setString(1, computer.getName());
+            st.setDate(2, Date.valueOf(computer.getIntroduced()));
+            st.setDate(3, Date.valueOf(computer.getDiscontinued()));
+            st.setLong(4, computer.getCompany());
 
-				
-	}
+            st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
 
-	/**
-	 * Make persistent the given Computer.
-	 * @param Computer
-	 * @return
-	 */
-	public boolean create(Computer computer) {
+            if (rs.next()) {
+                id = new Long(rs.getInt(1));
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            id = -1L;
+        }
 
-		boolean isCreated = true;
+        return id;
+    }
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+    /**
+     * Update the given Computer into database.
+     * @param computer the computer to update
+     * @return true if was update
+     */
+    public Long update(Computer computer) {
 
-			// open connection
-			;
+        Long id = -1L;
 
-			// prepare query
-			PreparedStatement st = connection.prepareStatement(CREATE);
-			st.setString(1, computer.getName());
-			st.setDate(2, Date.valueOf(computer.getIntroduced()));
-			st.setDate(3, Date.valueOf(computer.getDiscontinued()));
-			st.setLong(4, computer.getCompany());
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-			st.executeUpdate();
+            // prepare query
+            PreparedStatement st = connection.prepareStatement(UPDATE);
+            st.setString(1, computer.getName());
+            st.setDate(2, Date.valueOf(computer.getIntroduced()));
+            st.setDate(3, Date.valueOf(computer.getDiscontinued()));
+            st.setLong(4, computer.getCompany());
+            st.setLong(5, computer.getId());
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			isCreated = false;
-		}
-		
-		return isCreated;
-	}
+            st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
 
-	/**
-	 * Update the given Computer into database.
-	 * @param Computer
-	 * @return
-	 */
-	public boolean update(Computer computer) {
+            if (rs.next()) {
+                id = new Long(rs.getInt(1));
+            }
 
-		boolean isCreated = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            id = -1L;
+        }
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+        return id;
+    }
 
-			// prepare query
-			PreparedStatement st = connection.prepareStatement(UPDATE);
-			st.setString(1, computer.getName());
-			st.setDate(2,  Date.valueOf(computer.getIntroduced()));
-			st.setDate(3,  Date.valueOf(computer.getDiscontinued()));
-			st.setLong(4, computer.getCompany());
-			st.setLong(5, computer.getId());
+    /**
+     * Remove the Computer with the given id.
+     * @param id the id of computer
+     * @return true if the given computer was remove
+     */
+    public boolean removeById(Long id) {
 
-			st.executeUpdate();
+        boolean isCreated = true;
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			isCreated = false;
-		}
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-		return isCreated;
-	}
+            // prepare query
+            PreparedStatement st = connection.prepareStatement(REMOVE);
 
-	/**
-	 * Remove the given Computer.
-	 * @param Computer
-	 */
-	public boolean remove(Computer computer) {
-	
-		boolean isCreated = true;
+            st.setLong(1, id);
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
+            st.executeUpdate();
 
-			// prepare query
-			PreparedStatement st = connection.prepareStatement(REMOVE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            isCreated = false;
+        }
 
-			st.setLong(1, computer.getId());
+        return isCreated;
 
-			st.executeUpdate();
+    }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			isCreated = false;
-		}
+    /**
+     * Retrieve a page of computers.
+     * @param offset index of the first computer of the page
+     * @return Page of computers
+     */
+    public Page<Computer> getPage(int offset) {
 
-		return isCreated;
+        List<Computer> computers = new ArrayList<Computer>();
 
-	}
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-	/**
-	 * Remove the Computer with the given id.
-	 * @param id
-	 */
-	public boolean removeById(Long id) {
-	
-		boolean isCreated = true;
+            PreparedStatement st = connection.prepareStatement(GET_PAGE);
+            st.setInt(1, Constante.LIMIT_PAGE);
+            st.setInt(2, offset);
+            ResultSet rs = st.executeQuery();
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
-			
-			// prepare query
-			PreparedStatement st = connection.prepareStatement(REMOVE);
+            while (rs.next()) {
+                computers.add(ComputerMapper.INSTANCE.map(rs));
+            }
 
-			st.setLong(1, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-			st.executeUpdate();
+        return new Page<Computer>(computers);
+    }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			isCreated = false;
-		}
+    /**
+     * Retrieve the computer with the given id.
+     * @param id the id of computer
+     * @return the computer
+     */
+    public Computer findById(Long id) {
 
-		return isCreated;
+        Computer computer = null;
 
-	}
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-	/**
-	 * retrieve a page of companies.
-	 * @return
-	 */
-	public Page<Computer> getPage(int offset){
+            PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
 
-		List<Computer> computers = new ArrayList<Computer>();
+            st.setLong(1, id);
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
-			
-			PreparedStatement st = connection.prepareStatement(GET_PAGE);
-			st.setInt(1, Constante.LIMIT_PAGE);
-			st.setInt(2, offset);
-			ResultSet rs = st.executeQuery();
-			
+            ResultSet resultSet = st.executeQuery();
 
-			while (rs.next()) {
-				computers.add(ComputerMapper.INSTANCE.map(rs));
-			}
+            if (resultSet.next()) {
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
- 
-		return new Page<Computer>(computers);
-	}
+                computer = ComputerMapper.INSTANCE.map(resultSet);
 
-	/**
-	 * retrieve the computer with the given id.
-	 * @param id
-	 * @return
-	 */
-	public Computer findById(Long id) {
+            }
 
-	
-		Computer computer = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
-			
-			PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
-
-			st.setLong(1, id);
-
-			ResultSet resultSet = st.executeQuery();
-
-			if (resultSet.next()) {
-
-				computer = ComputerMapper.INSTANCE.map(resultSet);
-
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return computer;
-	}
-
+        return computer;
+    }
 
 }

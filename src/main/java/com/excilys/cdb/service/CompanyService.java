@@ -6,28 +6,28 @@ import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
 public class CompanyService {
-	
-	
-	private CompanyDao companyDao = CompanyDao.INSTANCE;
-	
-	
-	/**
-	 * retrieve all companies.
-	 */
-	public Page<Company> getPage(int page){
-		
-		int offset = Constante.LIMIT_PAGE * page;
-		
-		return companyDao.getPage(offset);	
-	}
-	
-	/**
-	 * retrieve the company with the given id.
-	 * @param id
-	 * @return
-	 */
-	public Company findById(Long id) {
-		return companyDao.findById(id);
-	}
+
+    private CompanyDao companyDao = CompanyDao.INSTANCE;
+
+    /**
+     * Retrieve all companies.
+     * @param page number of the page
+     * @return the page
+     */
+    public Page<Company> getPage(int page) {
+
+        int offset = Constante.LIMIT_PAGE * page;
+
+        return companyDao.getPage(offset);
+    }
+
+    /**
+     * Retrieve the company with the given id.
+     * @param id the id of the company
+     * @return the company
+     */
+    public Company findById(Long id) {
+        return companyDao.findById(id);
+    }
 
 }

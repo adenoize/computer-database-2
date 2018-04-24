@@ -1,6 +1,3 @@
-/**
- * 
- */
 package main.java.com.excilys.cdb.dao;
 
 import java.sql.Connection;
@@ -16,71 +13,67 @@ import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
 /**
- * 
+ * DAO about company.
  * @author aurel
  *
  */
 public enum CompanyDao {
-	INSTANCE;
+    INSTANCE;
 
-	private static final String GET_PAGE = "SELECT * FROM company LIMIT ? OFFSET ?";
-	private static final String FIND_BY_ID = "SELECT * FROM company WHERE id = ?";
+    private static final String GET_PAGE = "SELECT * FROM company LIMIT ? OFFSET ?";
+    private static final String FIND_BY_ID = "SELECT * FROM company WHERE id = ?";
 
-	private CompanyDao() {}
+    /**
+     * Retrieve a page of companies.
+     * @param offset index of the first company of the page
+     * @return the page of company
+     */
+    public Page<Company> getPage(int offset) {
 
-	/**
-	 * retrieve a page of companies.
-	 * @return
-	 */
-	public Page<Company> getPage(int offset){
+        List<Company> companies = new ArrayList<Company>();
 
-		List<Company> companies = new ArrayList<Company>();
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
-			
-			PreparedStatement st = connection.prepareStatement(GET_PAGE);
-			st.setInt(1, Constante.LIMIT_PAGE);
-			st.setInt(2, offset);
-			ResultSet rs = st.executeQuery();
-			
+            PreparedStatement st = connection.prepareStatement(GET_PAGE);
+            st.setInt(1, Constante.LIMIT_PAGE);
+            st.setInt(2, offset);
+            ResultSet rs = st.executeQuery();
 
-			while (rs.next()) {
-				companies.add(CompanyMapper.INSTANCE.map(rs));
-			}
+            while (rs.next()) {
+                companies.add(CompanyMapper.INSTANCE.map(rs));
+            }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		return new Page<Company>(companies);
-	}
+        return new Page<Company>(companies);
+    }
 
-	/**
-	 * retrieve the company with the given id.
-	 * @param id
-	 * @return
-	 */
-	public Company findById(Long id){
-		Company company = null;
-		
-		try(Connection connection = JdbcTool.INSTANCE.newConnection()){
-			
-		
-			PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
-			st.setLong(1, id);
-			ResultSet rs = st.executeQuery();
+    /**
+     * Retrieve the company with the given id.
+     * @param id the id of company
+     * @return the company
+     */
+    public Company findById(Long id) {
+        Company company = null;
 
-			if(rs.next())
-				company = CompanyMapper.INSTANCE.map(rs);
-				
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			company = null;
-		}
+            PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
+            st.setLong(1, id);
+            ResultSet rs = st.executeQuery();
 
-		return company;
-	}
+            if (rs.next()) {
+                company = CompanyMapper.INSTANCE.map(rs);
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            company = null;
+        }
+
+        return company;
+    }
 
 }

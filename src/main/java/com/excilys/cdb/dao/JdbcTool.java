@@ -1,152 +1,123 @@
 package main.java.com.excilys.cdb.dao;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
- * Class JDBCTool;
- * This class help to connect to DB
+ * Class JDBCTool This class help to connect to DB.
  * @author Aurelien Denoize
  *
  */
 public enum JdbcTool {
-	INSTANCE;
+    INSTANCE;
 
-	private String filename = "datasource.properties";
-	private String driverName;
-	private String url;
-	private String user;       
-	private String password;
-	private boolean init;
-	
-	
-	private JdbcTool() {
+    private String driverName;
+    private String url;
+    private String user;
+    private String password;
+    private boolean init;
 
-	}
 
-	/**
-	 * Load the driver.
-	 * @throws ClassNotFoundException
-	 */
-	private void loadDriver() throws ClassNotFoundException {
-		 Class.forName(driverName);
-	}
+    /**
+     * Load the driver.
+     * @throws ClassNotFoundException Exception if driver not found
+     */
+    private void loadDriver() throws ClassNotFoundException {
+        Class.forName(driverName);
+    }
 
-	/**
-	 * Create a new connection to database.
-	 * @return
-	 * @throws SQLException
-	 */
-	public Connection newConnection() throws SQLException {
-	
-		if(!init) {
-			init();
-			init = true;
-		}
-	    Connection connection = DriverManager.getConnection(url, user, password);
-	    return connection;
-	}
-	
-	/**
-	 * Initialize the JDBC Tool.
-	 */
-	public void init() {
+    /**
+     * Create a new connection to database.
+     * @return Connection to database
+     * @throws SQLException Exception if connection is refused
+     */
+    public Connection newConnection() throws SQLException {
 
-		Properties prop = new Properties();
-		InputStream input = null;
+        if (!init) {
+            init();
+            init = true;
+        }
+        Connection connection = DriverManager.getConnection(url, user, password);
+        return connection;
+    }
 
-		try {
+    /**
+     * Initialize the JDBC Tool.
+     */
+    public void init() {
 
-			
-    		prop.load(new FileInputStream("resources/"+filename));
-	
-    		
-			url = prop.getProperty("url");
-			user = prop.getProperty("user");
-			password = prop.getProperty("password");
-			driverName = prop.getProperty("driverName");
+        ResourceBundle bundle = ResourceBundle.getBundle("datasource");
+        url = bundle.getString("url");
+        user = bundle.getString("user");
+        password = bundle.getString("password");
+        driverName = bundle.getString("driverName");
 
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		try {
-			loadDriver();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	} 
-	
-	/**
-	 * Close the given connection.
-	 * @param connection
-	 */
-	public void close(Connection connection) {
-		try {
-			if (connection != null)
-				connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            loadDriver();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
+    /**
+     * Close the given connection.
+     * @param connection connection to close
+     */
+    public void close(Connection connection) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
 
-	/**
-	 * @return the user
-	 */
-	public String getUser() {
-		return user;
-	}
+    /**
+     * @param url
+     *            the url to set
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(String user) {
-		this.user = user;
-	}
+    /**
+     * @return the user
+     */
+    public String getUser() {
+        return user;
+    }
 
-	/**
-	 * @return the driverName
-	 */
-	public String getDriverName() {
-		return driverName;
-	}
+    /**
+     * @param user
+     *            the user to set
+     */
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	/**
-	 * @param driverName the driverName to set
-	 */
-	public void setDriverName(String driverName) {
-		this.driverName = driverName;
-	}
+    /**
+     * @return the driverName
+     */
+    public String getDriverName() {
+        return driverName;
+    }
 
-	
-	
-	
+    /**
+     * @param driverName
+     *            the driverName to set
+     */
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
 
 }
