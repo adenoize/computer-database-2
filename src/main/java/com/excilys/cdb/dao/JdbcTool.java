@@ -1,9 +1,11 @@
 package main.java.com.excilys.cdb.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
+import java.util.Properties;
 
 /**
  * Class JDBCTool This class help to connect to DB.
@@ -48,11 +50,30 @@ public enum JdbcTool {
      */
     public void init() {
 
-        ResourceBundle bundle = ResourceBundle.getBundle("datasource");
-        url = bundle.getString("url");
-        user = bundle.getString("user");
-        password = bundle.getString("password");
-        driverName = bundle.getString("driverName");
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        InputStream inputStream = classLoader.getResourceAsStream("datasource.properties");
+
+        Properties prop = new Properties();
+
+        if (inputStream != null) {
+            try {
+                prop.load(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        ResourceBundle bundle = ResourceBundle.getBundle("datasource");
+//        url = bundle.getString("url");
+//        user = bundle.getString("user");
+//        password = bundle.getString("password");
+//        driverName = bundle.getString("driverName");
+
+        url = prop.getProperty("url");
+        user = prop.getProperty("user");
+        password = prop.getProperty("password");
+        driverName = prop.getProperty("driverName");
 
         try {
             loadDriver();
