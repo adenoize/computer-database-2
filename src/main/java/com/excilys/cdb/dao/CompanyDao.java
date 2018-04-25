@@ -32,6 +32,10 @@ public enum CompanyDao {
 
         List<Company> companies = new ArrayList<Company>();
 
+        if (offset < 0) {
+            offset = 0;
+        }
+
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
@@ -45,7 +49,6 @@ public enum CompanyDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return new Page<Company>(new ArrayList<Company>());
         }
 
         return new Page<Company>(companies);
@@ -71,7 +74,7 @@ public enum CompanyDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            company = null;
+            return null;
         }
 
         return company;

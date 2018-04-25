@@ -47,5 +47,4 @@ public class JdbcToolTest {
         Assert.assertTrue("Connection should be close", connection.isClosed());
 
     }
-
 }

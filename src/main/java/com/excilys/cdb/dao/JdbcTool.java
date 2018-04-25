@@ -64,12 +64,6 @@ public enum JdbcTool {
             }
         }
 
-//        ResourceBundle bundle = ResourceBundle.getBundle("datasource");
-//        url = bundle.getString("url");
-//        user = bundle.getString("user");
-//        password = bundle.getString("password");
-//        driverName = bundle.getString("driverName");
-
         url = prop.getProperty("url");
         user = prop.getProperty("user");
         password = prop.getProperty("password");
@@ -95,50 +89,4 @@ public enum JdbcTool {
             e.printStackTrace();
         }
     }
-
-    /**
-     * @return the url
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * @param url
-     *            the url to set
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    /**
-     * @return the user
-     */
-    public String getUser() {
-        return user;
-    }
-
-    /**
-     * @param user
-     *            the user to set
-     */
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    /**
-     * @return the driverName
-     */
-    public String getDriverName() {
-        return driverName;
-    }
-
-    /**
-     * @param driverName
-     *            the driverName to set
-     */
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
-    }
-
 }

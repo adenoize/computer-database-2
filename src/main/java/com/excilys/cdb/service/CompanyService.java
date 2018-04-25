@@ -25,9 +25,16 @@ public class CompanyService {
      * Retrieve the company with the given id.
      * @param id the id of the company
      * @return the company
+     * @throws DatabaseException DatabaseException
      */
-    public Company findById(Long id) {
-        return companyDao.findById(id);
+    public Company findById(Long id) throws DatabaseException {
+        Company company = companyDao.findById(id);
+
+        if (company == null) {
+            throw new DatabaseException();
+        }
+
+        return company;
     }
 
 }

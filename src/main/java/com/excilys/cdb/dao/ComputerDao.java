@@ -40,9 +40,22 @@ public enum ComputerDao {
 
             PreparedStatement st = connection.prepareStatement(CREATE);
             st.setString(1, computer.getName());
-            st.setDate(2, Date.valueOf(computer.getIntroduced()));
-            st.setDate(3, Date.valueOf(computer.getDiscontinued()));
-            st.setLong(4, computer.getCompany());
+
+            if (computer.getIntroduced() != null) {
+                st.setDate(2, Date.valueOf(computer.getIntroduced()));
+            } else {
+                st.setDate(2, null);
+            }
+            if (computer.getDiscontinued() != null) {
+                st.setDate(3, Date.valueOf(computer.getDiscontinued()));
+            } else {
+                st.setDate(3, null);
+            }
+            if (computer.getCompany() != null) {
+                st.setLong(4, computer.getCompany());
+            } else {
+                st.setObject(4, null);
+            }
 
             st.executeUpdate();
             ResultSet rs = st.getGeneratedKeys();
@@ -64,33 +77,40 @@ public enum ComputerDao {
      * @param computer the computer to update
      * @return true if was update
      */
-    public Long update(Computer computer) {
+    public boolean update(Computer computer) {
 
-        Long id = -1L;
+        int result = 0;
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
             // prepare query
             PreparedStatement st = connection.prepareStatement(UPDATE);
             st.setString(1, computer.getName());
-            st.setDate(2, Date.valueOf(computer.getIntroduced()));
-            st.setDate(3, Date.valueOf(computer.getDiscontinued()));
-            st.setLong(4, computer.getCompany());
+            if (computer.getIntroduced() != null) {
+                st.setDate(2, Date.valueOf(computer.getIntroduced()));
+            } else {
+                st.setDate(2, null);
+            }
+            if (computer.getDiscontinued() != null) {
+                st.setDate(3, Date.valueOf(computer.getDiscontinued()));
+            } else {
+                st.setDate(3, null);
+            }
+            if (computer.getCompany() != null) {
+                st.setLong(4, computer.getCompany());
+            } else {
+                st.setObject(4, null);
+            }
             st.setLong(5, computer.getId());
 
-            st.executeUpdate();
-            ResultSet rs = st.getGeneratedKeys();
-
-            if (rs.next()) {
-                id = new Long(rs.getInt(1));
-            }
+            result = st.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            id = -1L;
+            return false;
         }
 
-        return id;
+        return (result == 1);
     }
 
     /**
@@ -100,7 +120,7 @@ public enum ComputerDao {
      */
     public boolean removeById(Long id) {
 
-        boolean isCreated = true;
+        int result = 0;
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
@@ -109,14 +129,14 @@ public enum ComputerDao {
 
             st.setLong(1, id);
 
-            st.executeUpdate();
+            result = st.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            isCreated = false;
+            return false;
         }
 
-        return isCreated;
+        return (result == 1);
 
     }
 

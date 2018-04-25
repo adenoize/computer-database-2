@@ -26,7 +26,7 @@ public class CompanyDaoTest {
     @Test
     public void testGetPage() throws Exception {
 
-        Page<Company> page = companyDao.getPage(0);
+        Page<Company> page = companyDao.getPage(1);
         assertEquals("Number of companies should be 10", 10, page.getPage().size());
     }
 
@@ -38,9 +38,8 @@ public class CompanyDaoTest {
     @Test
     public void testGetPageFail() throws Exception {
 
-        Page<Company> page = companyDao.getPage(-1000);
-        assertTrue("Page should be empty", page.getPage().isEmpty());
-
+        Page<Company> page = companyDao.getPage(-1);
+        assertEquals("Number of companies should be 10", 10, page.getPage().size());
     }
 
     /**

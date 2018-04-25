@@ -5,6 +5,9 @@ import main.java.com.excilys.cdb.dao.ComputerDao;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
+/**
+ * @author Aurelien Denoize
+ */
 public class ComputerService {
 
     private ComputerDao computerDao = ComputerDao.INSTANCE;
@@ -20,7 +23,6 @@ public class ComputerService {
         if (computerDao.create(computer).equals(-1L)) {
             throw new DatabaseException();
         }
-
     }
 
     /**
@@ -31,7 +33,7 @@ public class ComputerService {
     public void update(Computer computer) throws DatabaseException {
 
         // if update fail
-        if (computerDao.update(computer).equals(-1L)) {
+        if (!computerDao.update(computer)) {
             throw new DatabaseException();
         }
     }
@@ -74,7 +76,7 @@ public class ComputerService {
             throw new DatabaseException();
         }
 
-        return computerDao.findById(id);
+        return computer;
     }
 
 }

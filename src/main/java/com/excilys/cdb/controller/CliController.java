@@ -82,7 +82,6 @@ public class CliController {
             return "An error occurred !";
         }
 
-        // TODO
         return computer.toString();
 
     }
@@ -234,7 +233,12 @@ public class CliController {
      * @return the company
      */
     public Company getCompany(Long id) {
-        return companyService.findById(id);
+        try {
+            return companyService.findById(id);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

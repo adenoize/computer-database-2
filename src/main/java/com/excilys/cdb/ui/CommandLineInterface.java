@@ -125,10 +125,8 @@ public class CommandLineInterface {
     private void removeComputer() {
         String arg = args.poll();
 
-        int id = 0;
-
         try {
-            id = Integer.parseInt(arg);
+            Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             System.err.println("Please enter an ID; (ex : 123)");
             printHelp();
