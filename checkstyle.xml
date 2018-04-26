@@ -92,7 +92,7 @@
     -->
 
     <!-- To have SuppressionsCommentFilter available -->
-    <module name="FileContentsHolder"/>
+    <!--<module name="FileContentsHolder"/> -->
 
     <!-- Checks for Naming Conventions.                  -->
     <!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -190,14 +190,7 @@
 
   </module>
   <!-- Ignore filter-->
-  <module name="SuppressionCommentFilter">
-    <property name="offCommentFormat" value="CHECKSTYLE_OFF: JAVADOC"/>
-    <property name="onCommentFormat" value="CHECKSTYLE_ON: JAVADOC"/>
-    <property name="checkFormat" value="JavadocMethod"/>
-  </module>
-  <module name="SuppressionFilter">
-    <property name="file" value="suppressions.xml"/>
-  </module>
+  
 
 
 </module>
