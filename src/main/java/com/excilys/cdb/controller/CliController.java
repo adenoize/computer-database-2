@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
@@ -17,6 +20,7 @@ import main.java.com.excilys.cdb.service.DatabaseException;
  */
 public class CliController {
 
+    static final Logger LOGGER = LoggerFactory.getLogger(CliController.class);
     ComputerService computerService = new ComputerService();
     CompanyService companyService = new CompanyService();
 
@@ -76,6 +80,7 @@ public class CliController {
 
         try {
             computerService.save(computer);
+            LOGGER.info("Add of computer : " + computer);
         } catch (DatabaseException e) {
             return "An error occurred !";
         }
@@ -150,7 +155,9 @@ public class CliController {
         }
 
         try {
+
             computerService.update(computer);
+            LOGGER.info("Update of computer to : " + computer);
         } catch (DatabaseException e) {
             return "An error occurred !";
         }
@@ -177,6 +184,7 @@ public class CliController {
             return "Computer not found";
         }
 
+        LOGGER.info("Remove of computer with id = " + id);
         return "Computer is remove";
     }
 
