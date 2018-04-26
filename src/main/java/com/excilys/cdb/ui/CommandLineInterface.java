@@ -14,7 +14,6 @@ import main.java.com.excilys.cdb.model.Page;
 
 /**
  * @author Aurelien Denoize
- *
  */
 public class CommandLineInterface {
 
@@ -104,10 +103,8 @@ public class CommandLineInterface {
 
         String arg = args.poll();
 
-        int id = 0;
-
         try {
-            id = Integer.parseInt(arg);
+            Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             System.err.println("Please enter an ID; (ex : 123)");
             printHelp();
@@ -241,10 +238,9 @@ public class CommandLineInterface {
      */
     private void showComputer() {
         String arg = args.poll();
-        int id = 0;
 
         try {
-            id = Integer.parseInt(arg);
+            Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             System.err.println("Please enter an ID; (ex : 123)");
             printHelp();
