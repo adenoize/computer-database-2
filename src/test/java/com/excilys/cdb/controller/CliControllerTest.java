@@ -1,17 +1,21 @@
 package test.java.com.excilys.cdb.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import main.java.com.excilys.cdb.controller.CliController;
+import main.java.com.excilys.cdb.model.Company;
+import main.java.com.excilys.cdb.model.Computer;
+import main.java.com.excilys.cdb.model.Page;
 
 /**
  * @author Aurelien Denoize
@@ -20,9 +24,6 @@ import main.java.com.excilys.cdb.controller.CliController;
 public class CliControllerTest {
 
     CliController cliController = new CliController();
-
-    @Mock
-    Map<String, String> args;
 
     /**
      * Test method for
@@ -36,7 +37,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Computer 0 test, introduced=null, discontinued=null".equals(result));
     }
 
@@ -53,7 +53,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=null".equals(result));
     }
 
@@ -71,7 +70,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
     }
 
@@ -90,7 +88,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
     }
 
@@ -109,7 +106,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Error on date".equals(result));
     }
 
@@ -128,7 +124,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Error on date".equals(result));
     }
 
@@ -147,7 +142,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("Error on company id".equals(result));
     }
 
@@ -166,7 +160,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("An error occurred !".equals(result));
     }
 
@@ -185,7 +178,6 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
         assertTrue("An error occurred !".equals(result));
     }
 
@@ -200,12 +192,11 @@ public class CliControllerTest {
         m.put("fail", "test");
         m.put("introduced", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -219,12 +210,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("fail", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -238,12 +228,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
         m.put("fail", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -257,12 +246,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("fail", "1");
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -276,12 +264,11 @@ public class CliControllerTest {
         m.put("fail", "test");
         m.put("fail", "01/01/2000");
         m.put("fail", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("fail", "1");
 
         String result = cliController.addComputer(m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -299,7 +286,6 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
         assertTrue("Computer 1 test, introduced=null, discontinued=null".equals(result));
     }
 
@@ -316,8 +302,7 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=null".equals(result));
+        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=null".equals(result));
     }
 
     /**
@@ -334,8 +319,7 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
     }
 
     /**
@@ -353,8 +337,7 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
     }
 
     /**
@@ -372,7 +355,6 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
         assertTrue("Error on date".equals(result));
     }
 
@@ -391,7 +373,6 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
         assertTrue("Error on date".equals(result));
     }
 
@@ -410,7 +391,6 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
         assertTrue("Error on company id".equals(result));
     }
 
@@ -429,7 +409,6 @@ public class CliControllerTest {
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
         assertTrue("An error occurred !".equals(result));
     }
 
@@ -444,12 +423,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Error on company id".equals(result));
     }
 
     /**
@@ -463,12 +441,11 @@ public class CliControllerTest {
         m.put("fail", "test");
         m.put("introduced", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -482,12 +459,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("fail", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -501,12 +477,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
         m.put("fail", "01/01/2000");
-        m.put("company", "100000000000000");
+        m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -520,12 +495,11 @@ public class CliControllerTest {
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
         m.put("discontinued", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("fail", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -539,12 +513,11 @@ public class CliControllerTest {
         m.put("fail", "test");
         m.put("fail", "01/01/2000");
         m.put("fail", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("fail", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        System.out.println(result);
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Bad argument".equals(result));
     }
 
     /**
@@ -555,14 +528,13 @@ public class CliControllerTest {
     public void testUpdateComputerBadId1() {
 
         Map<String, String> m = new HashMap<>();
-        m.put("fail", "test");
-        m.put("fail", "01/01/2000");
-        m.put("fail", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("name", "test");
+        m.put("introduced", "01/01/2000");
+        m.put("discontinued", "01/01/2000");
+        m.put("company", "1");
 
         String result = cliController.updateComputer("-1", m);
 
-        System.out.println(result);
         assertTrue("Computer not found".equals(result));
     }
 
@@ -574,15 +546,50 @@ public class CliControllerTest {
     public void testUpdateComputerBadId2() {
 
         Map<String, String> m = new HashMap<>();
-        m.put("fail", "test");
-        m.put("fail", "01/01/2000");
-        m.put("fail", "01/01/2000");
-        m.put("fail", "100000000000000");
+        m.put("name", "test");
+        m.put("introduced", "01/01/2000");
+        m.put("discontinued", "01/01/2000");
+        m.put("company", "1");
 
         String result = cliController.updateComputer("100000000000", m);
 
-        System.out.println(result);
         assertTrue("Computer not found".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#addComputer(java.util.Map)}.
+     */
+    @Test
+    public void testUpdateComputerBadId3() {
+
+        Map<String, String> m = new HashMap<>();
+        m.put("name", "test");
+        m.put("introduced", "01/01/2000");
+        m.put("discontinued", "01/01/2000");
+        m.put("company", "1");
+
+        String result = cliController.updateComputer("", m);
+
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#addComputer(java.util.Map)}.
+     */
+    @Test
+    public void testUpdateComputerBadId4() {
+
+        Map<String, String> m = new HashMap<>();
+        m.put("name", "test");
+        m.put("introduced", "01/01/2000");
+        m.put("discontinued", "01/01/2000");
+        m.put("company", "1");
+
+        String result = cliController.updateComputer("abc", m);
+
+        assertTrue("Error on id format".equals(result));
     }
 
     /**
@@ -591,7 +598,53 @@ public class CliControllerTest {
      */
     @Test
     public void testRemoveComputer() {
-        fail("Not yet implemented");
+        String result = cliController.removeComputer("123");
+
+        assertTrue("Computer is remove".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#removeComputer(java.lang.String)}.
+     */
+    @Test
+    public void testRemoveComputerNotFound1() {
+        String result = cliController.removeComputer("-1");
+
+        assertTrue("Computer not found".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#removeComputer(java.lang.String)}.
+     */
+    @Test
+    public void testRemoveComputerNotFound2() {
+        String result = cliController.removeComputer("100000000000");
+
+        assertTrue("Computer not found".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#removeComputer(java.lang.String)}.
+     */
+    @Test
+    public void testRemoveComputerBadId1() {
+        String result = cliController.removeComputer("");
+
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#removeComputer(java.lang.String)}.
+     */
+    @Test
+    public void testRemoveComputerBadId2() {
+        String result = cliController.removeComputer("abc");
+
+        assertTrue("Error on id format".equals(result));
     }
 
     /**
@@ -600,7 +653,9 @@ public class CliControllerTest {
      */
     @Test
     public void testListCompany() {
-        fail("Not yet implemented");
+        Page<Company> page = cliController.listCompany(1);
+        assertNotNull(page);
+        assertEquals(10, page.getPage().size());
     }
 
     /**
@@ -609,7 +664,9 @@ public class CliControllerTest {
      */
     @Test
     public void testListComputer() {
-        fail("Not yet implemented");
+        Page<Computer> page = cliController.listComputer(1);
+        assertNotNull(page);
+        assertEquals(10, page.getPage().size());
     }
 
     /**
@@ -618,7 +675,59 @@ public class CliControllerTest {
      */
     @Test
     public void testShowComputer() {
-        fail("Not yet implemented");
+        Computer computer = new Computer("Apple II Plus", null, null, null);
+        computer.setId(11L);
+        String result = cliController.showComputer("11");
+
+        assertTrue(computer.toString().equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#showComputer(java.lang.String)}.
+     */
+    @Test
+    public void testShowComputerBadId1() {
+
+        String result = cliController.showComputer("");
+
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#showComputer(java.lang.String)}.
+     */
+    @Test
+    public void testShowComputerBadId2() {
+
+        String result = cliController.showComputer("abc");
+
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#showComputer(java.lang.String)}.
+     */
+    @Test
+    public void testShowComputerBadId3() {
+
+        String result = cliController.showComputer("-1");
+
+        assertTrue("Computer not found !".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#showComputer(java.lang.String)}.
+     */
+    @Test
+    public void testShowComputerBadId4() {
+
+        String result = cliController.showComputer("10000000000");
+
+        assertTrue("Computer not found !".equals(result));
     }
 
     /**
@@ -627,7 +736,28 @@ public class CliControllerTest {
      */
     @Test
     public void testGetCompany() {
-        fail("Not yet implemented");
+        Company company = cliController.getCompany(1L);
+        assertNotNull(company);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     */
+    @Test
+    public void testGetCompanyBadId1() {
+        Company company = cliController.getCompany(100000000000L);
+        assertNull(company);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     */
+    @Test
+    public void testGetCompanyBadId2() {
+        Company company = cliController.getCompany(-1L);
+        assertNull(company);
     }
 
 }

@@ -14,7 +14,6 @@ import main.java.com.excilys.cdb.service.DatabaseException;
 
 /**
  * @author Aurelien Denoize
- *
  */
 public class CliController {
 
@@ -23,8 +22,7 @@ public class CliController {
 
     /**
      * Add new Computer.
-     * @param args
-     *            list of values
+     * @param args list of values
      * @return the computer
      */
     public String addComputer(Map<String, String> args) {
@@ -72,7 +70,7 @@ public class CliController {
 
                 break;
             default:
-                break;
+                return "Bad argument";
             }
         }
 
@@ -88,10 +86,8 @@ public class CliController {
 
     /**
      * Update a Computer.
-     * @param id
-     *            id of the computer
-     * @param args
-     *            list of values
+     * @param id id of the computer
+     * @param args list of values
      * @return the updated computer
      */
     public String updateComputer(String id, Map<String, String> args) {
@@ -101,8 +97,11 @@ public class CliController {
 
         try {
             Long computerId = new Long(id);
+            computerService.findById(computerId);
             computer.setId(computerId);
         } catch (NumberFormatException e) {
+            return "Error on id format";
+        } catch (DatabaseException e) {
             return "Computer not found";
         }
 
@@ -146,7 +145,7 @@ public class CliController {
 
                 break;
             default:
-                break;
+                return "Bad argument";
             }
         }
 
@@ -162,8 +161,7 @@ public class CliController {
 
     /**
      * Remove a computer.
-     * @param id
-     *            the id of the computer
+     * @param id the id of the computer
      * @return some messages
      */
     public String removeComputer(String id) {
@@ -174,9 +172,9 @@ public class CliController {
             computerId = new Long(id);
             computerService.removeById(computerId);
         } catch (NumberFormatException e) {
-            return "Computer not found";
+            return "Error on id format";
         } catch (DatabaseException e) {
-            return "An error occurred !";
+            return "Computer not found";
         }
 
         return "Computer is remove";
@@ -184,8 +182,7 @@ public class CliController {
 
     /**
      * List all companies per page.
-     * @param page
-     *            the number of the page
+     * @param page the number of the page
      * @return the page
      */
     public Page<Company> listCompany(int page) {
@@ -195,8 +192,7 @@ public class CliController {
 
     /**
      * List all computers per page.
-     * @param page
-     *            the number of the page
+     * @param page the number of the page
      * @return the page
      */
     public Page<Computer> listComputer(int page) {
@@ -206,14 +202,19 @@ public class CliController {
 
     /**
      * Show the Computer with the given id.
-     * @param id
-     *            the id of computer
+     * @param id the id of computer
      * @return informations of the computer
      */
     public String showComputer(String id) {
 
-        Long computerId = new Long(id);
         String result = "";
+        Long computerId = null;
+
+        try {
+            computerId = new Long(id);
+        } catch (NumberFormatException e) {
+            return "Error on id format";
+        }
 
         try {
             Computer computer = computerService.findById(computerId);
@@ -228,8 +229,7 @@ public class CliController {
 
     /**
      * Retrieve the company.
-     * @param id
-     *            the id of the company
+     * @param id the id of the company
      * @return the company
      */
     public Company getCompany(Long id) {
