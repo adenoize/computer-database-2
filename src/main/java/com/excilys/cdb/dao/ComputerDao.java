@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,6 @@ import main.java.com.excilys.cdb.model.Page;
 /**
  * DAO about Computer.
  * @author Aurelien Denoize
- *
  */
 public enum ComputerDao {
     INSTANCE;
@@ -26,6 +26,9 @@ public enum ComputerDao {
     private static final String REMOVE = "DELETE FROM computer where id = ?";
     private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
     private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
+    private static final String COUNT = "SELECT count(id) FROM computer";
+    private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
+    private static final String GET_PAGE_SEARCH = "SELECT * FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
 
     /**
      * Make persistent the given Computer.
@@ -38,7 +41,7 @@ public enum ComputerDao {
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-            PreparedStatement st = connection.prepareStatement(CREATE);
+            PreparedStatement st = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
             st.setString(1, computer.getName());
 
             if (computer.getIntroduced() != null) {
@@ -168,6 +171,64 @@ public enum ComputerDao {
     }
 
     /**
+     * Retrieve a page of computers.
+     * @param offset index of the first computer of the page
+     * @param limit the number of computer for the page
+     * @return Page of computers
+     */
+    public Page<Computer> getPage(int offset, int limit) {
+
+        List<Computer> computers = new ArrayList<Computer>();
+
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+
+            PreparedStatement st = connection.prepareStatement(GET_PAGE);
+            st.setInt(1, limit);
+            st.setInt(2, offset);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                computers.add(ComputerMapper.INSTANCE.map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new Page<Computer>(computers);
+    }
+
+    /**
+     * Retrieve a page of computers.
+     * @param offset index of the first computer of the page
+     * @param limit the number of computer for the page
+     * @param search the criteria
+     * @return Page of computers
+     */
+    public Page<Computer> getPage(int offset, int limit, String search) {
+        List<Computer> computers = new ArrayList<Computer>();
+
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+
+            PreparedStatement st = connection.prepareStatement(GET_PAGE_SEARCH);
+            st.setString(1, "%" + search + "%");
+            st.setInt(2, limit);
+            st.setInt(3, offset);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                computers.add(ComputerMapper.INSTANCE.map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new Page<Computer>(computers);
+    }
+
+    /**
      * Retrieve the computer with the given id.
      * @param id the id of computer
      * @return the computer
@@ -196,6 +257,64 @@ public enum ComputerDao {
         }
 
         return computer;
+    }
+
+    /**
+     * Retrieve the number of computers.
+     * @return the number of computers
+     */
+    public int count() {
+
+        int count = 0;
+
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+
+            Statement st = connection.createStatement();
+
+            ResultSet resultSet = st.executeQuery(COUNT);
+
+            if (resultSet.next()) {
+
+                count = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        return count;
+    }
+
+    /**
+     * Retrieve the number of computers.
+     * @param search the criteria
+     * @return the number of computers
+     */
+    public int count(String search) {
+
+        int count = 0;
+
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+
+            PreparedStatement st = connection.prepareStatement(COUNT_PAGE_SEARCH);
+            st.setString(1, "%" + search + "%");
+
+            ResultSet resultSet = st.executeQuery();
+
+            if (resultSet.next()) {
+
+                count = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        return count;
     }
 
 }

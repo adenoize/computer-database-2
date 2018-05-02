@@ -63,6 +63,19 @@ public class ComputerService {
     }
 
     /**
+     * Retrieve all computers.
+     * @param page the number of the page
+     * @param limit the number of item per page
+     * @return the page
+     */
+    public Page<Computer> getPage(int page, int limit) {
+
+        int offset = limit * (page - 1);
+
+        return computerDao.getPage(offset, limit);
+    }
+
+    /**
      * Retrieve the computer with the given id.
      * @param id the id of the computer
      * @return the computer
@@ -77,6 +90,82 @@ public class ComputerService {
         }
 
         return computer;
+    }
+
+    /**
+     * Retrieve the number total of pages.
+     * @param limit the limit of the computer per page
+     * @return the number of pages
+     */
+    public int totalPages(int limit) {
+
+        int totalPages = 0;
+        int numberOfComputers = computerDao.count();
+
+        if (limit != 0) {
+            totalPages = numberOfComputers / limit;
+        }
+
+        if (numberOfComputers % limit != 0) {
+            totalPages++;
+        }
+
+        return totalPages;
+    }
+
+    /**
+     * Retrieve the number total of pages with search.
+     * @param limit the limit of the computer per page
+     * @param search the search
+     * @return the number of pages
+     */
+    public int totalPages(int limit, String search) {
+
+        int totalPages = 0;
+        int numberOfComputers = computerDao.count(search);
+
+        if (limit != 0) {
+            totalPages = numberOfComputers / limit;
+        }
+
+        if (numberOfComputers % limit != 0) {
+            totalPages++;
+        }
+
+        return totalPages;
+    }
+
+    /**
+     * Retrieve all computers.
+     * @param page the number of the page
+     * @param limit the number of item per page
+     * @param search the search
+     * @return the page
+     */
+    public Page<Computer> getPageBySearch(int page, int limit, String search) {
+        int offset = limit * (page - 1);
+
+        return computerDao.getPage(offset, limit, search);
+    }
+
+    /**
+     * Retrieve the number total of computers.
+     * @return the number of computers
+     */
+    public int count() {
+        return computerDao.count();
+    }
+
+    /**
+     * Retrieve the number total of computers for the search.
+     * @param search the criteria of the search
+     * @return the number of computers for the search
+     */
+    public int count(String search) {
+
+        int numberOfComputers = computerDao.count(search);
+
+        return numberOfComputers;
     }
 
 }

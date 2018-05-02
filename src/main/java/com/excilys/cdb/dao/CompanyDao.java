@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,11 @@ import main.java.com.excilys.cdb.model.Page;
 /**
  * DAO about company.
  * @author aurel
- *
  */
 public enum CompanyDao {
     INSTANCE;
 
+    private static final String FIND_ALL = "SELECT * FROM company";
     private static final String GET_PAGE = "SELECT * FROM company LIMIT ? OFFSET ?";
     private static final String FIND_BY_ID = "SELECT * FROM company WHERE id = ?";
 
@@ -66,10 +67,10 @@ public enum CompanyDao {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
             st.setLong(1, id);
-            ResultSet rs = st.executeQuery();
+            ResultSet resultSet = st.executeQuery();
 
-            if (rs.next()) {
-                company = CompanyMapper.INSTANCE.map(rs);
+            if (resultSet.next()) {
+                company = CompanyMapper.INSTANCE.map(resultSet);
             }
 
         } catch (SQLException e) {
@@ -78,6 +79,31 @@ public enum CompanyDao {
         }
 
         return company;
+    }
+
+    /**
+     * Retrieve the company with the given id.
+     * @return the company
+     */
+    public List<Company> findAll() {
+        List<Company> companies = new ArrayList<>();
+
+        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+
+            Statement st = connection.createStatement();
+
+            ResultSet resultSet = st.executeQuery(FIND_ALL);
+
+            while (resultSet.next()) {
+                companies.add(CompanyMapper.INSTANCE.map(resultSet));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return companies;
     }
 
 }
