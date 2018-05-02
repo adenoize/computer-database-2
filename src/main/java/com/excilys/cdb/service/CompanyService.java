@@ -1,5 +1,7 @@
 package main.java.com.excilys.cdb.service;
 
+import java.util.List;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.CompanyDao;
 import main.java.com.excilys.cdb.model.Company;
@@ -35,6 +37,20 @@ public class CompanyService {
         }
 
         return company;
+    }
+
+    /**
+     * Retrieve the company with the given id.
+     * @return the company
+     * @throws DatabaseException DatabaseException
+     */
+    public List<Company> findAll() throws DatabaseException {
+        List<Company> companies = companyDao.findAll();
+
+        if (companies == null) {
+            throw new DatabaseException();
+        }
+        return companies;
     }
 
 }
