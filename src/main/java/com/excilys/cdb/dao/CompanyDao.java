@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
@@ -19,6 +23,8 @@ import main.java.com.excilys.cdb.model.Page;
  */
 public enum CompanyDao {
     INSTANCE;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
     private static final String FIND_ALL = "SELECT id, name FROM company";
     private static final String GET_PAGE = "SELECT id, name FROM company LIMIT ? OFFSET ?";
@@ -49,7 +55,7 @@ public enum CompanyDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return new Page<Company>(companies);
@@ -60,7 +66,7 @@ public enum CompanyDao {
      * @param id the id of company
      * @return the company
      */
-    public Company findById(Long id) {
+    public Optional<Company> findById(Long id) {
         Company company = null;
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
@@ -74,11 +80,10 @@ public enum CompanyDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.error(e.getMessage());
         }
 
-        return company;
+        return Optional.ofNullable(company);
     }
 
     /**
@@ -99,8 +104,7 @@ public enum CompanyDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.error(e.getMessage());
         }
 
         return companies;

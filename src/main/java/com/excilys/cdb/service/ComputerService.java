@@ -1,5 +1,7 @@
 package main.java.com.excilys.cdb.service;
 
+import java.util.Optional;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.ComputerDao;
 import main.java.com.excilys.cdb.model.Computer;
@@ -19,8 +21,7 @@ public class ComputerService {
      */
     public void save(Computer computer) throws DatabaseException {
 
-        // if save fail
-        if (computerDao.create(computer).equals(-1L)) {
+        if (!computerDao.create(computer).isPresent()) {
             throw new DatabaseException();
         }
     }
@@ -32,7 +33,6 @@ public class ComputerService {
      */
     public void update(Computer computer) throws DatabaseException {
 
-        // if update fail
         if (!computerDao.update(computer)) {
             throw new DatabaseException();
         }
@@ -44,7 +44,7 @@ public class ComputerService {
      * @throws DatabaseException Exception if computer was not remove
      */
     public void removeById(Long id) throws DatabaseException {
-        // if remove fail
+
         if (!computerDao.removeById(id)) {
             throw new DatabaseException();
         }
@@ -83,13 +83,13 @@ public class ComputerService {
      */
     public Computer findById(Long id) throws DatabaseException {
 
-        Computer computer = computerDao.findById(id);
+        Optional<Computer> computer = computerDao.findById(id);
 
-        if (computer == null) {
+        if (!computer.isPresent()) {
             throw new DatabaseException();
         }
 
-        return computer;
+        return computer.get();
     }
 
     /**

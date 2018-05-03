@@ -3,10 +3,10 @@ package test.java.com.excilys.cdb.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -29,8 +29,9 @@ public class ComputerDaoTest {
     public void testCreate() {
 
         Computer computer = new Computer("computer test");
-        Long id = computerDao.create(computer);
-        assertNotEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertNotEquals(Optional.empty(), id);
+
     }
 
     /**
@@ -41,8 +42,8 @@ public class ComputerDaoTest {
     public void testCreateWithBadCompany() {
 
         Computer computer = new Computer("computer test", null, null, -1L);
-        Long id = computerDao.create(computer);
-        assertEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertEquals(Optional.empty(), id);
     }
 
     /**
@@ -53,8 +54,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate1() {
 
         Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), -1L);
-        Long id = computerDao.create(computer);
-        assertEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertEquals(Optional.empty(), id);
     }
 
     /**
@@ -65,8 +66,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate2() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, -1L);
-        Long id = computerDao.create(computer);
-        assertEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertEquals(Optional.empty(), id);
     }
 
     /**
@@ -77,8 +78,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate3() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), -1L);
-        Long id = computerDao.create(computer);
-        assertEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertEquals(Optional.empty(), id);
     }
 
     /**
@@ -89,8 +90,8 @@ public class ComputerDaoTest {
     public void testCreateAllInfo() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), 1L);
-        Long id = computerDao.create(computer);
-        assertNotEquals(new Long(-1), id);
+        Optional<Long> id = computerDao.create(computer);
+        assertNotEquals(Optional.empty(), id);
     }
 
     /**
@@ -210,11 +211,11 @@ public class ComputerDaoTest {
      */
     @Test
     public void testFindById() {
-        Computer computer = computerDao.findById(10L);
+        Optional<Computer> computer = computerDao.findById(10L);
 
-        assertNotNull(computer);
-        assertEquals(10, computer.getId().longValue());
-        assertTrue(computer.getName().equals("Apple IIc Plus"));
+        assertNotEquals(Optional.empty(), computer);
+        assertEquals(10, computer.get().getId().longValue());
+        assertTrue(computer.get().getName().equals("Apple IIc Plus"));
     }
 
 }

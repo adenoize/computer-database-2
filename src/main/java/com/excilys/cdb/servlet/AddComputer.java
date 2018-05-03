@@ -53,11 +53,7 @@ public class AddComputer extends HttpServlet {
 
         List<Company> companies = null;
 
-        try {
-            companies = companyService.findAll();
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        companies = companyService.findAll();
 
         request.setAttribute("companies", companies);
 

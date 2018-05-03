@@ -1,11 +1,10 @@
 package test.java.com.excilys.cdb.dao;
 
-
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -51,9 +50,12 @@ public class CompanyDaoTest {
      */
     @Test
     public void testFindById() throws Exception {
-        Company company = companyDao.findById(20L);
-        assertNotNull(company);
-        assertTrue("Name should be Atari", company.getName().equals("Atari"));
+        Optional<Company> company = companyDao.findById(20L);
+        if (company.isPresent()) {
+            assertTrue("Name should be Atari", company.get().getName().equals("Atari"));
+        } else {
+            fail();
+        }
     }
 
     /**
@@ -63,9 +65,10 @@ public class CompanyDaoTest {
      */
     @Test
     public void testFindByIdFail() throws Exception {
-        Company company = companyDao.findById(-1L);
-        assertNull(company);
+        Optional<Company> company = companyDao.findById(-1L);
+        if (company.isPresent()) {
+            fail();
+        }
     }
-
 
 }
