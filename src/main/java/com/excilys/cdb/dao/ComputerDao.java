@@ -24,11 +24,11 @@ public enum ComputerDao {
     private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
     private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
     private static final String REMOVE = "DELETE FROM computer where id = ?";
-    private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
-    private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
+    private static final String GET_PAGE = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ? OFFSET ?";
+    private static final String FIND_BY_ID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id = ?";
     private static final String COUNT = "SELECT count(id) FROM computer";
     private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
-    private static final String GET_PAGE_SEARCH = "SELECT * FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
+    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
 
     /**
      * Make persistent the given Computer.

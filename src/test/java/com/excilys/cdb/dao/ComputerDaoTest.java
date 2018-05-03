@@ -16,7 +16,6 @@ import main.java.com.excilys.cdb.model.Page;
 
 /**
  * @author Aurelien Denoize
- *
  */
 public class ComputerDaoTest {
 

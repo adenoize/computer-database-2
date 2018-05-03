@@ -20,9 +20,9 @@ import main.java.com.excilys.cdb.model.Page;
 public enum CompanyDao {
     INSTANCE;
 
-    private static final String FIND_ALL = "SELECT * FROM company";
-    private static final String GET_PAGE = "SELECT * FROM company LIMIT ? OFFSET ?";
-    private static final String FIND_BY_ID = "SELECT * FROM company WHERE id = ?";
+    private static final String FIND_ALL = "SELECT id, name FROM company";
+    private static final String GET_PAGE = "SELECT id, name FROM company LIMIT ? OFFSET ?";
+    private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
 
     /**
      * Retrieve a page of companies.
