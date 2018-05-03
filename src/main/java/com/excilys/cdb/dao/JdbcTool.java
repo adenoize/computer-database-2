@@ -7,20 +7,23 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class JDBCTool This class help to connect to DB.
  * @author Aurelien Denoize
- *
  */
 public enum JdbcTool {
     INSTANCE;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
     private String driverName;
     private String url;
     private String user;
     private String password;
     private boolean init;
-
 
     /**
      * Load the driver.
@@ -35,13 +38,21 @@ public enum JdbcTool {
      * @return Connection to database
      * @throws SQLException Exception if connection is refused
      */
-    public Connection newConnection() throws SQLException {
+    public Connection newConnection() {
 
         if (!init) {
             init();
             init = true;
         }
-        Connection connection = DriverManager.getConnection(url, user, password);
+
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+
+            LOGGER.error(e.getMessage());
+        }
         return connection;
     }
 

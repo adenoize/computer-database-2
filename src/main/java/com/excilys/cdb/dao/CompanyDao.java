@@ -78,7 +78,6 @@ public enum CompanyDao {
             if (resultSet.next()) {
                 company = CompanyMapper.INSTANCE.map(resultSet);
             }
-
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }

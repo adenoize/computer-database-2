@@ -87,8 +87,17 @@
 		<junit.version>4.12</junit.version>
 		<org.mockito.version>1.9.5</org.mockito.version>
 		<javax.servlet.jsp.version>2.1</javax.servlet.jsp.version>
+		<org.apache.commons.version>3.7</org.apache.commons.version>
 	</properties>
 	<dependencies>
+
+		<!-- TOOLS -->
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${org.apache.commons.version}</version>
+		</dependency>
 
 		<!-- DTO -->
 
