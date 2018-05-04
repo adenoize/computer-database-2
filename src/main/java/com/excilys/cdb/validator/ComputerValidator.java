@@ -1,46 +1,41 @@
 package main.java.com.excilys.cdb.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 
+import main.java.com.excilys.cdb.exception.ValidatorException;
 import main.java.com.excilys.cdb.model.Computer;
 
 /**
  * @author Aurelien Denoize Excilys 2018
  */
-public class ComputerValidator {
+public enum ComputerValidator {
+    INSTANCE;
 
     /**
      * Validate a computer.
-     * @param computer the computer to validate
-     * @return Optional<String> String with error message or empty String if
-     *         computer is valid
+     * @param computer the computer to validate computer is valid
+     * @throws ValidatorException Validation exception
      */
-    public List<String> validate(Computer computer) {
-
-        List<String> messages = new ArrayList<>();
+    public void validate(Computer computer) throws ValidatorException {
 
         if (StringUtils.isBlank(computer.getName())) {
-            messages.add("Name is needed");
+            throw new ValidatorException("Name is needed");
+
         }
 
         if (computer.getIntroduced() != null && computer.getDiscontinued() != null) {
 
             if (!computer.getIntroduced().isBefore(computer.getDiscontinued())) {
-                messages.add("Date of introduction have to be before the date of discontinue");
+                throw new ValidatorException("The introduction date have to be before the discontinued date");
             }
 
         }
 
         if (computer.getCompany() != null) {
             if (computer.getCompany() < 1) {
-                messages.add("Company ID have to be positive");
+                throw new ValidatorException("Company ID have to be positive");
             }
         }
-
-        return messages;
     }
 
 }

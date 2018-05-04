@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.ComputerDao;
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 

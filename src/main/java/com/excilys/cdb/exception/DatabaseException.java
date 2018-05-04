@@ -1,4 +1,4 @@
-package main.java.com.excilys.cdb.service;
+package main.java.com.excilys.cdb.exception;
 
 /**
  * @author Aurelien Denoize

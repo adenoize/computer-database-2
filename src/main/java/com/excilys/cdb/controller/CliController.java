@@ -9,12 +9,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.CompanyService;
 import main.java.com.excilys.cdb.service.ComputerService;
-import main.java.com.excilys.cdb.service.DatabaseException;
 
 /**
  * @author Aurelien Denoize

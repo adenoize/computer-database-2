@@ -11,10 +11,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.ComputerService;
-import main.java.com.excilys.cdb.service.DatabaseException;
 
 /**
  * Test for ComputerService.

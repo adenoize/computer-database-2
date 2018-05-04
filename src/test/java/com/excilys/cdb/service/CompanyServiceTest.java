@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.CompanyService;
-import main.java.com.excilys.cdb.service.DatabaseException;
 
 /**
  * @author Aurelien Denoize

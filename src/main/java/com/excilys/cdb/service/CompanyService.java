@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.CompanyDao;
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -38,7 +39,7 @@ public class CompanyService {
         Optional<Company> company = companyDao.findById(id);
 
         if (!company.isPresent()) {
-            LOGGER.error("Company with id=" + id + " not found.");
+            LOGGER.warn("Company with id=" + id + " not found.");
             throw new DatabaseException();
         }
 
