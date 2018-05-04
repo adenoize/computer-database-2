@@ -4,16 +4,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.CompanyService;
 import main.java.com.excilys.cdb.service.ComputerService;
-import main.java.com.excilys.cdb.service.DatabaseException;
 
 /**
  * @author Aurelien Denoize
@@ -240,12 +241,12 @@ public class CliController {
      * @param id the id of the company
      * @return the company
      */
-    public Company getCompany(Long id) {
+    public Optional<Company> getCompany(Long id) {
         try {
-            return companyService.findById(id);
+            return Optional.ofNullable(companyService.findById(id));
         } catch (DatabaseException e) {
-            e.printStackTrace();
-            return null;
+            LOGGER.warn("Company with the id= " + id + " not found.");
+            return Optional.empty();
         }
     }
 

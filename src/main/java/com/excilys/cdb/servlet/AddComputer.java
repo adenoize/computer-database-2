@@ -12,11 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import main.java.com.excilys.cdb.exception.DatabaseException;
+import main.java.com.excilys.cdb.exception.ValidatorException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.service.CompanyService;
 import main.java.com.excilys.cdb.service.ComputerService;
-import main.java.com.excilys.cdb.service.DatabaseException;
+import main.java.com.excilys.cdb.validator.ComputerValidator;
 
 /**
  * Servlet implementation class AddComputer.
@@ -25,8 +30,12 @@ import main.java.com.excilys.cdb.service.DatabaseException;
 public class AddComputer extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddComputer.class);
+
     private ComputerService computerService = new ComputerService();
     private CompanyService companyService = new CompanyService();
+
+    private ComputerValidator computerValidator = ComputerValidator.INSTANCE;
 
     private String computerName;
     private LocalDate introduced;
@@ -53,11 +62,7 @@ public class AddComputer extends HttpServlet {
 
         List<Company> companies = null;
 
-        try {
-            companies = companyService.findAll();
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        companies = companyService.findAll();
 
         request.setAttribute("companies", companies);
 
@@ -89,22 +94,31 @@ public class AddComputer extends HttpServlet {
         }
         try {
             companyId = Long.valueOf(request.getParameter("companyId"));
+            if (companyId == 0) {
+                companyId = null;
+            }
         } catch (NumberFormatException e) {
-            companyId = null;
-        }
-
-        if (companyId == 0) {
             companyId = null;
         }
 
         Computer computer = new Computer(computerName, introduced, discontinued, companyId);
 
         try {
+            computerValidator.validate(computer);
+        } catch (ValidatorException e) {
+            LOGGER.warn("Validator " + e.getMessage());
+            request.setAttribute("error", e.getMessage());
+            doGet(request, response);
+            return;
+        }
+
+        try {
             computerService.save(computer);
             response.sendRedirect("dashboard");
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
+            LOGGER.warn("Save Computer " + e.getMessage());
+            request.setAttribute("error", "Error of saving");
             doGet(request, response);
 
         }

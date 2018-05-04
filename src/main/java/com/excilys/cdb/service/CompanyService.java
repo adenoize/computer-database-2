@@ -1,14 +1,20 @@
 package main.java.com.excilys.cdb.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.CompanyDao;
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
 public class CompanyService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyService.class);
     private CompanyDao companyDao = CompanyDao.INSTANCE;
 
     /**
@@ -30,13 +36,14 @@ public class CompanyService {
      * @throws DatabaseException DatabaseException
      */
     public Company findById(Long id) throws DatabaseException {
-        Company company = companyDao.findById(id);
+        Optional<Company> company = companyDao.findById(id);
 
-        if (company == null) {
+        if (!company.isPresent()) {
+            LOGGER.warn("Company with id=" + id + " not found.");
             throw new DatabaseException();
         }
 
-        return company;
+        return company.get();
     }
 
     /**
@@ -44,12 +51,9 @@ public class CompanyService {
      * @return the company
      * @throws DatabaseException DatabaseException
      */
-    public List<Company> findAll() throws DatabaseException {
+    public List<Company> findAll() {
         List<Company> companies = companyDao.findAll();
 
-        if (companies == null) {
-            throw new DatabaseException();
-        }
         return companies;
     }
 

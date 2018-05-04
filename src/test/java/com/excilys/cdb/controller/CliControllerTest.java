@@ -2,11 +2,11 @@ package test.java.com.excilys.cdb.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -736,28 +736,30 @@ public class CliControllerTest {
      */
     @Test
     public void testGetCompany() {
-        Company company = cliController.getCompany(1L);
-        assertNotNull(company);
+        Optional<Company> company = cliController.getCompany(1L);
+        assertTrue(company.isPresent());
     }
 
     /**
      * Test method for
      * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
      */
     @Test
-    public void testGetCompanyBadId1() {
-        Company company = cliController.getCompany(100000000000L);
-        assertNull(company);
+    public void testGetCompanyBadId1() throws Exception {
+        Optional<Company> company = cliController.getCompany(100000000000L);
+        assertTrue(!company.isPresent());
     }
 
     /**
      * Test method for
      * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
      */
     @Test
-    public void testGetCompanyBadId2() {
-        Company company = cliController.getCompany(-1L);
-        assertNull(company);
+    public void testGetCompanyBadId2() throws Exception {
+        Optional<Company> company = cliController.getCompany(-1L);
+        assertTrue(!company.isPresent());
     }
 
 }

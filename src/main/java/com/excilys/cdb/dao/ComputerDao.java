@@ -8,6 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
@@ -21,23 +25,25 @@ import main.java.com.excilys.cdb.model.Page;
 public enum ComputerDao {
     INSTANCE;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
+
     private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
     private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
     private static final String REMOVE = "DELETE FROM computer where id = ?";
-    private static final String GET_PAGE = "SELECT * FROM computer LIMIT ? OFFSET ?";
-    private static final String FIND_BY_ID = "SELECT * FROM computer WHERE id = ?";
+    private static final String GET_PAGE = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ? OFFSET ?";
+    private static final String FIND_BY_ID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id = ?";
     private static final String COUNT = "SELECT count(id) FROM computer";
     private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
-    private static final String GET_PAGE_SEARCH = "SELECT * FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
+    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
 
     /**
      * Make persistent the given Computer.
      * @param computer the computer to persist
      * @return the id of entity
      */
-    public Long create(Computer computer) {
+    public Optional<Long> create(Computer computer) {
 
-        Long id = -1L;
+        Long id = null;
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
@@ -68,11 +74,11 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            id = -1L;
+            LOGGER.error(e.getMessage());
+            id = null;
         }
 
-        return id;
+        return Optional.ofNullable(id);
     }
 
     /**
@@ -109,7 +115,7 @@ public enum ComputerDao {
             result = st.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return false;
         }
 
@@ -127,7 +133,6 @@ public enum ComputerDao {
 
         try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
 
-            // prepare query
             PreparedStatement st = connection.prepareStatement(REMOVE);
 
             st.setLong(1, id);
@@ -135,7 +140,7 @@ public enum ComputerDao {
             result = st.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return false;
         }
 
@@ -164,7 +169,7 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return new Page<Computer>(computers);
@@ -192,7 +197,7 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return new Page<Computer>(computers);
@@ -222,7 +227,7 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
         return new Page<Computer>(computers);
@@ -233,7 +238,7 @@ public enum ComputerDao {
      * @param id the id of computer
      * @return the computer
      */
-    public Computer findById(Long id) {
+    public Optional<Computer> findById(Long id) {
 
         Computer computer = null;
 
@@ -252,11 +257,11 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return null;
         }
 
-        return computer;
+        return Optional.ofNullable(computer);
     }
 
     /**
@@ -280,7 +285,7 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return 0;
         }
 
@@ -310,7 +315,7 @@ public enum ComputerDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return 0;
         }
 

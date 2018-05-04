@@ -1,9 +1,12 @@
 package main.java.com.excilys.cdb.taglib;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspWriter;
+
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+
 
 public class Paginator extends SimpleTagSupport {
     private String uri;
@@ -44,7 +47,7 @@ public class Paginator extends SimpleTagSupport {
             }
 
             for (int i = pgStart; i < pgEnd; i++) {
-                    out.write(constructLink(i));
+                out.write(constructLink(i));
             }
 
             if (!lastPage) {
