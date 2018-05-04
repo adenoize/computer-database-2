@@ -6,8 +6,10 @@
 <head>
 <title>Add Computer</title>
 <jsp:include page="head.jsp" flush="true" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/form-validation.js"></script>
 </head>
 <body>
@@ -23,30 +25,35 @@
 		<div class="row">
 			<div class="col-xs-8 col-xs-offset-2 box">
 				<h1>Add Computer</h1>
-				<p><c:out value="${error}"></c:out></p>
+				<c:if test="${error!=null}">
+					<div class="alert alert-danger">
+						<c:out value="${error}"></c:out>
+					</div>
+				</c:if>
 				<form action="addComputer" method="POST" name="addComputer">
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input
-								type="text" class="form-control" id="computerName" name="computerName"
-								placeholder="Computer name">
+								type="text" class="form-control" id="computerName"
+								name="computerName" placeholder="Computer name">
 						</div>
 						<div class="form-group">
 							<label for="introduced">Introduced date</label> <input
-								type="date" class="form-control" id="introduced" name="introduced"
-								placeholder="Introduced date">
+								type="date" class="form-control" id="introduced"
+								name="introduced" placeholder="Introduced date">
 						</div>
 						<div class="form-group">
-							<label for="discontinued">Discontinued date</label> 
-							<input type="date" class="form-control" id="discontinued" name="discontinued"
-								placeholder="Discontinued date">
+							<label for="discontinued">Discontinued date</label> <input
+								type="date" class="form-control" id="discontinued"
+								name="discontinued" placeholder="Discontinued date">
 						</div>
 						<div class="form-group">
-							<label for="companyId">Company</label>
-							<select class="form-control" id="companyId" name="companyId">
+							<label for="companyId">Company</label> <select
+								class="form-control" id="companyId" name="companyId">
 								<option value="0">--</option>
 								<c:forEach items="${companies}" var="companiesValue">
-									<option value="${companiesValue.id}"><c:out value="${companiesValue.name}"></c:out></option>
+									<option value="${companiesValue.id}"><c:out
+											value="${companiesValue.name}"></c:out></option>
 								</c:forEach>
 							</select>
 						</div>

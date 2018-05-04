@@ -149,6 +149,12 @@
 			<version>${com.h2database.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+
 		<!-- LOGGER -->
 
 		<dependency>
