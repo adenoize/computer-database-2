@@ -43,7 +43,7 @@ public enum CompanyDao {
             offset = 0;
         }
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, Constante.LIMIT_PAGE);
@@ -69,7 +69,7 @@ public enum CompanyDao {
     public Optional<Company> findById(Long id) {
         Company company = null;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
             st.setLong(1, id);
@@ -92,7 +92,7 @@ public enum CompanyDao {
     public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             Statement st = connection.createStatement();
 

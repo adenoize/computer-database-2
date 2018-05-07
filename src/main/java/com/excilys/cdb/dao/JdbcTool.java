@@ -75,10 +75,10 @@ public enum JdbcTool {
             }
         }
 
-        url = prop.getProperty("url");
-        user = prop.getProperty("user");
-        password = prop.getProperty("password");
-        driverName = prop.getProperty("driverName");
+        url = prop.getProperty("dataSource.url");
+        user = prop.getProperty("dataSource.user");
+        password = prop.getProperty("dataSource.password");
+        driverName = prop.getProperty("dataSourceClassName");
 
         try {
             loadDriver();
