@@ -15,8 +15,8 @@ local.properties
 .loadpath
 .recommenders
 
-/src/main/resources/datasource.properties
-/src/test/resources/datasource.properties
+src/main/resources/datasource.properties
+src/test/resources/datasource.properties
 
 # External tool builders
 .externalToolBuilders/
