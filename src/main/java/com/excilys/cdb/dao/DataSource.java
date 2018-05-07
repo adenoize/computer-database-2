@@ -8,23 +8,23 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class DataSource {
 
-    private static HikariConfig config = new HikariConfig("datasource.properties");
+    private static HikariConfig config = new HikariConfig("/datasource.properties");
     private static HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc_url");
-        config.setUsername("database_username");
-        config.setPassword("database_password");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+//        config.setJdbcUrl("jdbc_url");
+//        config.setUsername("database_username");
+//        config.setPassword("database_password");
+//        config.addDataSourceProperty("cachePrepStmts", "true");
+//        config.addDataSourceProperty("prepStmtCacheSize", "250");
+//        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         ds = new HikariDataSource(config);
     }
 
     /**
      * Constructor.
      */
-    private DataSource() {    }
+    private DataSource() {}
 
     /**
      * Retrieve a Connection to the Database.

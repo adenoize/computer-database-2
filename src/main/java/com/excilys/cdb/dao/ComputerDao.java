@@ -45,7 +45,7 @@ public enum ComputerDao {
 
         Long id = null;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
             st.setString(1, computer.getName());
@@ -90,7 +90,7 @@ public enum ComputerDao {
 
         int result = 0;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             // prepare query
             PreparedStatement st = connection.prepareStatement(UPDATE);
@@ -131,7 +131,7 @@ public enum ComputerDao {
 
         int result = 0;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(REMOVE);
 
@@ -157,7 +157,7 @@ public enum ComputerDao {
 
         List<Computer> computers = new ArrayList<Computer>();
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, Constante.LIMIT_PAGE);
@@ -185,7 +185,7 @@ public enum ComputerDao {
 
         List<Computer> computers = new ArrayList<Computer>();
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, limit);
@@ -213,7 +213,7 @@ public enum ComputerDao {
     public Page<Computer> getPage(int offset, int limit, String search) {
         List<Computer> computers = new ArrayList<Computer>();
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
@@ -242,7 +242,7 @@ public enum ComputerDao {
 
         Computer computer = null;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
 
@@ -272,7 +272,7 @@ public enum ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             Statement st = connection.createStatement();
 
@@ -301,7 +301,7 @@ public enum ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = JdbcTool.INSTANCE.newConnection()) {
+        try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(COUNT_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
