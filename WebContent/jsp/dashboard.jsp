@@ -18,14 +18,13 @@
 		<h1 id="homeTitle"><c:out value="${numberComputers}"></c:out> Computers found</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
-				<form id="searchForm" action="dashboard?page=1" method="POST" class="form-inline">
-
+				 <form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
 					<input type="text" id="searchbox" name="search"
 						class="form-control" placeholder="Search name" />
 						<input
 						type="submit" id="searchsubmit" value="Filter by name"
 						class="btn btn-primary" />
-				</form>
+				</form> 
 			</div>
 			<div class="pull-right">
 				<a class="btn btn-success" id="addComputer" href="addComputer">Add
@@ -35,7 +34,7 @@
 		</div>
 	</div>
 
-	<form id="deleteForm" action="#" method="POST">
+	<form id="deleteForm" action="dashboard" method="POST">
 		<input type="hidden" name="selection" value="">
 	</form>
 
@@ -68,7 +67,7 @@
 				<c:forEach items="${page.page}" var="item">
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
-							class="cb" value="0"></td>
+							class="cb" value="${item.id}"></td>
 						<td><a href="editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
 						<td><c:out value="${item.introduced}"/></td>
 						<td><c:out value="${item.discontinued}"/></td>
