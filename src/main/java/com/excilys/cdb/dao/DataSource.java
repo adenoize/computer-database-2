@@ -12,19 +12,14 @@ public class DataSource {
     private static HikariDataSource ds;
 
     static {
-//        config.setJdbcUrl("jdbc_url");
-//        config.setUsername("database_username");
-//        config.setPassword("database_password");
-//        config.addDataSourceProperty("cachePrepStmts", "true");
-//        config.addDataSourceProperty("prepStmtCacheSize", "250");
-//        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         ds = new HikariDataSource(config);
     }
 
     /**
      * Constructor.
      */
-    private DataSource() {}
+    private DataSource() {
+    }
 
     /**
      * Retrieve a Connection to the Database.
