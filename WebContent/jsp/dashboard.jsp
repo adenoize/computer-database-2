@@ -11,11 +11,7 @@
 </head>
 
 <body>
-	<header class="navbar navbar-inverse navbar-fixed-top">
-	<div class="container">
-		<a class="navbar-brand" href="dashboard"> Application - Computer Database </a>
-	</div>
-	</header>
+	<jsp:include page="header.jsp" flush="true" />
 
 	<section id="main">
 	<div class="container">
@@ -34,7 +30,7 @@
 			<div class="pull-right">
 				<a class="btn btn-success" id="addComputer" href="addComputer">Add
 					Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-					onclick="$.fn.toggleEditMode();">Edit</a>
+					onclick="$.fn.toggleEditMode();">Edit <i class="fa fa-edit"></i></a>
 			</div>
 		</div>
 	</div>
@@ -73,7 +69,7 @@
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
 							class="cb" value="0"></td>
-						<td><a href="editComputer" onclick=""><c:out value="${item.name}"/></a></td>
+						<td><a href="editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
 						<td><c:out value="${item.introduced}"/></td>
 						<td><c:out value="${item.discontinued}"/></td>
 						<td><c:out value="${item.company}"/></td>

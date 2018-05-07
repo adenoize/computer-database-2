@@ -92,7 +92,6 @@ public enum ComputerDao {
 
         try (Connection connection = DataSource.getConnection()) {
 
-            // prepare query
             PreparedStatement st = connection.prepareStatement(UPDATE);
             st.setString(1, computer.getName());
             if (computer.getIntroduced() != null) {
