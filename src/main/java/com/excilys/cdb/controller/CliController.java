@@ -89,12 +89,9 @@ public class CliController {
         } catch (DatabaseException e) {
             return "An error occurred !";
         } catch (ValidatorException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return e.getMessage();
         }
-
         return computer.toString();
-
     }
 
     /**
@@ -163,11 +160,13 @@ public class CliController {
         }
 
         try {
-
+            ComputerValidator.INSTANCE.validate(computer);
             computerService.update(computer);
             LOGGER.info("Update of computer to : " + computer);
         } catch (DatabaseException e) {
             return "An error occurred !";
+        } catch (ValidatorException e) {
+            return e.getMessage();
         }
 
         return computer.toString();
