@@ -39,7 +39,6 @@ public class CompanyService {
         Optional<Company> company = companyDao.findById(id);
 
         if (!company.isPresent()) {
-            LOGGER.warn("Company with id=" + id + " not found.");
             throw new DatabaseException();
         }
 
@@ -55,6 +54,17 @@ public class CompanyService {
         List<Company> companies = companyDao.findAll();
 
         return companies;
+    }
+
+    /**
+     * Remove the company with the given id.
+     * @param id the company id
+     * @throws DatabaseException Database Exception
+     */
+    public void removeById(Long id) throws DatabaseException {
+
+        companyDao.removeById(id);
+
     }
 
 }

@@ -10,11 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.exception.DatabaseException;
+import main.java.com.excilys.cdb.exception.ValidatorException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.CompanyService;
 import main.java.com.excilys.cdb.service.ComputerService;
+import main.java.com.excilys.cdb.validator.ComputerValidator;
 
 /**
  * @author Aurelien Denoize
@@ -80,10 +82,15 @@ public class CliController {
         }
 
         try {
+
+            ComputerValidator.INSTANCE.validate(computer);
             computerService.save(computer);
             LOGGER.info("Add of computer : " + computer);
         } catch (DatabaseException e) {
             return "An error occurred !";
+        } catch (ValidatorException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         return computer.toString();
@@ -187,6 +194,28 @@ public class CliController {
 
         LOGGER.info("Remove of computer with id = " + id);
         return "Computer is remove";
+    }
+
+    /**
+     * Remove a computer.
+     * @param id the id of the computer
+     * @return some messages
+     */
+    public String removeCompany(String id) {
+
+        Long computerId = null;
+
+        try {
+            computerId = new Long(id);
+            companyService.removeById(computerId);
+        } catch (NumberFormatException e) {
+            return "Error on id format";
+        } catch (DatabaseException e) {
+            return "Error : company not found or database error";
+        }
+
+        LOGGER.info("Remove of company with id = " + id);
+        return "Company is remove";
     }
 
     /**

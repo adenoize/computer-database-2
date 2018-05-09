@@ -48,7 +48,7 @@ public class CommandLineInterface {
             break;
         case "-r":
         case "--remove":
-            removeComputer();
+            remove();
             break;
         case "-s":
         case "--show":
@@ -117,6 +117,25 @@ public class CommandLineInterface {
     }
 
     /**
+     * Remove computers or companies.
+     */
+    private void remove() {
+        String arg = args.poll();
+        switch (arg) {
+        case "--computer":
+            removeComputer();
+            break;
+        case "--company":
+            removeCompany();
+            break;
+
+        default:
+            printHelp();
+            break;
+        }
+    }
+
+    /**
      * Remove a computer.
      */
     private void removeComputer() {
@@ -135,6 +154,24 @@ public class CommandLineInterface {
     }
 
     /**
+     * Remove a company.
+     */
+    private void removeCompany() {
+        String arg = args.poll();
+
+        try {
+            Integer.parseInt(arg);
+        } catch (NumberFormatException e) {
+            System.err.println("Please enter an ID; (ex : 123)");
+            printHelp();
+            return;
+        }
+
+        System.out.println(cliController.removeCompany(arg));
+
+    }
+
+    /**
      * List computers or companies.
      */
     private void list() {
@@ -148,8 +185,8 @@ public class CommandLineInterface {
         case "--company":
             listCompany();
             break;
-
         default:
+            printHelp();
             break;
         }
 
@@ -252,7 +289,7 @@ public class CommandLineInterface {
     }
 
     /**
-     * Parse agruments into Map.
+     * Parse arguments into Map.
      * @return Map of arguments
      */
     private Map<String, String> parseParameters() {
@@ -279,7 +316,8 @@ public class CommandLineInterface {
         System.out.println("Help :");
         System.out.println("cdbCli --add name=[value] company=[value] [field=value]");
         System.out.println("cdbCli --update (id) [field=value]");
-        System.out.println("cdbCli --remove (id)");
+        System.out.println("cdbCli --remove --computer (id)");
+        System.out.println("cdbCli --remove --company (id)");
         System.out.println("cdbCli --show (id)");
         System.out.println("cbdCli --list --computer");
         System.out.println("cbdCli --list --company");

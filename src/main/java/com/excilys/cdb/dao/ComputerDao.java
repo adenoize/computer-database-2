@@ -34,7 +34,9 @@ public enum ComputerDao {
     private static final String FIND_BY_ID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id = ?";
     private static final String COUNT = "SELECT count(id) FROM computer";
     private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
-    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? LIMIT ? OFFSET ?";
+    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? ) LIMIT ? OFFSET ?";
+    private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
+    private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
 
     /**
      * Make persistent the given Computer.
@@ -216,12 +218,14 @@ public enum ComputerDao {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
-            st.setInt(2, limit);
-            st.setInt(3, offset);
+            st.setString(2, "%" + search + "%");
+            st.setInt(3, limit);
+            st.setInt(4, offset);
 
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
+
                 computers.add(ComputerMapper.INSTANCE.map(rs));
             }
 
@@ -321,4 +325,92 @@ public enum ComputerDao {
         return count;
     }
 
+    /**
+     * Retrieve the computer with the given company id.
+     * @param computerId the id of computer
+     * @param offset index for pagination
+     * @return the computer
+     */
+    public Page<Computer> findByComputerId(Long computerId, int offset) {
+
+        List<Computer> computers = new ArrayList<Computer>();
+
+        try (Connection connection = DataSource.getConnection()) {
+
+            PreparedStatement st = connection.prepareStatement(FIND_BY_COMPANYID);
+            st.setLong(1, computerId);
+            st.setInt(2, Constante.LIMIT_PAGE);
+            st.setInt(3, offset);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                computers.add(ComputerMapper.INSTANCE.map(rs));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return new Page<Computer>(computers);
+    }
+
+    /**
+     * Retrieve the computer with the given company id.
+     * @param computerId the id of computer
+     * @param offset index for pagination
+     * @param connection the connection
+     * @return the computer
+     */
+    public Page<Computer> findByComputerId(Long computerId, int offset, Connection connection) {
+
+        List<Computer> computers = new ArrayList<Computer>();
+
+        try {
+
+            PreparedStatement st = connection.prepareStatement(FIND_BY_COMPANYID);
+            st.setLong(1, computerId);
+            st.setInt(2, Constante.LIMIT_PAGE);
+            st.setInt(3, offset);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                computers.add(ComputerMapper.INSTANCE.map(rs));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+
+        return new Page<Computer>(computers);
+    }
+
+    /**
+     * Retrieve the number of computers.
+     * @param computerId the computer id
+     * @return the number of computers
+     */
+    public int countByComputerId(Long computerId) {
+
+        int count = 0;
+
+        try (Connection connection = DataSource.getConnection()) {
+
+            PreparedStatement st = connection.prepareStatement(COUNT_BY_COMPANYID);
+            st.setLong(1, computerId);
+
+            ResultSet resultSet = st.executeQuery();
+
+            if (resultSet.next()) {
+
+                count = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            return 0;
+        }
+
+        return count;
+    }
 }
