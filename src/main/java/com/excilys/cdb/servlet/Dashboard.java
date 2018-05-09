@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.dto.ComputerDTO;
 import main.java.com.excilys.cdb.dto.PageDTO;
@@ -28,6 +30,8 @@ import main.java.com.excilys.cdb.service.ComputerService;
 public class Dashboard extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
 
     private ComputerService computerService = new ComputerService();
     private CompanyService companyService = new CompanyService();
@@ -106,7 +110,7 @@ public class Dashboard extends HttpServlet {
         request.setAttribute("limit", limit);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("currPage", currPage);
-        request.setAttribute("searchval", search);
+        request.setAttribute("search", search);
         request.setAttribute("numberComputers", numberComputers);
 
         this.getServletContext().getRequestDispatcher("/jsp/dashboard.jsp").forward(request, response);
@@ -122,6 +126,22 @@ public class Dashboard extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String deletedComputers = request.getParameter("selection");
+        String[] computerIds = deletedComputers.split(",");
+        Long id = null;
+        for (String computerId : computerIds) {
+
+            try {
+                id = Long.parseLong(computerId);
+                computerService.removeById(id);
+                LOGGER.info("Computer with id=" + id + " was deleted.");
+            } catch (DatabaseException e) {
+                LOGGER.warn("Fail to delete computer with id " + id + "Exception : " + e.getMessage());
+            } catch (NumberFormatException e) {
+                LOGGER.debug("Delete computer : bad id, not a number" + e.getMessage());
+            }
+        }
 
         doGet(request, response);
     }
