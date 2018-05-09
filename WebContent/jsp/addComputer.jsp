@@ -6,11 +6,6 @@
 <head>
 <title>Add computer</title>
 <jsp:include page="head.jsp" flush="true" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/form-validation.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp" flush="true" />
@@ -62,5 +57,10 @@
 		</div>
 	</div>
 	</section>
+	
+<jsp:include page="script.jsp" flush="true" />
+<script
+	src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/form-validation.js"></script>
 </body>
 </html>

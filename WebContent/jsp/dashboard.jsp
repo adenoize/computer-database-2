@@ -18,7 +18,7 @@
 		<h1 id="homeTitle"><c:out value="${numberComputers}"></c:out> Computers found</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
-				 <form id="searchForm" action="dashboard?page=1" method="GET" class="form-inline">
+				 <form id="searchForm" action="dashboard" method="GET" class="form-inline">
 					<input type="text" id="searchbox" name="search"
 						class="form-control" placeholder="Search name" />
 						<input
@@ -81,8 +81,14 @@
 
 	<footer class="navbar-fixed-bottom">
 	<div class="container text-center">
-			
-		<c:url var="searchUri" value="/dashboard?page=##" />
+		
+		<c:if test="${search==null}">
+			<c:url var="searchUri" value="/dashboard?page=##" />
+		</c:if>
+		<c:if test="${search!=null}">
+			<c:url var="searchUri" value="/dashboard?search=${search}&page=##" />
+		</c:if>
+		
 		<p:display maxLinks="5" currPage="${currPage}" totalPages="${totalPages}" uri="${searchUri}" />
 
 		<div class="btn-group btn-group-sm pull-right" role="group">
@@ -93,8 +99,7 @@
 	</div>
 	</footer>
 
-	<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+	<jsp:include page="script.jsp" flush="true" />
 	<script src="${pageContext.request.contextPath}/js/dashboard.js"></script>
 
 </body>
