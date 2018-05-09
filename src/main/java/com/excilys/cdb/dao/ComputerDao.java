@@ -34,7 +34,7 @@ public enum ComputerDao {
     private static final String FIND_BY_ID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id = ?";
     private static final String COUNT = "SELECT count(id) FROM computer";
     private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
-    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? ) LIMIT ? OFFSET ?";
+    private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? ) ORDER BY name LIMIT ? OFFSET ?";
     private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
     private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
 
