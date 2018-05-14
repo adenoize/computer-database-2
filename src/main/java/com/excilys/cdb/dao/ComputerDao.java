@@ -150,6 +150,33 @@ public enum ComputerDao {
     }
 
     /**
+     * Remove the Computer with the given id.
+     * @param id the id of computer
+     * @param connection the connection to database
+     * @return true if the given computer was remove
+     */
+    public boolean removeById(Long id, Connection connection) {
+
+        int result = 0;
+
+        try {
+
+            PreparedStatement st = connection.prepareStatement(REMOVE);
+
+            st.setLong(1, id);
+
+            result = st.executeUpdate();
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
+
+        return (result == 1);
+
+    }
+
+    /**
      * Retrieve a page of computers.
      * @param offset index of the first computer of the page
      * @return Page of computers

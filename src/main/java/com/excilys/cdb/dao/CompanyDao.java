@@ -133,7 +133,7 @@ public enum CompanyDao {
                 List<Computer> computers = page.getPage();
 
                 for (Computer computer : computers) {
-                    computerDao.removeById(computer.getId());
+                    computerDao.removeById(computer.getId(), connection);
                 }
 
             }

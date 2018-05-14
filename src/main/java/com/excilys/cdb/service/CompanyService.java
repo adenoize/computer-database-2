@@ -63,7 +63,11 @@ public class CompanyService {
      */
     public void removeById(Long id) throws DatabaseException {
 
-        companyDao.removeById(id);
+        if (companyDao.findById(id).isPresent()) {
+            companyDao.removeById(id);
+        } else {
+            throw new DatabaseException();
+        }
 
     }
 
