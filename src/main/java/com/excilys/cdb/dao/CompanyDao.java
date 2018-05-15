@@ -16,7 +16,6 @@ import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
 import main.java.com.excilys.cdb.model.Company;
-import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
 /**
@@ -32,8 +31,7 @@ public enum CompanyDao {
     private static final String GET_PAGE = "SELECT id, name FROM company LIMIT ? OFFSET ?";
     private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
     private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
-
-    private ComputerDao computerDao = ComputerDao.INSTANCE;
+    private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
 
     /**
      * Retrieve a page of companies.
@@ -70,8 +68,9 @@ public enum CompanyDao {
      * Retrieve the company with the given id.
      * @param id the id of company
      * @return the company
+     * @throws DatabaseException if id not found
      */
-    public Optional<Company> findById(Long id) {
+    public Optional<Company> findById(Long id) throws DatabaseException {
         Company company = null;
 
         try (Connection connection = DataSource.getConnection()) {
@@ -83,6 +82,11 @@ public enum CompanyDao {
             if (resultSet.next()) {
                 company = CompanyMapper.INSTANCE.map(resultSet);
             }
+
+            if (company == null) {
+                throw new DatabaseException("Computer not found");
+            }
+
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
@@ -126,32 +130,27 @@ public enum CompanyDao {
         try {
             connection = DataSource.getConnection();
             connection.setAutoCommit(false);
-            int numberItem = computerDao.countByComputerId(id);
 
-            for (int offset = 0; offset < numberItem; offset += Constante.LIMIT_PAGE) {
-                Page<Computer> page = computerDao.findByComputerId(id, offset, connection);
-                List<Computer> computers = page.getPage();
+            PreparedStatement st = connection.prepareStatement(REMOVE_COMPUTER_BY_COMPANY);
+            st.setLong(1, id);
+            st.executeUpdate();
 
-                for (Computer computer : computers) {
-                    computerDao.removeById(computer.getId(), connection);
-                }
-
-            }
-
-            PreparedStatement st = connection.prepareStatement(REMOVE_BY_ID);
+            st = connection.prepareStatement(REMOVE_BY_ID);
             st.setLong(1, id);
             st.executeUpdate();
 
             connection.commit();
 
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             if (connection != null) {
                 try {
                     connection.rollback();
                 } catch (SQLException e1) {
                     LOGGER.error(e.getMessage());
+                    throw new DatabaseException("Can't rollback");
                 }
-                throw new DatabaseException();
+                throw new DatabaseException("Rollback");
             }
         } finally {
             if (connection != null) {
@@ -159,7 +158,7 @@ public enum CompanyDao {
                     connection.close();
                 } catch (SQLException e) {
                     LOGGER.error(e.getMessage());
-                    throw new DatabaseException();
+                    throw new DatabaseException("Can't close connection to database");
                 }
             }
         }

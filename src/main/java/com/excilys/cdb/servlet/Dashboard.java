@@ -36,23 +36,6 @@ public class Dashboard extends HttpServlet {
     private ComputerService computerService = new ComputerService();
     private CompanyService companyService = new CompanyService();
 
-    private int limit;
-    private int currPage;
-    private int totalPages;
-    private int numberComputers;
-    private String search = "";
-
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Dashboard() {
-        super();
-        limit = 10;
-        currPage = 1;
-        search = "";
-        numberComputers = 0;
-    }
-
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
@@ -63,6 +46,13 @@ public class Dashboard extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        int limit = 10;
+        int currPage = 1;
+        int totalPages = 0;
+        int numberComputers = 0;
+        String search = "";
+
         response.setContentType("text/html");
         String pageParam = request.getParameter("page");
 
@@ -135,6 +125,7 @@ public class Dashboard extends HttpServlet {
             try {
                 id = Long.parseLong(computerId);
                 computerService.removeById(id);
+                request.setAttribute("info", "Computer was deleted");
                 LOGGER.info("Computer with id=" + id + " was deleted.");
             } catch (DatabaseException e) {
                 LOGGER.warn("Fail to delete computer with id " + id + "Exception : " + e.getMessage());

@@ -378,7 +378,7 @@ public enum ComputerDao {
     public Page<Computer> findByComputerId(Long computerId, int offset) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
-        // TODO
+
         if (offset < 0) {
             throw new IllegalArgumentException();
         }
@@ -414,7 +414,7 @@ public enum ComputerDao {
             throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
-        // TODO
+
         if (offset < 0) {
             throw new IllegalArgumentException();
         }

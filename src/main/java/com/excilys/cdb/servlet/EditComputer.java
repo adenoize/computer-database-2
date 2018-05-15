@@ -63,8 +63,7 @@ public class EditComputer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Company> companies = null;
-        companies = companyService.findAll();
+        List<Company> companies = companyService.findAll();
 
         try {
             id = Long.parseLong(request.getParameter("id"));

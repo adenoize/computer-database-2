@@ -1,10 +1,6 @@
 package main.java.com.excilys.cdb.service;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.CompanyDao;
@@ -14,7 +10,6 @@ import main.java.com.excilys.cdb.model.Page;
 
 public class CompanyService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyService.class);
     private CompanyDao companyDao = CompanyDao.INSTANCE;
 
     /**
@@ -36,24 +31,16 @@ public class CompanyService {
      * @throws DatabaseException DatabaseException
      */
     public Company findById(Long id) throws DatabaseException {
-        Optional<Company> company = companyDao.findById(id);
-
-        if (!company.isPresent()) {
-            throw new DatabaseException();
-        }
-
-        return company.get();
+        return companyDao.findById(id).get();
     }
 
     /**
-     * Retrieve the company with the given id.
+     * Retrieve all companies.
      * @return the company
      * @throws DatabaseException DatabaseException
      */
     public List<Company> findAll() {
-        List<Company> companies = companyDao.findAll();
-
-        return companies;
+        return companyDao.findAll();
     }
 
     /**
@@ -66,7 +53,7 @@ public class CompanyService {
         if (companyDao.findById(id).isPresent()) {
             companyDao.removeById(id);
         } else {
-            throw new DatabaseException();
+            throw new DatabaseException("Can't remove the company");
         }
 
     }

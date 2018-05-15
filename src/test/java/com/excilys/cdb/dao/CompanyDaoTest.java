@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import main.java.com.excilys.cdb.dao.CompanyDao;
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -64,12 +65,9 @@ public class CompanyDaoTest {
      * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findById(java.lang.Long)}.
      * @throws Exception An Exception
      */
-    @Test
+    @Test(expected = DatabaseException.class)
     public void testFindByIdFail() throws Exception {
-        Optional<Company> company = companyDao.findById(-1L);
-        if (company.isPresent()) {
-            fail();
-        }
+        companyDao.findById(-1L);
     }
 
     /**
@@ -92,10 +90,6 @@ public class CompanyDaoTest {
      */
     @Test
     public void testRemoveById() throws Exception {
-        companyDao.removeById(18L);
-        if (companyDao.findById(18L).isPresent()) {
-            fail();
-        }
+        companyDao.removeById(20L);
     }
-
 }

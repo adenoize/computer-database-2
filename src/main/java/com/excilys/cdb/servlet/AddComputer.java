@@ -60,9 +60,7 @@ public class AddComputer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Company> companies = null;
-
-        companies = companyService.findAll();
+        List<Company> companies = companyService.findAll();
 
         request.setAttribute("companies", companies);
 

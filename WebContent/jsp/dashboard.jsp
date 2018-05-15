@@ -15,6 +15,11 @@
 
 	<section id="main">
 	<div class="container">
+		<c:if test="${info!=null}">
+			<div class="alert alert-success">
+				<c:out value="${info}"></c:out>
+			</div>
+		</c:if>
 		<h1 id="homeTitle"><c:out value="${numberComputers}"></c:out> Computers found</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
@@ -33,7 +38,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<form id="deleteForm" action="dashboard" method="POST">
 		<input type="hidden" name="selection" value="">
 	</form>
