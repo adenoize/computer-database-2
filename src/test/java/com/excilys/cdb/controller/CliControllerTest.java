@@ -771,7 +771,6 @@ public class CliControllerTest {
     public void testRemoveCompany() throws Exception {
         String result = cliController.removeCompany("40");
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>><< " + result);
         assertTrue("Company is remove".equals(result));
     }
 

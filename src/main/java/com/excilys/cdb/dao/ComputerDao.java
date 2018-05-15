@@ -33,7 +33,7 @@ public enum ComputerDao {
     private static final String GET_PAGE = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ? OFFSET ?";
     private static final String FIND_BY_ID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id = ?";
     private static final String COUNT = "SELECT count(id) FROM computer";
-    private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ?";
+    private static final String COUNT_PAGE_SEARCH = "SELECT count(id) FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? )";
     private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? ) ORDER BY name LIMIT ? OFFSET ?";
     private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
     private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
@@ -179,11 +179,16 @@ public enum ComputerDao {
     /**
      * Retrieve a page of computers.
      * @param offset index of the first computer of the page
+     * @throws IllegalArgumentException if offset is negative
      * @return Page of computers
      */
-    public Page<Computer> getPage(int offset) {
+    public Page<Computer> getPage(int offset) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
+
+        if (offset < 0) {
+            throw new IllegalArgumentException();
+        }
 
         try (Connection connection = DataSource.getConnection()) {
 
@@ -207,11 +212,16 @@ public enum ComputerDao {
      * Retrieve a page of computers.
      * @param offset index of the first computer of the page
      * @param limit the number of computer for the page
+     * @throws IllegalArgumentException if offset or limit is negative
      * @return Page of computers
      */
-    public Page<Computer> getPage(int offset, int limit) {
+    public Page<Computer> getPage(int offset, int limit) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
+
+        if (limit < 0 || offset < 0) {
+            throw new IllegalArgumentException();
+        }
 
         try (Connection connection = DataSource.getConnection()) {
 
@@ -236,10 +246,15 @@ public enum ComputerDao {
      * @param offset index of the first computer of the page
      * @param limit the number of computer for the page
      * @param search the criteria
+     * @throws IllegalArgumentException if offset or limit is negative
      * @return Page of computers
      */
-    public Page<Computer> getPage(int offset, int limit, String search) {
+    public Page<Computer> getPage(int offset, int limit, String search) throws IllegalArgumentException {
         List<Computer> computers = new ArrayList<Computer>();
+
+        if (limit < 0 || offset < 0) {
+            throw new IllegalArgumentException();
+        }
 
         try (Connection connection = DataSource.getConnection()) {
 
@@ -335,6 +350,7 @@ public enum ComputerDao {
 
             PreparedStatement st = connection.prepareStatement(COUNT_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
+            st.setString(2, "%" + search + "%");
 
             ResultSet resultSet = st.executeQuery();
 
@@ -356,11 +372,16 @@ public enum ComputerDao {
      * Retrieve the computer with the given company id.
      * @param computerId the id of computer
      * @param offset index for pagination
+     * @throws IllegalArgumentException if offset is negative
      * @return the computer
      */
-    public Page<Computer> findByComputerId(Long computerId, int offset) {
+    public Page<Computer> findByComputerId(Long computerId, int offset) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
+        // TODO
+        if (offset < 0) {
+            throw new IllegalArgumentException();
+        }
 
         try (Connection connection = DataSource.getConnection()) {
 
@@ -386,11 +407,17 @@ public enum ComputerDao {
      * @param computerId the id of computer
      * @param offset index for pagination
      * @param connection the connection
+     * @throws IllegalArgumentException if offset is negative
      * @return the computer
      */
-    public Page<Computer> findByComputerId(Long computerId, int offset, Connection connection) {
+    public Page<Computer> findByComputerId(Long computerId, int offset, Connection connection)
+            throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
+        // TODO
+        if (offset < 0) {
+            throw new IllegalArgumentException();
+        }
 
         try {
 
@@ -413,24 +440,23 @@ public enum ComputerDao {
 
     /**
      * Retrieve the number of computers.
-     * @param computerId the computer id
+     * @param companyId the computer id
      * @return the number of computers
      */
-    public int countByComputerId(Long computerId) {
+    public int countByComputerId(Long companyId) {
 
         int count = 0;
 
         try (Connection connection = DataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(COUNT_BY_COMPANYID);
-            st.setLong(1, computerId);
+            st.setLong(1, companyId);
 
             ResultSet resultSet = st.executeQuery();
 
             if (resultSet.next()) {
 
                 count = resultSet.getInt(1);
-
             }
 
         } catch (SQLException e) {

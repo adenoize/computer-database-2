@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -67,6 +68,32 @@ public class CompanyDaoTest {
     public void testFindByIdFail() throws Exception {
         Optional<Company> company = companyDao.findById(-1L);
         if (company.isPresent()) {
+            fail();
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findAll()}.
+     * @throws Exception An Exception
+     */
+    @Test
+    public void testFindAll() throws Exception {
+        List<Company> company = companyDao.findAll();
+        if (company.isEmpty()) {
+            fail();
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#removeById(java.lang.Long)}.
+     * @throws Exception An Exception
+     */
+    @Test
+    public void testRemoveById() throws Exception {
+        companyDao.removeById(18L);
+        if (companyDao.findById(18L).isPresent()) {
             fail();
         }
     }

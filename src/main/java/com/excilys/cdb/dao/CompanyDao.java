@@ -91,7 +91,7 @@ public enum CompanyDao {
     }
 
     /**
-     * Retrieve the company with the given id.
+     * Retrieve all the companies.
      * @return the company
      */
     public List<Company> findAll() {
