@@ -66,11 +66,11 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
 
         String result = cliController.addComputer(m);
 
-        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-02".equals(result));
     }
 
     /**
@@ -83,12 +83,12 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
 
-        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 0 test, introduced=2000-01-01, discontinued=2000-01-02".equals(result));
     }
 
     /**
@@ -101,7 +101,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01-01-2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
@@ -119,7 +119,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01-01-2000");
+        m.put("discontinued", "02-01-2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
@@ -137,7 +137,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "abc");
 
         String result = cliController.addComputer(m);
@@ -155,12 +155,12 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "-1");
 
         String result = cliController.addComputer(m);
 
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Company ID have to be positive".equals(result));
     }
 
     /**
@@ -173,7 +173,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "100000000000000");
 
         String result = cliController.addComputer(m);
@@ -191,7 +191,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("fail", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
@@ -209,7 +209,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("fail", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
@@ -227,7 +227,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("fail", "01/01/2000");
+        m.put("fail", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.addComputer(m);
@@ -245,7 +245,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("fail", "1");
 
         String result = cliController.addComputer(m);
@@ -263,7 +263,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("fail", "test");
         m.put("fail", "01/01/2000");
-        m.put("fail", "01/01/2000");
+        m.put("fail", "02/01/2000");
         m.put("fail", "1");
 
         String result = cliController.addComputer(m);
@@ -315,11 +315,11 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
 
         String result = cliController.updateComputer("1", m);
 
-        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-02".equals(result));
     }
 
     /**
@@ -332,12 +332,12 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
 
-        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-01".equals(result));
+        assertTrue("Computer 1 test, introduced=2000-01-01, discontinued=2000-01-02".equals(result));
     }
 
     /**
@@ -350,7 +350,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01-01-2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -368,7 +368,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01-01-2000");
+        m.put("discontinued", "02-01-2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -386,7 +386,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "abc");
 
         String result = cliController.updateComputer("1", m);
@@ -404,12 +404,12 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "-1");
 
         String result = cliController.updateComputer("1", m);
 
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Company ID have to be positive".equals(result));
     }
 
     /**
@@ -422,7 +422,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "");
 
         String result = cliController.updateComputer("1", m);
@@ -440,7 +440,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("fail", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -458,7 +458,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("fail", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -476,7 +476,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("fail", "01/01/2000");
+        m.put("fail", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -494,7 +494,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("fail", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -512,7 +512,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("fail", "test");
         m.put("fail", "01/01/2000");
-        m.put("fail", "01/01/2000");
+        m.put("fail", "02/01/2000");
         m.put("fail", "1");
 
         String result = cliController.updateComputer("1", m);
@@ -530,7 +530,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("-1", m);
@@ -548,7 +548,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("100000000000", m);
@@ -566,7 +566,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("", m);
@@ -584,7 +584,7 @@ public class CliControllerTest {
         Map<String, String> m = new HashMap<>();
         m.put("name", "test");
         m.put("introduced", "01/01/2000");
-        m.put("discontinued", "01/01/2000");
+        m.put("discontinued", "02/01/2000");
         m.put("company", "1");
 
         String result = cliController.updateComputer("abc", m);
@@ -760,6 +760,62 @@ public class CliControllerTest {
     public void testGetCompanyBadId2() throws Exception {
         Optional<Company> company = cliController.getCompany(-1L);
         assertTrue(!company.isPresent());
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
+     */
+    @Test
+    public void testRemoveCompany() throws Exception {
+        String result = cliController.removeCompany("40");
+
+        assertTrue("Company is remove".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
+     */
+    @Test
+    public void testRemoveCompanyBadIdFormat1() throws Exception {
+        String result = cliController.removeCompany("");
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
+     */
+    @Test
+    public void testRemoveCompanyBadIdFormat2() throws Exception {
+        String result = cliController.removeCompany("abc");
+        assertTrue("Error on id format".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
+     */
+    @Test
+    public void testRemoveCompanyBadId1() throws Exception {
+        String result = cliController.removeCompany("1000000000");
+        assertTrue("Error : company not found or database error".equals(result));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.controller.CliController#getCompany(java.lang.Long)}.
+     * @throws Exception Exception
+     */
+    @Test
+    public void testRemoveCompanyBadId2() throws Exception {
+        String result = cliController.removeCompany("-1");
+        assertTrue("Error : company not found or database error".equals(result));
     }
 
 }

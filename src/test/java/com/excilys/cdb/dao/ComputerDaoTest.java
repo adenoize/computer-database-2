@@ -5,12 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.Test;
 
 import main.java.com.excilys.cdb.dao.ComputerDao;
+import main.java.com.excilys.cdb.dao.DataSource;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -201,8 +204,91 @@ public class ComputerDaoTest {
      */
     @Test
     public void testGetPage() {
-        Page<Computer> page = computerDao.getPage(1);
+        Page<Computer> page = computerDao.getPage(0);
         assertEquals("Number of computers should be 10", 10, page.getPage().size());
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageBad() {
+        computerDao.getPage(-1);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int)}.
+     */
+    @Test
+    public void testGetPageLimit1() {
+        Page<Computer> page = computerDao.getPage(0, 20);
+        assertEquals("Number of computers should be 20", 20, page.getPage().size());
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageBadLimit2() {
+        computerDao.getPage(-1, 1);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageBadLimit3() {
+        computerDao.getPage(1, -1);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageBadLimit4() {
+        computerDao.getPage(-1, -1);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int,int,String)}.
+     */
+    @Test
+    public void testGetPageSearch() {
+        Page<Computer> page = computerDao.getPage(0, 10, "ASCI Thors Hammer");
+        assertEquals("Number of computers should be 1", 1, page.getPage().size());
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int,int,String)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageSearchBadLimit() {
+        computerDao.getPage(1, -1, "apple");
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int,int,String)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageSearchBadOffset() {
+        computerDao.getPage(-1, 10, "apple");
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#getPage(int,int,String)}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPageSearchBadOffsetAndLimit() {
+        computerDao.getPage(-1, -1, "apple");
     }
 
     /**
@@ -216,6 +302,52 @@ public class ComputerDaoTest {
         assertNotEquals(Optional.empty(), computer);
         assertEquals(10, computer.get().getId().longValue());
         assertTrue(computer.get().getName().equals("Apple IIc Plus"));
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#removeById(java.lang.Long)}.
+     * @throws SQLException SQLException
+     */
+    @Test
+    public void testRemoveByIdConnection() throws SQLException {
+
+        Connection connection = DataSource.getConnection();
+        connection.setAutoCommit(false);
+        boolean result = computerDao.removeById(100L, connection);
+        connection.rollback();
+        connection.close();
+        assertTrue(result);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#removeById(java.lang.Long)}.
+     * @throws SQLException SQLException
+     */
+    @Test
+    public void testRemoveByIdBadIdConnection1() throws SQLException {
+        Connection connection = DataSource.getConnection();
+        connection.setAutoCommit(false);
+        boolean result = computerDao.removeById(-1L, connection);
+        connection.rollback();
+        connection.close();
+        assertFalse(result);
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.dao.ComputerDao#removeById(java.lang.Long)}.
+     * @throws SQLException SQLException
+     */
+    @Test
+    public void testRemoveByIdBadIdConnection2() throws SQLException {
+        Connection connection = DataSource.getConnection();
+        connection.setAutoCommit(false);
+        boolean result = computerDao.removeById(10000000000L, connection);
+        connection.rollback();
+        connection.close();
+        assertFalse(result);
     }
 
 }

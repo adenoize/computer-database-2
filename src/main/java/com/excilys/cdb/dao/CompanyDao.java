@@ -91,7 +91,7 @@ public enum CompanyDao {
     }
 
     /**
-     * Retrieve the company with the given id.
+     * Retrieve all the companies.
      * @return the company
      */
     public List<Company> findAll() {
@@ -133,7 +133,7 @@ public enum CompanyDao {
                 List<Computer> computers = page.getPage();
 
                 for (Computer computer : computers) {
-                    computerDao.removeById(computer.getId());
+                    computerDao.removeById(computer.getId(), connection);
                 }
 
             }
