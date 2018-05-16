@@ -11,7 +11,12 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Repository;
 
+import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
@@ -22,8 +27,8 @@ import main.java.com.excilys.cdb.model.Page;
  * DAO about company.
  * @author aurel
  */
-public enum CompanyDao {
-    INSTANCE;
+@Repository
+public class CompanyDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
@@ -32,6 +37,17 @@ public enum CompanyDao {
     private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
     private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
     private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
+
+    @Autowired
+    private CompanyMapper companyMapper;
+
+    /**
+     * .
+     */
+    public CompanyDao() {
+        super();
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    }
 
     /**
      * Retrieve a page of companies.
@@ -54,7 +70,7 @@ public enum CompanyDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                companies.add(CompanyMapper.INSTANCE.map(rs));
+                companies.add(companyMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -80,7 +96,7 @@ public enum CompanyDao {
             ResultSet resultSet = st.executeQuery();
 
             if (resultSet.next()) {
-                company = CompanyMapper.INSTANCE.map(resultSet);
+                company = companyMapper.map(resultSet);
             }
 
             if (company == null) {
@@ -108,7 +124,7 @@ public enum CompanyDao {
             ResultSet resultSet = st.executeQuery(FIND_ALL);
 
             while (resultSet.next()) {
-                companies.add(CompanyMapper.INSTANCE.map(resultSet));
+                companies.add(companyMapper.map(resultSet));
             }
 
         } catch (SQLException e) {

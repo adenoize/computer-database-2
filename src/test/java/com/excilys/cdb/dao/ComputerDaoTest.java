@@ -24,7 +24,7 @@ import main.java.com.excilys.cdb.model.Page;
  */
 public class ComputerDaoTest {
 
-    private static ComputerDao computerDao = ComputerDao.INSTANCE;
+    private static ComputerDao computerDao = new ComputerDao();
 
     private static Company goodCompany;
     private static Company badCompany;

@@ -26,7 +26,7 @@ public class ComputerMapperTest {
     @Mock
     ResultSet resultSet;
 
-    ComputerMapper computerMapper = ComputerMapper.INSTANCE;
+    ComputerMapper computerMapper = new ComputerMapper();
 
     /**
      * Test method for

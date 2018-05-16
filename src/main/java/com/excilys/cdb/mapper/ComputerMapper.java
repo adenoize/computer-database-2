@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
@@ -15,12 +17,13 @@ import main.java.com.excilys.cdb.service.CompanyService;
  * Computer mapper.
  * @author Aurelien Denoize
  */
-public enum ComputerMapper {
-    INSTANCE;
+@Component
+public class ComputerMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 
-    CompanyService companyService = new CompanyService();
+    @Autowired
+    CompanyService companyService;
 
     /**
      * Mapper resultSet to computer.

@@ -2,15 +2,20 @@ package main.java.com.excilys.cdb.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.CompanyDao;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
+@Service
 public class CompanyService {
 
-    private CompanyDao companyDao = CompanyDao.INSTANCE;
+    @Autowired
+    private CompanyDao companyDao;
 
     /**
      * Retrieve all companies.

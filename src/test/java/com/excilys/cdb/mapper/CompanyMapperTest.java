@@ -26,7 +26,7 @@ public class CompanyMapperTest {
     @Mock
     ResultSet resultSet;
 
-    CompanyMapper companyMapper = CompanyMapper.INSTANCE;
+    CompanyMapper companyMapper = new CompanyMapper();
 
     /**
      * Test method for {@link main.java.com.excilys.cdb.mapper.CompanyMapper#map(java.sql.ResultSet)}.

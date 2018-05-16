@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.exception.ValidatorException;
@@ -45,11 +47,10 @@ public class EditComputer extends HttpServlet {
     private Company company;
     private Computer computer;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditComputer() {
-        super();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     /**

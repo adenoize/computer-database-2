@@ -12,7 +12,12 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Repository;
 
+import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
 import main.java.com.excilys.cdb.model.Computer;
@@ -22,8 +27,8 @@ import main.java.com.excilys.cdb.model.Page;
  * DAO about Computer.
  * @author Aurelien Denoize
  */
-public enum ComputerDao {
-    INSTANCE;
+@Repository
+public class ComputerDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
@@ -37,6 +42,17 @@ public enum ComputerDao {
     private static final String GET_PAGE_SEARCH = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE name LIKE ? OR company_id = ANY ( SELECT id FROM company WHERE name LIKE ? ) ORDER BY name LIMIT ? OFFSET ?";
     private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
     private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
+
+    @Autowired
+    private ComputerMapper computerMapper;
+
+    /**
+     * .
+     */
+    public ComputerDao() {
+        super();
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    }
 
     /**
      * Make persistent the given Computer.
@@ -198,7 +214,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -231,7 +247,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -268,7 +284,7 @@ public enum ComputerDao {
 
             while (rs.next()) {
 
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -297,7 +313,7 @@ public enum ComputerDao {
 
             if (resultSet.next()) {
 
-                computer = ComputerMapper.INSTANCE.map(resultSet);
+                computer = computerMapper.map(resultSet);
 
             }
 
@@ -392,7 +408,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -428,7 +444,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {

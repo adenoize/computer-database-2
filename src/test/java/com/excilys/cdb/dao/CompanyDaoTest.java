@@ -19,7 +19,7 @@ import main.java.com.excilys.cdb.model.Page;
  */
 public class CompanyDaoTest {
 
-    private static CompanyDao companyDao = CompanyDao.INSTANCE;
+    private static CompanyDao companyDao = new CompanyDao();
 
     /**
      * Test method for
