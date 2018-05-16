@@ -10,10 +10,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import main.java.com.excilys.cdb.dao.ComputerDao;
 import main.java.com.excilys.cdb.dao.DataSource;
+import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -23,6 +25,23 @@ import main.java.com.excilys.cdb.model.Page;
 public class ComputerDaoTest {
 
     private static ComputerDao computerDao = ComputerDao.INSTANCE;
+
+    private static Company goodCompany;
+    private static Company badCompany;
+
+    /**
+     * Initialization.
+     */
+    @BeforeClass
+    public static void beforeClass() {
+        goodCompany = new Company();
+        goodCompany.setId(1L);
+        goodCompany.setName("Apple Inc.");
+
+        badCompany = new Company();
+        badCompany.setId(-1L);
+        badCompany.setName("BadName");
+    }
 
     /**
      * Test method for
@@ -44,7 +63,7 @@ public class ComputerDaoTest {
     @Test
     public void testCreateWithBadCompany() {
 
-        Computer computer = new Computer("computer test", null, null, -1L);
+        Computer computer = new Computer("computer test", null, null, badCompany);
         Optional<Long> id = computerDao.create(computer);
         assertEquals(Optional.empty(), id);
     }
@@ -56,7 +75,7 @@ public class ComputerDaoTest {
     @Test
     public void testCreateWithDate1() {
 
-        Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), -1L);
+        Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), badCompany);
         Optional<Long> id = computerDao.create(computer);
         assertEquals(Optional.empty(), id);
     }
@@ -68,7 +87,7 @@ public class ComputerDaoTest {
     @Test
     public void testCreateWithDate2() {
 
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, -1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, badCompany);
         Optional<Long> id = computerDao.create(computer);
         assertEquals(Optional.empty(), id);
     }
@@ -80,7 +99,7 @@ public class ComputerDaoTest {
     @Test
     public void testCreateWithDate3() {
 
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), -1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), badCompany);
         Optional<Long> id = computerDao.create(computer);
         assertEquals(Optional.empty(), id);
     }
@@ -92,7 +111,7 @@ public class ComputerDaoTest {
     @Test
     public void testCreateAllInfo() {
 
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), 1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), goodCompany);
         Optional<Long> id = computerDao.create(computer);
         assertNotEquals(Optional.empty(), id);
     }
@@ -103,7 +122,7 @@ public class ComputerDaoTest {
      */
     @Test
     public void testUpdate() {
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), 1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), goodCompany);
         computer.setId(1L);
         boolean result = computerDao.update(computer);
         assertTrue(result);
@@ -116,7 +135,7 @@ public class ComputerDaoTest {
      */
     @Test
     public void testUpdateBadId() {
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), 1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), goodCompany);
         computer.setId(-1L);
         boolean result = computerDao.update(computer);
         assertFalse(result);
@@ -130,7 +149,7 @@ public class ComputerDaoTest {
     @Test
     public void testUpdateWithDate1() {
 
-        Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), -1L);
+        Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), badCompany);
         computer.setId(1L);
         boolean result = computerDao.update(computer);
         assertFalse(result);
@@ -143,7 +162,7 @@ public class ComputerDaoTest {
     @Test
     public void testUpdateWithDate2() {
 
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, -1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, badCompany);
         computer.setId(1L);
         boolean result = computerDao.update(computer);
         assertFalse(result);
@@ -156,7 +175,7 @@ public class ComputerDaoTest {
     @Test
     public void testUpdateWithDate3() {
 
-        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), -1L);
+        Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), badCompany);
         computer.setId(1L);
         boolean result = computerDao.update(computer);
         assertFalse(result);

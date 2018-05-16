@@ -40,14 +40,7 @@ public class AddComputer extends HttpServlet {
     private String computerName;
     private LocalDate introduced;
     private LocalDate discontinued;
-    private Long companyId;
-
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AddComputer() {
-        super();
-    }
+    private Company company;
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -78,28 +71,7 @@ public class AddComputer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        computerName = request.getParameter("computerName");
-
-        try {
-            introduced = LocalDate.parse(request.getParameter("introduced"), DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (DateTimeParseException e) {
-            introduced = null;
-        }
-        try {
-            discontinued = LocalDate.parse(request.getParameter("discontinued"), DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (DateTimeParseException e) {
-            discontinued = null;
-        }
-        try {
-            companyId = Long.valueOf(request.getParameter("companyId"));
-            if (companyId == 0) {
-                companyId = null;
-            }
-        } catch (NumberFormatException e) {
-            companyId = null;
-        }
-
-        Computer computer = new Computer(computerName, introduced, discontinued, companyId);
+        Computer computer = buildComputer(request);
 
         try {
             computerValidator.validate(computer);
@@ -121,6 +93,39 @@ public class AddComputer extends HttpServlet {
 
         }
 
+    }
+
+    /**
+     * Construct computers with data from form.
+     * @param request the servlet request object
+     * @return the computer
+     */
+    private Computer buildComputer(HttpServletRequest request) {
+        computerName = request.getParameter("computerName");
+
+        try {
+            introduced = LocalDate.parse(request.getParameter("introduced"), DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            introduced = null;
+        }
+        try {
+            discontinued = LocalDate.parse(request.getParameter("discontinued"), DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            discontinued = null;
+        }
+        try {
+            Long companyId = Long.valueOf(request.getParameter("companyId"));
+            if (companyId > 0) {
+                try {
+                    company = companyService.findById(companyId);
+                } catch (DatabaseException e) {
+                    company = null;
+                }
+            }
+        } catch (NumberFormatException e) {
+            company = null;
+        }
+        return new Computer(computerName, introduced, discontinued, company);
     }
 
 }

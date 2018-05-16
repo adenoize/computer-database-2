@@ -69,7 +69,16 @@ public class CliController {
             case "company":
                 try {
                     Long companyId = Long.parseLong(value);
-                    computer.setCompany(companyId);
+
+                    if (companyId < 1L) {
+                        return "Company ID have to be positive";
+                    }
+
+                    try {
+                        computer.setCompany(companyService.findById(companyId));
+                    } catch (DatabaseException e) {
+                        return "Error on company id";
+                    }
 
                 } catch (NumberFormatException e) {
                     return "Error on company id";
@@ -147,7 +156,15 @@ public class CliController {
                 try {
                     Long companyId = Long.parseLong(value);
 
-                    computer.setCompany(companyId);
+                    if (companyId < 1L) {
+                        return "Company ID have to be positive";
+                    }
+
+                    try {
+                        computer.setCompany(companyService.findById(companyId));
+                    } catch (DatabaseException e) {
+                        return "Error on company id";
+                    }
 
                 } catch (NumberFormatException e) {
                     return "Error on company id";

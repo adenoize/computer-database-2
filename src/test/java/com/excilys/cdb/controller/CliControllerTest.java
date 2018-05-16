@@ -178,7 +178,7 @@ public class CliControllerTest {
 
         String result = cliController.addComputer(m);
 
-        assertTrue("An error occurred !".equals(result));
+        assertTrue("Error on company id".equals(result));
     }
 
     /**

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.time.LocalDate;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import main.java.com.excilys.cdb.exception.DatabaseException;
+import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.ComputerService;
@@ -28,6 +30,18 @@ public class ComputerServiceTest {
     @Mock
     Computer computer;
 
+    private static Company badCompany;
+
+    /**
+     * Initialization.
+     */
+    @BeforeClass
+    public static void beforeClass() {
+        badCompany = new Company();
+        badCompany.setId(-1L);
+        badCompany.setName("BadName");
+    }
+
     /**
      * Test method for
      * {@link main.java.com.excilys.cdb.service.ComputerService#save(main.java.com.excilys.cdb.model.Computer)}.
@@ -39,7 +53,7 @@ public class ComputerServiceTest {
         Mockito.when(computer.getName()).thenReturn("test");
         Mockito.when(computer.getIntroduced()).thenReturn(LocalDate.of(2000, 1, 1));
         Mockito.when(computer.getDiscontinued()).thenReturn(LocalDate.of(2000, 1, 1));
-        Mockito.when(computer.getCompany()).thenReturn(-1L);
+        Mockito.when(computer.getCompany()).thenReturn(badCompany);
 
         computerService.save(computer);
     }
@@ -56,7 +70,7 @@ public class ComputerServiceTest {
         Mockito.when(computer.getName()).thenReturn("test");
         Mockito.when(computer.getIntroduced()).thenReturn(LocalDate.of(2000, 1, 1));
         Mockito.when(computer.getDiscontinued()).thenReturn(LocalDate.of(2000, 1, 1));
-        Mockito.when(computer.getCompany()).thenReturn(-1L);
+        Mockito.when(computer.getCompany()).thenReturn(badCompany);
 
         computerService.update(computer);
     }

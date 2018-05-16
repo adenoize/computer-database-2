@@ -48,7 +48,7 @@ public class ComputerMapperTest {
         assertTrue(computer.getName().equals("test"));
         assertTrue(computer.getIntroduced().equals(new Date(20000101).toLocalDate()));
         assertTrue(computer.getDiscontinued().equals(new Date(20000101).toLocalDate()));
-        assertEquals(1, computer.getCompany().longValue());
+        assertEquals(1, computer.getCompany().getId().longValue());
     }
 
     /**
@@ -71,7 +71,7 @@ public class ComputerMapperTest {
         assertTrue(computer.getName().equals("test"));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getIntroduced()));
         assertTrue(new Date(20000101).toLocalDate().equals(computer.getDiscontinued()));
-        assertEquals(1, computer.getCompany().longValue());
+        assertEquals(1, computer.getCompany().getId().longValue());
     }
 
     /**
@@ -94,7 +94,7 @@ public class ComputerMapperTest {
         assertTrue(computer.getName().equals("test"));
         assertTrue(new Date(20000101).toLocalDate().equals(computer.getIntroduced()));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getDiscontinued()));
-        assertEquals(1, computer.getCompany().longValue());
+        assertEquals(1, computer.getCompany().getId().longValue());
     }
 
     /**
@@ -117,7 +117,7 @@ public class ComputerMapperTest {
         assertTrue(computer.getName().equals("test"));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getIntroduced()));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getDiscontinued()));
-        assertEquals(1, computer.getCompany().longValue());
+        assertEquals(1, computer.getCompany().getId().longValue());
     }
 
     /**
@@ -140,6 +140,6 @@ public class ComputerMapperTest {
         assertTrue(computer.getName().equals("test"));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getIntroduced()));
         assertFalse(new Date(20000101).toLocalDate().equals(computer.getDiscontinued()));
-        assertEquals(1, computer.getCompany().longValue());
+        assertEquals(1, computer.getCompany().getId().longValue());
     }
 }

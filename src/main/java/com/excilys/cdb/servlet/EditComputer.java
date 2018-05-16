@@ -42,7 +42,7 @@ public class EditComputer extends HttpServlet {
     private String computerName;
     private LocalDate introduced;
     private LocalDate discontinued;
-    private Long companyId;
+    private Company company;
     private Computer computer;
 
     /**
@@ -101,29 +101,7 @@ public class EditComputer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        computerName = request.getParameter("computerName");
-
-        try {
-            introduced = LocalDate.parse(request.getParameter("introduced"), DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (DateTimeParseException e) {
-            introduced = null;
-        }
-        try {
-            discontinued = LocalDate.parse(request.getParameter("discontinued"), DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (DateTimeParseException e) {
-            discontinued = null;
-        }
-        try {
-            companyId = Long.valueOf(request.getParameter("companyId"));
-            if (companyId == 0) {
-                companyId = null;
-            }
-        } catch (NumberFormatException e) {
-            companyId = null;
-        }
-
-        Computer computer = new Computer(computerName, introduced, discontinued, companyId);
-        computer.setId(id);
+        Computer computer = buildComputer(request);
 
         try {
             computerValidator.validate(computer);
@@ -144,8 +122,6 @@ public class EditComputer extends HttpServlet {
             doGet(request, response);
 
         }
-
-        // doGet(request, response);
     }
 
     /**
@@ -158,6 +134,42 @@ public class EditComputer extends HttpServlet {
     private void errorUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
         LOGGER.warn("Bad request on '/editComputer' with param id=" + request.getParameter("id"));
         response.sendRedirect("404.jsp");
+    }
+
+    /**
+     * Construct computers with data from form.
+     * @param request the servlet request object
+     * @return the computer
+     */
+    private Computer buildComputer(HttpServletRequest request) {
+        computerName = request.getParameter("computerName");
+
+        try {
+            introduced = LocalDate.parse(request.getParameter("introduced"), DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            introduced = null;
+        }
+        try {
+            discontinued = LocalDate.parse(request.getParameter("discontinued"), DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            discontinued = null;
+        }
+        try {
+            Long companyId = Long.valueOf(request.getParameter("companyId"));
+            if (companyId > 0) {
+                try {
+                    company = companyService.findById(companyId);
+                } catch (DatabaseException e) {
+                    company = null;
+                }
+            }
+        } catch (NumberFormatException e) {
+            company = null;
+        }
+
+        Computer computer = new Computer(computerName, introduced, discontinued, company);
+        computer.setId(id);
+        return computer;
     }
 
 }

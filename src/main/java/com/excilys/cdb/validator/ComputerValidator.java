@@ -32,7 +32,7 @@ public enum ComputerValidator {
         }
 
         if (computer.getCompany() != null) {
-            if (computer.getCompany() < 1) {
+            if (computer.getCompany().getId() < 1L) {
                 throw new ValidatorException("Company ID have to be positive");
             }
         }

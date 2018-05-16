@@ -17,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import main.java.com.excilys.cdb.dto.ComputerDTO;
 import main.java.com.excilys.cdb.dto.PageDTO;
 import main.java.com.excilys.cdb.exception.DatabaseException;
-import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
-import main.java.com.excilys.cdb.service.CompanyService;
 import main.java.com.excilys.cdb.service.ComputerService;
 
 /**
@@ -34,7 +32,6 @@ public class Dashboard extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
 
     private ComputerService computerService = new ComputerService();
-    private CompanyService companyService = new CompanyService();
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -83,14 +80,7 @@ public class Dashboard extends HttpServlet {
 
             ComputerDTO computerDTO = new ComputerDTO();
             modelMapper.map(computer, computerDTO);
-
-            try {
-                Company company = companyService.findById(computer.getCompany());
-                computerDTO.setCompany(company.getName());
-            } catch (DatabaseException e) {
-                computerDTO.setCompany("");
-            }
-
+            computerDTO.setCompany(computer.getCompany().getName());
             listDTO.add(computerDTO);
 
         }

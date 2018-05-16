@@ -63,7 +63,7 @@ public enum ComputerDao {
                 st.setDate(3, null);
             }
             if (computer.getCompany() != null) {
-                st.setLong(4, computer.getCompany());
+                st.setLong(4, computer.getCompany().getId());
             } else {
                 st.setObject(4, null);
             }
@@ -107,7 +107,7 @@ public enum ComputerDao {
                 st.setDate(3, null);
             }
             if (computer.getCompany() != null) {
-                st.setLong(4, computer.getCompany());
+                st.setLong(4, computer.getCompany().getId());
             } else {
                 st.setObject(4, null);
             }

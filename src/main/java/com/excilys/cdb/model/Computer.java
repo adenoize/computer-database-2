@@ -5,7 +5,6 @@ import java.time.LocalDate;
 /**
  * Class Computer. Represent all informations about computer.
  * @author aurel
- *
  */
 public class Computer {
 
@@ -13,7 +12,7 @@ public class Computer {
     private String name;
     private LocalDate introduced;
     private LocalDate discontinued;
-    private Long company;
+    private Company company;
 
     /**
      * Constructor.
@@ -40,7 +39,7 @@ public class Computer {
      * @param discontinued date of discontinue
      * @param company the brand
      */
-    public Computer(String name, LocalDate introduced, LocalDate discontinued, Long company) {
+    public Computer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
         super();
         this.id = 0L;
         this.name = name;
@@ -57,8 +56,7 @@ public class Computer {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(Long id) {
         this.id = id;
@@ -72,8 +70,7 @@ public class Computer {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -87,8 +84,7 @@ public class Computer {
     }
 
     /**
-     * @param introduced
-     *            the introduced to set
+     * @param introduced the introduced to set
      */
     public void setIntroduced(LocalDate introduced) {
         this.introduced = introduced;
@@ -102,8 +98,7 @@ public class Computer {
     }
 
     /**
-     * @param discontinued
-     *            the discontinued to set
+     * @param discontinued the discontinued to set
      */
     public void setDiscontinued(LocalDate discontinued) {
         this.discontinued = discontinued;
@@ -112,15 +107,14 @@ public class Computer {
     /**
      * @return the company
      */
-    public Long getCompany() {
+    public Company getCompany() {
         return company;
     }
 
     /**
-     * @param company
-     *            the company to set
+     * @param company the company to set
      */
-    public void setCompany(Long company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 
