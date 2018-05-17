@@ -1,13 +1,10 @@
 package main.java.com.excilys.cdb.model;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Class Computer. Represent all informations about company.
  * @author aurel
  *
  */
-@Component
 public class Company {
 
     private Long id;

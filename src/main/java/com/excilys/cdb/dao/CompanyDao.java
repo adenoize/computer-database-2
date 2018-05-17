@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Repository;
 
-import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
@@ -30,6 +29,9 @@ import main.java.com.excilys.cdb.model.Page;
 @Repository
 public class CompanyDao {
 
+    @Autowired
+    private DataSource dataSource;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
     private static final String FIND_ALL = "SELECT id, name FROM company";
@@ -40,14 +42,6 @@ public class CompanyDao {
 
     @Autowired
     private CompanyMapper companyMapper;
-
-    /**
-     * .
-     */
-    public CompanyDao() {
-        super();
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-    }
 
     /**
      * Retrieve a page of companies.
@@ -62,7 +56,7 @@ public class CompanyDao {
             offset = 0;
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, Constante.LIMIT_PAGE);
@@ -89,7 +83,7 @@ public class CompanyDao {
     public Optional<Company> findById(Long id) throws DatabaseException {
         Company company = null;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
             st.setLong(1, id);
@@ -117,7 +111,7 @@ public class CompanyDao {
     public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             Statement st = connection.createStatement();
 
@@ -144,7 +138,7 @@ public class CompanyDao {
         Connection connection = null;
 
         try {
-            connection = DataSource.getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             PreparedStatement st = connection.prepareStatement(REMOVE_COMPUTER_BY_COMPANY);

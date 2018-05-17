@@ -2,13 +2,10 @@ package main.java.com.excilys.cdb.model;
 
 import java.time.LocalDate;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Class Computer. Represent all informations about computer.
  * @author aurel
  */
-@Component
 public class Computer {
 
     private Long id;

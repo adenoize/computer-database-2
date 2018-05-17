@@ -25,7 +25,7 @@ import main.java.com.excilys.cdb.service.ComputerService;
 @RunWith(MockitoJUnitRunner.class)
 public class ComputerServiceTest {
 
-    ComputerService computerService = new ComputerService();
+    private ComputerService computerService;
 
     @Mock
     Computer computer;

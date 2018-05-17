@@ -10,13 +10,11 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
-    public void onStartup(ServletContext container) throws ServletException {
-
-        AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(AppConfig.class);
-
-        container.addListener(new ContextLoaderListener(rootContext));
-
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(AppConfig.class);
+        ContextLoaderListener contextLoaderListener = new ContextLoaderListener(context);
+        servletContext.addListener(contextLoaderListener);
     }
 
 }

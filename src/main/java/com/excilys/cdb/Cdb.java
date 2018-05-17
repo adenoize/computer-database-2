@@ -1,15 +1,10 @@
 package main.java.com.excilys.cdb;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
 import main.java.com.excilys.cdb.ui.CommandLineInterface;
 
 /**
  * @author Aurelien Denoize
  */
-@Configuration
-@ComponentScan
 public class Cdb {
 
     /**

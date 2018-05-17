@@ -6,6 +6,7 @@
 	id="WebApp_ID" version="3.1">
 	<display-name>cdb</display-name>
 	<description>Computer DataBase</description>
+   <!--  
 	<servlet>
 		<servlet-name>Dashboard</servlet-name>
 		<servlet-class>main.java.com.excilys.cdb.servlet.Dashboard</servlet-class>
@@ -21,7 +22,7 @@
 		<servlet-name>EditComputer</servlet-name>
 		<servlet-class>main.java.com.excilys.cdb.servlet.EditComputer</servlet-class>
 		<load-on-startup>3</load-on-startup>
-	</servlet>
+	</servlet> -->
 
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>

@@ -27,7 +27,7 @@ import main.java.com.excilys.cdb.service.ComputerService;
 /**
  * Servlet implementation class Dashboard.
  */
-@WebServlet("/dashboard")
+@WebServlet(name = "Dashboard", urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class Dashboard extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 
     /**
@@ -90,7 +90,12 @@ public class Dashboard extends HttpServlet {
 
             ComputerDTO computerDTO = new ComputerDTO();
             modelMapper.map(computer, computerDTO);
-            computerDTO.setCompany(computer.getCompany().getName());
+            if (computer.getCompany() == null) {
+                computerDTO.setCompany("");
+            } else {
+                computerDTO.setCompany(computer.getCompany().getName());
+            }
+
             listDTO.add(computerDTO);
 
         }
@@ -136,5 +141,4 @@ public class Dashboard extends HttpServlet {
 
         doGet(request, response);
     }
-
-};
+}
