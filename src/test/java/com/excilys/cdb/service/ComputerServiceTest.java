@@ -2,16 +2,20 @@ package test.java.com.excilys.cdb.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
@@ -22,13 +26,14 @@ import main.java.com.excilys.cdb.service.ComputerService;
  * Test for ComputerService.
  * @author Aurelien Denoize
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = AppConfig.class)
 public class ComputerServiceTest {
 
-    ComputerService computerService = new ComputerService();
+    @Autowired
+    private ComputerService computerService;
 
-    @Mock
-    Computer computer;
+    private Computer computer;
 
     private static Company badCompany;
 
@@ -40,6 +45,15 @@ public class ComputerServiceTest {
         badCompany = new Company();
         badCompany.setId(-1L);
         badCompany.setName("BadName");
+    }
+
+    /**
+     * Mock of computer.
+     */
+    @Before
+    public void before() {
+        computer = mock(Computer.class);
+
     }
 
     /**

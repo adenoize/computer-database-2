@@ -1,14 +1,22 @@
 package main.java.com.excilys.cdb.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Aurelien Denoize
- *
  */
 public class Page<T> {
 
     private List<T> list;
+
+    /**
+     * Constructor with no parameters.
+     */
+    public Page() {
+
+        this.list = new ArrayList<>();
+    }
 
     /**
      * Constructor with the given list.

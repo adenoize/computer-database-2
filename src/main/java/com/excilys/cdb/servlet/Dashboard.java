@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import main.java.com.excilys.cdb.dto.ComputerDTO;
 import main.java.com.excilys.cdb.dto.PageDTO;
@@ -24,14 +27,21 @@ import main.java.com.excilys.cdb.service.ComputerService;
 /**
  * Servlet implementation class Dashboard.
  */
-@WebServlet("/dashboard")
+@WebServlet(name = "Dashboard", urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
 
-    private ComputerService computerService = new ComputerService();
+    @Autowired
+    private ComputerService computerService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+    }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -80,7 +90,12 @@ public class Dashboard extends HttpServlet {
 
             ComputerDTO computerDTO = new ComputerDTO();
             modelMapper.map(computer, computerDTO);
-            computerDTO.setCompany(computer.getCompany().getName());
+            if (computer.getCompany() == null) {
+                computerDTO.setCompany("");
+            } else {
+                computerDTO.setCompany(computer.getCompany().getName());
+            }
+
             listDTO.add(computerDTO);
 
         }
@@ -126,5 +141,4 @@ public class Dashboard extends HttpServlet {
 
         doGet(request, response);
     }
-
-};
+}

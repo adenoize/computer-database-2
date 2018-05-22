@@ -2,6 +2,9 @@ package main.java.com.excilys.cdb.service;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.dao.ComputerDao;
 import main.java.com.excilys.cdb.exception.DatabaseException;
@@ -11,9 +14,11 @@ import main.java.com.excilys.cdb.model.Page;
 /**
  * @author Aurelien Denoize
  */
+@Service
 public class ComputerService {
 
-    private ComputerDao computerDao = ComputerDao.INSTANCE;
+    @Autowired
+    private ComputerDao computerDao;
 
     /**
      * Save a Computer into Database.

@@ -8,7 +8,10 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
+import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.exception.ValidatorException;
 import main.java.com.excilys.cdb.model.Company;
@@ -24,8 +27,11 @@ import main.java.com.excilys.cdb.validator.ComputerValidator;
 public class CliController {
 
     static final Logger LOGGER = LoggerFactory.getLogger(CliController.class);
-    ComputerService computerService = new ComputerService();
-    CompanyService companyService = new CompanyService();
+
+    private AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+    private ComputerService computerService = (ComputerService) context.getBean("computerService");
+    private CompanyService companyService = (CompanyService) context.getBean("companyService");
 
     /**
      * Add new Computer.

@@ -10,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
@@ -22,8 +26,8 @@ import main.java.com.excilys.cdb.model.Page;
  * DAO about Computer.
  * @author Aurelien Denoize
  */
-public enum ComputerDao {
-    INSTANCE;
+@Repository
+public class ComputerDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
@@ -38,6 +42,12 @@ public enum ComputerDao {
     private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
     private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
 
+    @Autowired
+    private DataSource datasource;
+
+    @Autowired
+    private ComputerMapper computerMapper;
+
     /**
      * Make persistent the given Computer.
      * @param computer the computer to persist
@@ -47,7 +57,7 @@ public enum ComputerDao {
 
         Long id = null;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
             st.setString(1, computer.getName());
@@ -92,7 +102,7 @@ public enum ComputerDao {
 
         int result = 0;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(UPDATE);
             st.setString(1, computer.getName());
@@ -132,7 +142,7 @@ public enum ComputerDao {
 
         int result = 0;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(REMOVE);
 
@@ -190,7 +200,7 @@ public enum ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, Constante.LIMIT_PAGE);
@@ -198,7 +208,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -223,7 +233,7 @@ public enum ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, limit);
@@ -231,7 +241,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -256,7 +266,7 @@ public enum ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
@@ -268,7 +278,7 @@ public enum ComputerDao {
 
             while (rs.next()) {
 
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -287,7 +297,7 @@ public enum ComputerDao {
 
         Computer computer = null;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
 
@@ -297,7 +307,7 @@ public enum ComputerDao {
 
             if (resultSet.next()) {
 
-                computer = ComputerMapper.INSTANCE.map(resultSet);
+                computer = computerMapper.map(resultSet);
 
             }
 
@@ -317,7 +327,7 @@ public enum ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             Statement st = connection.createStatement();
 
@@ -346,7 +356,7 @@ public enum ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(COUNT_PAGE_SEARCH);
             st.setString(1, "%" + search + "%");
@@ -383,7 +393,7 @@ public enum ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_COMPANYID);
             st.setLong(1, computerId);
@@ -392,7 +402,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -428,7 +438,7 @@ public enum ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(ComputerMapper.INSTANCE.map(rs));
+                computers.add(computerMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -447,7 +457,7 @@ public enum ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = datasource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(COUNT_BY_COMPANYID);
             st.setLong(1, companyId);

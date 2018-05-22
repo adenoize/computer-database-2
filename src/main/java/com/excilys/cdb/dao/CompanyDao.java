@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
@@ -22,8 +26,11 @@ import main.java.com.excilys.cdb.model.Page;
  * DAO about company.
  * @author aurel
  */
-public enum CompanyDao {
-    INSTANCE;
+@Repository
+public class CompanyDao {
+
+    @Autowired
+    private DataSource dataSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
@@ -32,6 +39,9 @@ public enum CompanyDao {
     private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
     private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
     private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
+
+    @Autowired
+    private CompanyMapper companyMapper;
 
     /**
      * Retrieve a page of companies.
@@ -46,7 +56,7 @@ public enum CompanyDao {
             offset = 0;
         }
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(GET_PAGE);
             st.setInt(1, Constante.LIMIT_PAGE);
@@ -54,7 +64,7 @@ public enum CompanyDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                companies.add(CompanyMapper.INSTANCE.map(rs));
+                companies.add(companyMapper.map(rs));
             }
 
         } catch (SQLException e) {
@@ -73,14 +83,14 @@ public enum CompanyDao {
     public Optional<Company> findById(Long id) throws DatabaseException {
         Company company = null;
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
             st.setLong(1, id);
             ResultSet resultSet = st.executeQuery();
 
             if (resultSet.next()) {
-                company = CompanyMapper.INSTANCE.map(resultSet);
+                company = companyMapper.map(resultSet);
             }
 
             if (company == null) {
@@ -101,14 +111,14 @@ public enum CompanyDao {
     public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
 
-        try (Connection connection = DataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
 
             Statement st = connection.createStatement();
 
             ResultSet resultSet = st.executeQuery(FIND_ALL);
 
             while (resultSet.next()) {
-                companies.add(CompanyMapper.INSTANCE.map(resultSet));
+                companies.add(companyMapper.map(resultSet));
             }
 
         } catch (SQLException e) {
@@ -128,7 +138,7 @@ public enum CompanyDao {
         Connection connection = null;
 
         try {
-            connection = DataSource.getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
             PreparedStatement st = connection.prepareStatement(REMOVE_COMPUTER_BY_COMPANY);

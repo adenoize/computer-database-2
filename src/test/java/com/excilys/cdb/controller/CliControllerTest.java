@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import main.java.com.excilys.cdb.controller.CliController;
 import main.java.com.excilys.cdb.model.Company;
@@ -20,7 +18,6 @@ import main.java.com.excilys.cdb.model.Page;
 /**
  * @author Aurelien Denoize
  */
-@RunWith(MockitoJUnitRunner.class)
 public class CliControllerTest {
 
     CliController cliController = new CliController();

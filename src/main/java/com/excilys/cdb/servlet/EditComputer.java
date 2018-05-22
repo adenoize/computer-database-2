@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.exception.ValidatorException;
@@ -31,10 +34,12 @@ public class EditComputer extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddComputer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EditComputer.class);
 
-    private ComputerService computerService = new ComputerService();
-    private CompanyService companyService = new CompanyService();
+    @Autowired
+    private ComputerService computerService;
+    @Autowired
+    private CompanyService companyService;
 
     private ComputerValidator computerValidator = ComputerValidator.INSTANCE;
 
@@ -45,11 +50,10 @@ public class EditComputer extends HttpServlet {
     private Company company;
     private Computer computer;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditComputer() {
-        super();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 
     /**
@@ -85,7 +89,7 @@ public class EditComputer extends HttpServlet {
         request.setAttribute("computerName", computer.getName());
         request.setAttribute("introduced", computer.getIntroduced());
         request.setAttribute("discontinued", computer.getDiscontinued());
-        request.setAttribute("companyId", computer.getCompany());
+        request.setAttribute("companyId", computer.getCompany().getId());
 
         this.getServletContext().getRequestDispatcher("/jsp/editComputer.jsp").forward(request, response);
     }

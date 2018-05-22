@@ -3,6 +3,8 @@ package main.java.com.excilys.cdb.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import main.java.com.excilys.cdb.model.Company;
 
 /**
@@ -10,8 +12,8 @@ import main.java.com.excilys.cdb.model.Company;
  * @author Aurelien Denoize
  *
  */
-public enum CompanyMapper {
-    INSTANCE;
+@Component
+public class CompanyMapper {
 
     /**
      * Mapper resultset to Company.
