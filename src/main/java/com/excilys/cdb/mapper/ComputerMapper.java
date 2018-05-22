@@ -2,13 +2,13 @@ package main.java.com.excilys.cdb.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.service.CompanyService;
@@ -62,7 +62,7 @@ public class ComputerMapper {
 
         try {
             return companyService.findById(id);
-        } catch (DatabaseException e) {
+        } catch (NoSuchElementException e) {
             LOGGER.warn(e.getMessage());
         }
         return null;

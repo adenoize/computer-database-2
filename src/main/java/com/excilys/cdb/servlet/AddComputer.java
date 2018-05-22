@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -129,7 +130,7 @@ public class AddComputer extends HttpServlet {
             if (companyId > 0) {
                 try {
                     company = companyService.findById(companyId);
-                } catch (DatabaseException e) {
+                } catch (NoSuchElementException e) {
                     company = null;
                 }
             }

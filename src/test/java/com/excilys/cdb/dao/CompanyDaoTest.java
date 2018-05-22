@@ -1,6 +1,7 @@
 package test.java.com.excilys.cdb.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -15,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.dao.CompanyDao;
-import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -73,9 +73,10 @@ public class CompanyDaoTest {
      * {@link com.excilys.cdb.main.java.dao.impl.CompanyDaoImpl#findById(java.lang.Long)}.
      * @throws Exception An Exception
      */
-    @Test(expected = DatabaseException.class)
+    @Test
     public void testFindByIdFail() throws Exception {
-        companyDao.findById(-1L);
+        Optional<Company> company = companyDao.findById(-1L);
+        assertFalse("Company should be false", company.isPresent());
     }
 
     /**

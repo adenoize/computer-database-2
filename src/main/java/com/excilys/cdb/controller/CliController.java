@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class CliController {
 
                     try {
                         computer.setCompany(companyService.findById(companyId));
-                    } catch (DatabaseException e) {
+                    } catch (NoSuchElementException e) {
                         return "Error on company id";
                     }
 
@@ -168,7 +169,7 @@ public class CliController {
 
                     try {
                         computer.setCompany(companyService.findById(companyId));
-                    } catch (DatabaseException e) {
+                    } catch (NoSuchElementException e) {
                         return "Error on company id";
                     }
 
@@ -295,7 +296,7 @@ public class CliController {
     public Optional<Company> getCompany(Long id) {
         try {
             return Optional.ofNullable(companyService.findById(id));
-        } catch (DatabaseException e) {
+        } catch (NoSuchElementException e) {
             LOGGER.warn("Company with the id= " + id + " not found.");
             return Optional.empty();
         }

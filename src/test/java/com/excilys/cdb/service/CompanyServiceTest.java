@@ -3,6 +3,8 @@ package test.java.com.excilys.cdb.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.NoSuchElementException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import main.java.com.excilys.cdb.config.AppConfig;
-import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.CompanyService;
@@ -67,7 +68,7 @@ public class CompanyServiceTest {
      * {@link main.java.com.excilys.cdb.service.CompanyService#findById(java.lang.Long)}.
      * @throws Exception Exception
      */
-    @Test(expected = DatabaseException.class)
+    @Test(expected = NoSuchElementException.class)
     public void testFindByBadId() throws Exception {
         companyService.findById(-1L);
     }

@@ -2,14 +2,15 @@ package main.java.com.excilys.cdb.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,9 +31,6 @@ import main.java.com.excilys.cdb.model.Page;
 @Repository
 public class CompanyDao {
 
-    // @Autowired
-    private DataSource dataSource;
-
     private JdbcTemplate jdbcTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
@@ -43,8 +41,6 @@ public class CompanyDao {
     private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
     private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
 
-    // private TransactionTemplate transactionTemplate;
-
     private PlatformTransactionManager transactionManager;
 
     /**
@@ -52,10 +48,8 @@ public class CompanyDao {
      * @param dataSource The datasource
      * @param transactionManager The patformTransactionManager
      */
-    @Autowired
     public CompanyDao(DataSource dataSource, PlatformTransactionManager transactionManager) {
 
-        this.dataSource = dataSource;
         this.transactionManager = transactionManager;
         jdbcTemplate = new JdbcTemplate(dataSource);
 
@@ -90,18 +84,19 @@ public class CompanyDao {
      * Retrieve the company with the given id.
      * @param id the id of company
      * @return the company
-     * @throws DatabaseException if id not found
+     * @throws NoSuchElementException if id not found
      */
-    public Optional<Company> findById(Long id) {
+    public Optional<Company> findById(Long id) throws NoSuchElementException {
         Company company = null;
+
         try {
-
-            company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, new CompanyMapper());
-
+        company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, new CompanyMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         } catch (DataAccessException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.warn(e.getMessage());
+            return Optional.empty();
         }
-
         return Optional.ofNullable(company);
     }
 

@@ -1,6 +1,7 @@
 package main.java.com.excilys.cdb.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,9 @@ public class CompanyService {
      * Retrieve the company with the given id.
      * @param id the id of the company
      * @return the company
-     * @throws DatabaseException DatabaseException
+     * @throws NoSuchElementException NoSuchElementException
      */
-    public Company findById(Long id) throws DatabaseException {
+    public Company findById(Long id) throws NoSuchElementException {
         return companyDao.findById(id).get();
     }
 
