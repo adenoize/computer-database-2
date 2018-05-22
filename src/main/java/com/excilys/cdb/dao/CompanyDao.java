@@ -1,10 +1,5 @@
 package main.java.com.excilys.cdb.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +9,13 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
@@ -29,8 +30,10 @@ import main.java.com.excilys.cdb.model.Page;
 @Repository
 public class CompanyDao {
 
-    @Autowired
+    // @Autowired
     private DataSource dataSource;
+
+    private JdbcTemplate jdbcTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
 
@@ -40,8 +43,23 @@ public class CompanyDao {
     private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
     private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
 
+    // private TransactionTemplate transactionTemplate;
+
+    private PlatformTransactionManager transactionManager;
+
+    /**
+     * Constructor of CompanyDao.
+     * @param dataSource The datasource
+     * @param transactionManager The patformTransactionManager
+     */
     @Autowired
-    private CompanyMapper companyMapper;
+    public CompanyDao(DataSource dataSource, PlatformTransactionManager transactionManager) {
+
+        this.dataSource = dataSource;
+        this.transactionManager = transactionManager;
+        jdbcTemplate = new JdbcTemplate(dataSource);
+
+    }
 
     /**
      * Retrieve a page of companies.
@@ -50,24 +68,18 @@ public class CompanyDao {
      */
     public Page<Company> getPage(int offset) {
 
-        List<Company> companies = new ArrayList<Company>();
-
         if (offset < 0) {
             offset = 0;
         }
 
-        try (Connection connection = dataSource.getConnection()) {
+        List<Company> companies = new ArrayList<>();
 
-            PreparedStatement st = connection.prepareStatement(GET_PAGE);
-            st.setInt(1, Constante.LIMIT_PAGE);
-            st.setInt(2, offset);
-            ResultSet rs = st.executeQuery();
+        try {
 
-            while (rs.next()) {
-                companies.add(companyMapper.map(rs));
-            }
+            companies = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset },
+                    new CompanyMapper());
 
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -80,24 +92,13 @@ public class CompanyDao {
      * @return the company
      * @throws DatabaseException if id not found
      */
-    public Optional<Company> findById(Long id) throws DatabaseException {
+    public Optional<Company> findById(Long id) {
         Company company = null;
+        try {
 
-        try (Connection connection = dataSource.getConnection()) {
+            company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, new CompanyMapper());
 
-            PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
-            st.setLong(1, id);
-            ResultSet resultSet = st.executeQuery();
-
-            if (resultSet.next()) {
-                company = companyMapper.map(resultSet);
-            }
-
-            if (company == null) {
-                throw new DatabaseException("Computer not found");
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -111,17 +112,11 @@ public class CompanyDao {
     public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
 
-        try (Connection connection = dataSource.getConnection()) {
+        try {
 
-            Statement st = connection.createStatement();
+            companies = jdbcTemplate.query(FIND_ALL, new CompanyMapper());
 
-            ResultSet resultSet = st.executeQuery(FIND_ALL);
-
-            while (resultSet.next()) {
-                companies.add(companyMapper.map(resultSet));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -135,42 +130,16 @@ public class CompanyDao {
      */
     public void removeById(Long id) throws DatabaseException {
 
-        Connection connection = null;
+        TransactionDefinition def = new DefaultTransactionDefinition();
+        TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
 
-            PreparedStatement st = connection.prepareStatement(REMOVE_COMPUTER_BY_COMPANY);
-            st.setLong(1, id);
-            st.executeUpdate();
-
-            st = connection.prepareStatement(REMOVE_BY_ID);
-            st.setLong(1, id);
-            st.executeUpdate();
-
-            connection.commit();
-
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException e1) {
-                    LOGGER.error(e.getMessage());
-                    throw new DatabaseException("Can't rollback");
-                }
-                throw new DatabaseException("Rollback");
-            }
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    LOGGER.error(e.getMessage());
-                    throw new DatabaseException("Can't close connection to database");
-                }
-            }
+            jdbcTemplate.update(REMOVE_COMPUTER_BY_COMPANY, id);
+            jdbcTemplate.update(REMOVE_BY_ID, id);
+            transactionManager.commit(status);
+        } catch (DataAccessException e) {
+            transactionManager.rollback(status);
         }
     }
 

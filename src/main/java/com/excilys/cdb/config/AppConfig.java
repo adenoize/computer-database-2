@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -24,7 +25,17 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig("/datasource.properties");
-//        LOGGER.debug("Datasource");
+
         return new HikariDataSource(config);
+    }
+
+    /**
+     * DataSourceTransactionManager bean.
+     * @return DataSourceTransactionManager
+     */
+    @Bean
+    public DataSourceTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+
     }
 }
