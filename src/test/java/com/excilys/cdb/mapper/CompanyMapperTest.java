@@ -2,34 +2,47 @@ package test.java.com.excilys.cdb.mapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.sql.ResultSet;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import main.java.com.excilys.cdb.config.AppConfig;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
 import main.java.com.excilys.cdb.model.Company;
 
 /**
  * Test for CompanyMapper.
  * @author Aurelien Denoize
- *
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = AppConfig.class)
 public class CompanyMapperTest {
 
-
-    @Mock
     ResultSet resultSet;
 
-    CompanyMapper companyMapper = new CompanyMapper();
+    @Autowired
+    CompanyMapper companyMapper;
 
     /**
-     * Test method for {@link main.java.com.excilys.cdb.mapper.CompanyMapper#map(java.sql.ResultSet)}.
+     * Mock of computer.
+     */
+    @Before
+    public void before() {
+        resultSet = mock(ResultSet.class);
+
+    }
+
+    /**
+     * Test method for
+     * {@link main.java.com.excilys.cdb.mapper.CompanyMapper#map(java.sql.ResultSet)}.
      * @throws Exception Exception
      */
     @Test
@@ -42,6 +55,5 @@ public class CompanyMapperTest {
         assertEquals(1, company.getId().longValue());
         assertTrue(company.getName().equals("test"));
     }
-
 
 }

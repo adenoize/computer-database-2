@@ -27,7 +27,7 @@ import main.java.com.excilys.cdb.model.Page;
 public class CompanyDaoTest {
 
     @Autowired
-    private static CompanyDao companyDao;
+    private CompanyDao companyDao;
 
     /**
      * Test method for
