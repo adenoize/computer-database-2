@@ -9,6 +9,7 @@
 	<name>computer database</name>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+		<finalName>CDB</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -22,7 +23,10 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
+					<!-- <warSourceDirectory>WebContent</warSourceDirectory> -->
+					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<warName>CDB</warName>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -144,13 +148,13 @@
 		</dependency>
 
 		<!-- SPRING -->
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
