@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="p" uri="Paginator" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
 <html>
 <head>
 <title>Dashboard</title>
@@ -32,7 +34,7 @@
 				</form> 
 			</div>
 			<div class="pull-right">
-				<a class="btn btn-success" id="addComputer" href="addComputer">Add
+				<a class="btn btn-success" id="addComputer" href="${contextPath}/computer/add">Add
 					Computer</a> <a class="btn btn-default" id="editComputer" href="#"
 					onclick="$.fn.toggleEditMode();">Edit <i class="fa fa-edit"></i></a>
 			</div>
@@ -73,7 +75,7 @@
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
 							class="cb" value="${item.id}"></td>
-						<td><a href="editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
+						<td><a href="${contextPath}/editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
 						<td><c:out value="${item.introduced}"/></td>
 						<td><c:out value="${item.discontinued}"/></td>
 						<td><c:out value="${item.company}"/></td>
@@ -105,7 +107,7 @@
 	</footer>
 
 	<jsp:include page="script.jsp" flush="true" />
-	<script src="${pageContext.request.contextPath}/js/dashboard.js"></script>
+	<script src="${contextPath}/js/dashboard.js"></script>
 
 </body>
 </html>
