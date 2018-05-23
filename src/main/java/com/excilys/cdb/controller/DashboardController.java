@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.com.excilys.cdb.dto.ComputerDTO;
 import main.java.com.excilys.cdb.dto.PageDTO;
+import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 import main.java.com.excilys.cdb.service.ComputerService;
@@ -48,7 +49,6 @@ public class DashboardController {
         Page<Computer> computerPage = null;
         PageDTO<ComputerDTO> pageDTO = new PageDTO<>();
         List<ComputerDTO> listDTO = new ArrayList<ComputerDTO>();
-
 
         if (search == null || search.equals("")) {
             computerPage = computerService.getPage(currPage, limit);
@@ -85,10 +85,27 @@ public class DashboardController {
         return "dashboard";
     }
 
-    // @RequestMapping(value = "/helloagain", method = RequestMethod.GET)
-    // public String sayHelloAgain(ModelMap model) {
-    // model.addAttribute("greeting", "Hello World Again, from Spring 4 MVC");
-    // return "welcome";
-    // }
+    @RequestMapping(value = "/dashboard", method = RequestMethod.POST)
+    public String delete(@RequestParam String selection, ModelMap model) {
+
+        String[] computerIds = selection.split(",");
+        Long id = null;
+        for (String computerId : computerIds) {
+
+            try {
+                id = Long.parseLong(computerId);
+                computerService.removeById(id);
+                model.addAttribute("info", "Computer was deleted");
+                LOGGER.info("Computer with id=" + id + " was deleted.");
+            } catch (DatabaseException e) {
+                LOGGER.warn("Fail to delete computer with id " + id + "Exception : " + e.getMessage());
+            } catch (NumberFormatException e) {
+                LOGGER.debug("Delete computer : bad id, not a number" + e.getMessage());
+                model.addAttribute("info", "Bad selection");
+            }
+        }
+
+        return "dashboard";
+    }
 
 }

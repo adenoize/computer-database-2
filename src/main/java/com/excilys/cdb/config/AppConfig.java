@@ -8,11 +8,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
+@EnableWebMvc
 @ComponentScan(basePackages = { "main.java.com.excilys.cdb" })
 public class AppConfig {
 
@@ -37,5 +42,19 @@ public class AppConfig {
     public DataSourceTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
 
+    }
+
+    /**
+     * ViewResolver bean.
+     * @return ViewResolver
+     */
+    @Bean
+    public ViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/jsp/");
+        viewResolver.setSuffix(".jsp");
+
+        return viewResolver;
     }
 }
