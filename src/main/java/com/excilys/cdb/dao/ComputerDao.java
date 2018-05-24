@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +16,14 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
+import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -28,8 +33,6 @@ import main.java.com.excilys.cdb.model.Page;
  */
 @Repository
 public class ComputerDao {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
     private static final String CREATE = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?,?,?,?);";
     private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
@@ -42,11 +45,21 @@ public class ComputerDao {
     private static final String FIND_BY_COMPANYID = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE company_id = ? LIMIT ? OFFSET ?";
     private static final String COUNT_BY_COMPANYID = "SELECT count(id) FROM computer WHERE company_id = ?";
 
-    @Autowired
-    private DataSource datasource;
+    private JdbcTemplate jdbcTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
     @Autowired
     private ComputerMapper computerMapper;
+
+    /**
+     * Constructor of ComputerDao.
+     * @param dataSource The datasource
+     */
+    public ComputerDao(DataSource dataSource) {
+
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     /**
      * Make persistent the given Computer.
@@ -56,36 +69,35 @@ public class ComputerDao {
     public Optional<Long> create(Computer computer) {
 
         Long id = null;
+        String name = computer.getName();
+        Date introduced = null;
+        Date discontinued = null;
+        Long companyId = null;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-            st.setString(1, computer.getName());
-
-            if (computer.getIntroduced() != null) {
-                st.setDate(2, Date.valueOf(computer.getIntroduced()));
-            } else {
-                st.setDate(2, null);
+            try {
+                introduced = Date.valueOf(computer.getIntroduced());
+            } catch (NullPointerException e) {
+                introduced = null;
             }
-            if (computer.getDiscontinued() != null) {
-                st.setDate(3, Date.valueOf(computer.getDiscontinued()));
-            } else {
-                st.setDate(3, null);
+
+            try {
+                discontinued = Date.valueOf(computer.getDiscontinued());
+            } catch (NullPointerException e) {
+                discontinued = null;
             }
+
             if (computer.getCompany() != null) {
-                st.setLong(4, computer.getCompany().getId());
+                companyId = computer.getCompany().getId();
             } else {
-                st.setObject(4, null);
+                companyId = null;
             }
 
-            st.executeUpdate();
-            ResultSet rs = st.getGeneratedKeys();
+            jdbcTemplate.update(CREATE, computer.getName(), Date.valueOf(computer.getIntroduced()),
+                    Date.valueOf(computer.getDiscontinued()), computer.getCompany().getId());
 
-            if (rs.next()) {
-                id = new Long(rs.getInt(1));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             id = null;
         }
