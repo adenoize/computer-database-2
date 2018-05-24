@@ -208,7 +208,7 @@ public class ComputerDao {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                computers.add(computerMapper.map(rs));
+                computers.add(computerMapper.mapRow(rs, 2));
             }
 
         } catch (SQLException e) {

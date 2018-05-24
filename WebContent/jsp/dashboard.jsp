@@ -75,7 +75,7 @@
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
 							class="cb" value="${item.id}"></td>
-						<td><a href="${contextPath}/editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
+						<td><a href="${contextPath}/computer/edit?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
 						<td><c:out value="${item.introduced}"/></td>
 						<td><c:out value="${item.discontinued}"/></td>
 						<td><c:out value="${item.company}"/></td>

@@ -24,6 +24,7 @@
 				</c:if>
 				<form:form modelAttribute="computer" method="POST">
 					<fieldset>
+						
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <form:input path="name"
 								type="text" class="form-control" id="name"
@@ -40,7 +41,7 @@
 								placeholder="Discontinued date"/>
 						</div>
 						<div class="form-group">
-							<label for="companyId">Company</label> 
+							<form:label path="company">Company</form:label> 
 							<form:select path="company"
 								class="form-control" id="companyId">						
 								<form:option value="0" label="--Please Select"/>
