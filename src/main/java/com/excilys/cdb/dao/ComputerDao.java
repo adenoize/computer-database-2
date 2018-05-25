@@ -1,12 +1,6 @@
 package main.java.com.excilys.cdb.dao;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
-import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
 
@@ -64,12 +56,11 @@ public class ComputerDao {
     /**
      * Make persistent the given Computer.
      * @param computer the computer to persist
-     * @return the id of entity
+     * @return true if computer was saved
      */
-    public Optional<Long> create(Computer computer) {
+    public boolean create(Computer computer) {
 
-        Long id = null;
-        String name = computer.getName();
+        int result = 0;        String name = computer.getName();
         Date introduced = null;
         Date discontinued = null;
         Long companyId = null;
@@ -94,15 +85,14 @@ public class ComputerDao {
                 companyId = null;
             }
 
-            jdbcTemplate.update(CREATE, computer.getName(), Date.valueOf(computer.getIntroduced()),
-                    Date.valueOf(computer.getDiscontinued()), computer.getCompany().getId());
+            result = jdbcTemplate.update(CREATE, name, introduced, discontinued, companyId);
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
-            id = null;
+            return false;
         }
 
-        return Optional.ofNullable(id);
+        return (result == 1);
     }
 
     /**
@@ -113,31 +103,41 @@ public class ComputerDao {
     public boolean update(Computer computer) {
 
         int result = 0;
+        Long id = null;
+        String name = computer.getName();
+        Date introduced = null;
+        Date discontinued = null;
+        Long companyId = null;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(UPDATE);
-            st.setString(1, computer.getName());
-            if (computer.getIntroduced() != null) {
-                st.setDate(2, Date.valueOf(computer.getIntroduced()));
+            if (computer.getId() != null) {
+                id = computer.getId();
             } else {
-                st.setDate(2, null);
+                return false;
             }
-            if (computer.getDiscontinued() != null) {
-                st.setDate(3, Date.valueOf(computer.getDiscontinued()));
-            } else {
-                st.setDate(3, null);
-            }
-            if (computer.getCompany() != null) {
-                st.setLong(4, computer.getCompany().getId());
-            } else {
-                st.setObject(4, null);
-            }
-            st.setLong(5, computer.getId());
 
-            result = st.executeUpdate();
+            try {
+                introduced = Date.valueOf(computer.getIntroduced());
+            } catch (NullPointerException e) {
+                introduced = null;
+            }
 
-        } catch (SQLException e) {
+            try {
+                discontinued = Date.valueOf(computer.getDiscontinued());
+            } catch (NullPointerException e) {
+                discontinued = null;
+            }
+
+            if (computer.getCompany() != null && computer.getCompany().getId() != null) {
+                companyId = computer.getCompany().getId();
+            } else {
+                companyId = null;
+            }
+
+            result = jdbcTemplate.update(UPDATE, name, introduced, discontinued, companyId, id);
+
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return false;
         }
@@ -154,42 +154,11 @@ public class ComputerDao {
 
         int result = 0;
 
-        try (Connection connection = datasource.getConnection()) {
-
-            PreparedStatement st = connection.prepareStatement(REMOVE);
-
-            st.setLong(1, id);
-
-            result = st.executeUpdate();
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-            return false;
-        }
-
-        return (result == 1);
-
-    }
-
-    /**
-     * Remove the Computer with the given id.
-     * @param id the id of computer
-     * @param connection the connection to database
-     * @return true if the given computer was remove
-     */
-    public boolean removeById(Long id, Connection connection) {
-
-        int result = 0;
-
         try {
 
-            PreparedStatement st = connection.prepareStatement(REMOVE);
+            result = jdbcTemplate.update(REMOVE, id);
 
-            st.setLong(1, id);
-
-            result = st.executeUpdate();
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return false;
         }
@@ -212,18 +181,11 @@ public class ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(GET_PAGE);
-            st.setInt(1, Constante.LIMIT_PAGE);
-            st.setInt(2, offset);
-            ResultSet rs = st.executeQuery();
+            computers = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset }, computerMapper);
 
-            while (rs.next()) {
-                computers.add(computerMapper.mapRow(rs, 2));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -245,18 +207,11 @@ public class ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(GET_PAGE);
-            st.setInt(1, limit);
-            st.setInt(2, offset);
-            ResultSet rs = st.executeQuery();
+            computers = jdbcTemplate.query(GET_PAGE, new Object[] {limit, offset }, computerMapper);
 
-            while (rs.next()) {
-                computers.add(computerMapper.map(rs));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -278,22 +233,12 @@ public class ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(GET_PAGE_SEARCH);
-            st.setString(1, "%" + search + "%");
-            st.setString(2, "%" + search + "%");
-            st.setInt(3, limit);
-            st.setInt(4, offset);
+            computers = jdbcTemplate.query(GET_PAGE_SEARCH,
+                    new Object[] {"%" + search + "%", "%" + search + "%", limit, offset }, computerMapper);
 
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()) {
-
-                computers.add(computerMapper.map(rs));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -309,21 +254,11 @@ public class ComputerDao {
 
         Computer computer = null;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(FIND_BY_ID);
+            computer = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, computerMapper);
 
-            st.setLong(1, id);
-
-            ResultSet resultSet = st.executeQuery();
-
-            if (resultSet.next()) {
-
-                computer = computerMapper.map(resultSet);
-
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return null;
         }
@@ -339,19 +274,11 @@ public class ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            Statement st = connection.createStatement();
+            count = jdbcTemplate.queryForObject(COUNT, Integer.class);
 
-            ResultSet resultSet = st.executeQuery(COUNT);
-
-            if (resultSet.next()) {
-
-                count = resultSet.getInt(1);
-
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;
         }
@@ -368,21 +295,12 @@ public class ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(COUNT_PAGE_SEARCH);
-            st.setString(1, "%" + search + "%");
-            st.setString(2, "%" + search + "%");
+            count = jdbcTemplate.queryForObject(COUNT_PAGE_SEARCH,
+                    new Object[] {"%" + search + "%", "%" + search + "%" }, Integer.class);
 
-            ResultSet resultSet = st.executeQuery();
-
-            if (resultSet.next()) {
-
-                count = resultSet.getInt(1);
-
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;
         }
@@ -405,55 +323,12 @@ public class ComputerDao {
             throw new IllegalArgumentException();
         }
 
-        try (Connection connection = datasource.getConnection()) {
-
-            PreparedStatement st = connection.prepareStatement(FIND_BY_COMPANYID);
-            st.setLong(1, computerId);
-            st.setInt(2, Constante.LIMIT_PAGE);
-            st.setInt(3, offset);
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()) {
-                computers.add(computerMapper.map(rs));
-            }
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        }
-
-        return new Page<Computer>(computers);
-    }
-
-    /**
-     * Retrieve the computer with the given company id.
-     * @param computerId the id of computer
-     * @param offset index for pagination
-     * @param connection the connection
-     * @throws IllegalArgumentException if offset is negative
-     * @return the computer
-     */
-    public Page<Computer> findByComputerId(Long computerId, int offset, Connection connection)
-            throws IllegalArgumentException {
-
-        List<Computer> computers = new ArrayList<Computer>();
-
-        if (offset < 0) {
-            throw new IllegalArgumentException();
-        }
-
         try {
 
-            PreparedStatement st = connection.prepareStatement(FIND_BY_COMPANYID);
-            st.setLong(1, computerId);
-            st.setInt(2, Constante.LIMIT_PAGE);
-            st.setInt(3, offset);
-            ResultSet rs = st.executeQuery();
+            computers = jdbcTemplate.query(FIND_BY_COMPANYID, new Object[] {computerId, Constante.LIMIT_PAGE, offset },
+                    computerMapper);
 
-            while (rs.next()) {
-                computers.add(computerMapper.map(rs));
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
 
@@ -469,19 +344,11 @@ public class ComputerDao {
 
         int count = 0;
 
-        try (Connection connection = datasource.getConnection()) {
+        try {
 
-            PreparedStatement st = connection.prepareStatement(COUNT_BY_COMPANYID);
-            st.setLong(1, companyId);
+            count = jdbcTemplate.queryForObject(COUNT_BY_COMPANYID, new Object[] {companyId }, Integer.class);
 
-            ResultSet resultSet = st.executeQuery();
-
-            if (resultSet.next()) {
-
-                count = resultSet.getInt(1);
-            }
-
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;
         }

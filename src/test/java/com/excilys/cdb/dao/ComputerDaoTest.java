@@ -57,8 +57,8 @@ public class ComputerDaoTest {
     public void testCreate() {
 
         Computer computer = new Computer("computer test");
-        Optional<Long> id = computerDao.create(computer);
-        assertNotEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertTrue(result);
 
     }
 
@@ -70,8 +70,8 @@ public class ComputerDaoTest {
     public void testCreateWithBadCompany() {
 
         Computer computer = new Computer("computer test", null, null, badCompany);
-        Optional<Long> id = computerDao.create(computer);
-        assertEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertFalse(result);
     }
 
     /**
@@ -82,8 +82,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate1() {
 
         Computer computer = new Computer("computer test", null, LocalDate.of(2000, 1, 2), badCompany);
-        Optional<Long> id = computerDao.create(computer);
-        assertEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertFalse(result);
     }
 
     /**
@@ -94,8 +94,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate2() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), null, badCompany);
-        Optional<Long> id = computerDao.create(computer);
-        assertEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertFalse(result);
     }
 
     /**
@@ -106,8 +106,8 @@ public class ComputerDaoTest {
     public void testCreateWithDate3() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), badCompany);
-        Optional<Long> id = computerDao.create(computer);
-        assertEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertFalse(result);
     }
 
     /**
@@ -118,8 +118,8 @@ public class ComputerDaoTest {
     public void testCreateAllInfo() {
 
         Computer computer = new Computer("computer test", LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 2), goodCompany);
-        Optional<Long> id = computerDao.create(computer);
-        assertNotEquals(Optional.empty(), id);
+        boolean result = computerDao.create(computer);
+        assertTrue(result);
     }
 
     /**

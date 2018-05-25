@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,6 +44,9 @@ public class CompanyDao {
 
     private PlatformTransactionManager transactionManager;
 
+    @Autowired
+    private CompanyMapper companyMapper;
+
     /**
      * Constructor of CompanyDao.
      * @param dataSource The datasource
@@ -52,7 +56,6 @@ public class CompanyDao {
 
         this.transactionManager = transactionManager;
         jdbcTemplate = new JdbcTemplate(dataSource);
-
     }
 
     /**
@@ -70,8 +73,7 @@ public class CompanyDao {
 
         try {
 
-            companies = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset },
-                    new CompanyMapper());
+            companies = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset }, companyMapper);
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -90,7 +92,7 @@ public class CompanyDao {
         Company company = null;
 
         try {
-        company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, new CompanyMapper());
+            company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, companyMapper);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (DataAccessException e) {
@@ -109,7 +111,7 @@ public class CompanyDao {
 
         try {
 
-            companies = jdbcTemplate.query(FIND_ALL, new CompanyMapper());
+            companies = jdbcTemplate.query(FIND_ALL, companyMapper);
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());

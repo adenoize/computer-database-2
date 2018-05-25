@@ -29,49 +29,6 @@ public class ComputerMapper  implements RowMapper<Computer>  {
     /**
      * Mapper resultSet to computer.
      * @param resultSet the resultset
-     * @return the Computer
-     * @throws SQLException Exception if error into database
-     */
-    public Computer map(ResultSet resultSet) throws SQLException {
-        Computer computer = new Computer();
-
-        try {
-
-            computer.setId(resultSet.getLong("id"));
-            computer.setName(resultSet.getString("name"));
-            computer.setIntroduced(
-                    (resultSet.getDate("introduced") != null ? resultSet.getDate("introduced").toLocalDate() : null));
-            computer.setDiscontinued(
-                    (resultSet.getDate("discontinued") != null ? resultSet.getDate("discontinued").toLocalDate()
-                            : null));
-            computer.setCompany(findCompany(resultSet.getLong("company_id")));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException();
-        }
-
-        return computer;
-    }
-
-    /**
-     * Retrieve the company of the given id.
-     * @param id the comapny id
-     * @return the company
-     */
-    private Company findCompany(Long id) {
-
-        try {
-            return companyService.findById(id);
-        } catch (NoSuchElementException e) {
-            LOGGER.warn(e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Mapper resultSet to computer.
-     * @param resultSet the resultset
      * @param rowNum the number of rows
      * @return the Computer
      * @throws SQLException Exception if error into database
@@ -96,6 +53,21 @@ public class ComputerMapper  implements RowMapper<Computer>  {
         }
 
         return computer;
+    }
+
+    /**
+     * Retrieve the company of the given id.
+     * @param id the comapny id
+     * @return the company
+     */
+    private Company findCompany(Long id) {
+
+        try {
+            return companyService.findById(id);
+        } catch (NoSuchElementException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        return null;
     }
 
 }

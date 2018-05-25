@@ -27,7 +27,7 @@ public class ComputerService {
      */
     public void save(Computer computer) throws DatabaseException {
 
-        if (!computerDao.create(computer).isPresent()) {
+        if (!computerDao.create(computer)) {
             throw new DatabaseException();
         }
     }
