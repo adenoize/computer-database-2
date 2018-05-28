@@ -29,10 +29,15 @@ public class CliController {
 
     static final Logger LOGGER = LoggerFactory.getLogger(CliController.class);
 
-    private AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    private AbstractApplicationContext context;
+    private ComputerService computerService;
+    private CompanyService companyService;
 
-    private ComputerService computerService = (ComputerService) context.getBean("computerService");
-    private CompanyService companyService = (CompanyService) context.getBean("companyService");
+    {
+        context = new AnnotationConfigApplicationContext(AppConfig.class);
+        computerService = (ComputerService) context.getBean("computerService");
+        companyService = (CompanyService) context.getBean("companyService");
+    }
 
     /**
      * Add new Computer.

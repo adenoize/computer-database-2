@@ -1,12 +1,19 @@
 package main.java.com.excilys.cdb.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * @author Aurelien Denoize Excilys 2018
  */
 public class ComputerDTO {
 
     private String id;
+
+    @NotNull
+    @Size(min = 2, max = 64)
     private String name;
+
     private String introduced;
     private String discontinued;
     private String company;

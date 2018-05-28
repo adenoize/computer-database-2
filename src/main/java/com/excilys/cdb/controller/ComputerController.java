@@ -2,6 +2,8 @@ package main.java.com.excilys.cdb.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +65,14 @@ public class ComputerController {
      * @return The JSP page
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String saveAddComputer(@ModelAttribute("computer") ComputerDTO computerDTO, BindingResult result,
+    public String saveAddComputer(@ModelAttribute("computer") @Valid ComputerDTO computerDTO, BindingResult result,
             ModelMap model) {
 
         Computer computer = null;
+
+        if (result.hasErrors()) {
+            return "addComputer";
+        }
 
         try {
             computer = computerDTOMapper.toComputer(computerDTO);
