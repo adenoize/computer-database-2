@@ -30,7 +30,7 @@ public class DashboardController {
     private ComputerService computerService;
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String getDashboard(@RequestParam String page, @RequestParam String search, ModelMap model) {
+    public String getDashboard(@RequestParam(value = "page", required = false) String page, @RequestParam(value = "search", required = false) String search, ModelMap model) {
 
         int limit = 10;
         int currPage = 1;
@@ -86,7 +86,7 @@ public class DashboardController {
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.POST)
-    public String delete(@RequestParam String selection, ModelMap model) {
+    public String delete(@RequestParam(value = "selection", required = false) String selection, ModelMap model) {
 
         String[] computerIds = selection.split(",");
         Long id = null;
