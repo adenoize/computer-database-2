@@ -80,13 +80,13 @@ public class ComputerController {
             LOGGER.warn("Validator " + e.getMessage());
         }
 
-        try {
-            computerValidator.validate(computer);
-        } catch (ValidatorException e) {
-            LOGGER.warn("Validator " + e.getMessage());
-            model.addAttribute("error", e.getMessage());
-            return "addComputer";
-        }
+//        try {
+//            computerValidator.validate(computer);
+//        } catch (ValidatorException e) {
+//            LOGGER.warn("Validator " + e.getMessage());
+//            model.addAttribute("error", e.getMessage());
+//            return "addComputer";
+//        }
 
         try {
             computerService.save(computer);

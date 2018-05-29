@@ -3,9 +3,12 @@ package main.java.com.excilys.cdb.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import main.java.com.excilys.cdb.validator.DatePeriod;
+
 /**
  * @author Aurelien Denoize Excilys 2018
  */
+@DatePeriod(discontinued = "discontinued", introduced = "introduced")
 public class ComputerDTO {
 
     private String id;

@@ -36,12 +36,13 @@
 						<div class="form-group">
 							<label for="introduced"><spring:message code="introduced"/></label> <form:input path="introduced"
 								type="date" class="form-control" id="introduced"
-								placeholder="Introduced date"/>
+								/>
+								<form:errors path="" />
 						</div>
 						<div class="form-group">
 							<label for="discontinued"><spring:message code="discontinued"/></label> <form:input path="discontinued"
 								type="date" class="form-control" id="discontinued"
-								placeholder="Discontinued date"/>
+								/>
 						</div>
 						<div class="form-group">
 							<form:label path="company"><spring:message code="company"/></form:label> 
