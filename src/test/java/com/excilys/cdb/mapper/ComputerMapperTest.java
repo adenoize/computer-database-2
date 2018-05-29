@@ -56,7 +56,7 @@ public class ComputerMapperTest {
         Mockito.when(resultSet.getDate("discontinued")).thenReturn(new Date(20000101));
         Mockito.when(resultSet.getLong("company_id")).thenReturn(1L);
 
-        Computer computer = computerMapper.map(resultSet);
+        Computer computer = computerMapper.mapRow(resultSet, 5);
 
         assertEquals(1, computer.getId().longValue());
         assertTrue(computer.getName().equals("test"));
@@ -79,7 +79,7 @@ public class ComputerMapperTest {
         Mockito.when(resultSet.getDate("discontinued")).thenReturn(new Date(20000101));
         Mockito.when(resultSet.getLong("company_id")).thenReturn(1L);
 
-        Computer computer = computerMapper.map(resultSet);
+        Computer computer = computerMapper.mapRow(resultSet, 5);
 
         assertEquals(1, computer.getId().longValue());
         assertTrue(computer.getName().equals("test"));
@@ -102,7 +102,7 @@ public class ComputerMapperTest {
         Mockito.when(resultSet.getDate("discontinued")).thenReturn(null);
         Mockito.when(resultSet.getLong("company_id")).thenReturn(1L);
 
-        Computer computer = computerMapper.map(resultSet);
+        Computer computer = computerMapper.mapRow(resultSet, 5);
 
         assertEquals(1, computer.getId().longValue());
         assertTrue(computer.getName().equals("test"));
@@ -125,7 +125,7 @@ public class ComputerMapperTest {
         Mockito.when(resultSet.getDate("discontinued")).thenReturn(null);
         Mockito.when(resultSet.getLong("company_id")).thenReturn(1L);
 
-        Computer computer = computerMapper.map(resultSet);
+        Computer computer = computerMapper.mapRow(resultSet, 5);
 
         assertEquals(1, computer.getId().longValue());
         assertTrue(computer.getName().equals("test"));
@@ -148,7 +148,7 @@ public class ComputerMapperTest {
         Mockito.when(resultSet.getDate("discontinued")).thenReturn(null);
         Mockito.when(resultSet.getLong("company_id")).thenReturn(1L);
 
-        Computer computer = computerMapper.map(resultSet);
+        Computer computer = computerMapper.mapRow(resultSet, 5);
 
         assertEquals(1, computer.getId().longValue());
         assertTrue(computer.getName().equals("test"));

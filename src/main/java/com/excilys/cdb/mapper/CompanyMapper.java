@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import main.java.com.excilys.cdb.model.Company;
 
@@ -11,6 +12,7 @@ import main.java.com.excilys.cdb.model.Company;
  * Company mapper.
  * @author Aurelien Denoize
  */
+@Component
 public class CompanyMapper implements RowMapper<Company> {
 
     @Override

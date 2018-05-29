@@ -1,29 +1,34 @@
 package main.java.com.excilys.cdb.dto;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Aurelien Denoize Excilys 2018
  */
 public class ComputerDTO {
 
-    private Long id;
+    private String id;
+
+    @NotNull
+    @Size(min = 2, max = 64)
     private String name;
-    private LocalDate introduced;
-    private LocalDate discontinued;
+
+    private String introduced;
+    private String discontinued;
     private String company;
 
     /**
      * @return the id
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,28 +49,28 @@ public class ComputerDTO {
     /**
      * @return the introduced
      */
-    public LocalDate getIntroduced() {
+    public String getIntroduced() {
         return introduced;
     }
 
     /**
      * @param introduced the introduced to set
      */
-    public void setIntroduced(LocalDate introduced) {
+    public void setIntroduced(String introduced) {
         this.introduced = introduced;
     }
 
     /**
      * @return the discontinued
      */
-    public LocalDate getDiscontinued() {
+    public String getDiscontinued() {
         return discontinued;
     }
 
     /**
      * @param discontinued the discontinued to set
      */
-    public void setDiscontinued(LocalDate discontinued) {
+    public void setDiscontinued(String discontinued) {
         this.discontinued = discontinued;
     }
 
@@ -82,4 +87,5 @@ public class ComputerDTO {
     public void setCompany(String company) {
         this.company = company;
     }
+
 }

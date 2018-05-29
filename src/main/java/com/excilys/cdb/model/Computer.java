@@ -49,6 +49,23 @@ public class Computer {
     }
 
     /**
+     * Constructor with id, name, dates, company.
+     * @param id the id of computer
+     * @param name the name of computer
+     * @param introduced date of introduction
+     * @param discontinued date of discontinue
+     * @param company the brand
+     */
+    public Computer(Long id, String name, LocalDate introduced, LocalDate discontinued, Company company) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.introduced = introduced;
+        this.discontinued = discontinued;
+        this.company = company;
+    }
+
+    /**
      * @return the id
      */
     public Long getId() {

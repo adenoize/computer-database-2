@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
 <html>
 <head>
-<title>Edit computer</title>
+<title><spring:message code="editComputer"/></title>
 <jsp:include page="head.jsp" flush="true" />
 </head>
 <body>
@@ -17,7 +21,7 @@
 					id:
 					<c:out value="${id}">0</c:out>
 				</div>
-				<h1>Edit Computer</h1>
+				<h1><spring:message code="editComputer"/></h1>
 
 				<c:if test="${error!=null}">
 					<div class="alert alert-danger">
@@ -25,49 +29,39 @@
 					</div>
 				</c:if>
 				
-				<form action="editComputer?id=${id}" method="POST" name="editComputer">
+				<form:form modelAttribute="computer" method="POST">
 					<fieldset>
 						<div class="form-group">
-							<label for="computerName">Computer name</label> <input
-								type="text" class="form-control" id="computerName"
-								name="computerName" placeholder="Computer name"
-								value="${computerName}">
+							<label for="computerName"><spring:message code="computerName"/></label> <form:input path="name"
+								type="text" class="form-control" id="name"
+								placeholder="<spring:message code="computerName"/>"/>
+								<form:errors path="name" />
 						</div>
+						
 						<div class="form-group">
-							<label for="introduced">Introduced date</label> <input
+							<label for="introduced"><spring:message code="introduced"/></label> <form:input path="introduced"
 								type="date" class="form-control" id="introduced"
-								name="introduced" placeholder="Introduced date"
-								value="${introduced}">
+								/>
 						</div>
 						<div class="form-group">
-							<label for="discontinued">Discontinued date</label> <input
+							<label for="discontinued"><spring:message code="discontinued"/></label> <form:input path="discontinued"
 								type="date" class="form-control" id="discontinued"
-								name="discontinued" placeholder="Discontinued date"
-								value="${discontinued}">
+								/>
 						</div>
 						<div class="form-group">
-							<label for="companyId">Company</label> <select
-								class="form-control" id="companyId" name="companyId">
-								<option value="0">--</option>
-								<c:forEach items="${companies}" var="companiesValue">
-									
-									<c:if test="${companiesValue.id==companyId}">
-										<option selected="selected" value="${companiesValue.id}"><c:out
-												value="${companiesValue.name}"></c:out></option>
-									</c:if>
-									<c:if test="${companiesValue.id!=companyId}">
-										<option value="${companiesValue.id}"><c:out
-												value="${companiesValue.name}"></c:out></option>
-									</c:if>
-								</c:forEach>
-							</select>
+							<form:label path="company"><spring:message code="company"/></form:label> 
+							<form:select path="company"
+								class="form-control" id="companyId">						
+								<form:option value="0"><spring:message code="select"/></form:option>
+            					<form:options items="${companies}" itemValue="id" itemLabel="name"/>
+							</form:select>
 						</div>
 					</fieldset>
 					<div class="actions pull-right">
-						<input type="submit" value="Edit" class="btn btn-primary">
-						or <a href="dashboard" class="btn btn-default">Cancel</a>
+						<button type="submit" class="btn btn-primary"><spring:message code="edit"/></button>
+						<spring:message code="or"/> <a href="${contextPath}/dashboard" class="btn btn-default"><spring:message code="cancel"/></a>
 					</div>
-				</form>
+				</form:form>
 			</div>
 		</div>
 	</div>

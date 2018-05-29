@@ -2,17 +2,17 @@
 $(function() {
   // Initialize form validation on the registration form.
   // It has the name attribute "registration"
-  $("form[name='addComputer']").validate({
+  $("form[name='computer/add']").validate({
     // Specify validation rules
     rules: {
       // The key name on the left side is the name attribute
       // of an input field. Validation rules are defined
       // on the right side
-    	computerName: "required"
+    	name: "required"
     },
     // Specify validation error messages
     messages: {
-      computerName: "Please enter the name"
+    	name: "Please enter the name"
     },
     // Make sure the form is submitted to the destination defined
     // in the "action" attribute of the form when valid
@@ -27,11 +27,11 @@ $(function() {
 	      // The key name on the left side is the name attribute
 	      // of an input field. Validation rules are defined
 	      // on the right side
-	    	computerName: "required"
+	    	name: "required"
 	    },
 	    // Specify validation error messages
 	    messages: {
-	      computerName: "Please enter the name"
+	    	name: "Please enter the name"
 	    },
 	    // Make sure the form is submitted to the destination defined
 	    // in the "action" attribute of the form when valid

@@ -2,11 +2,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="p" uri="Paginator" %>
+<%@ taglib prefix="p" uri="Paginator"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <html>
 <head>
-<title>Dashboard</title>
+<title><spring:message code="dashboard"/></title>
 <jsp:include page="head.jsp" flush="true" />
 </head>
 
@@ -20,21 +23,20 @@
 				<c:out value="${info}"></c:out>
 			</div>
 		</c:if>
-		<h1 id="homeTitle"><c:out value="${numberComputers}"></c:out> Computers found</h1>
+		<h1 id="homeTitle"><spring:message code="computersFound" arguments="${numberComputers}"/></h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
 				 <form id="searchForm" action="dashboard" method="GET" class="form-inline">
 					<input type="text" id="searchbox" name="search"
-						class="form-control" placeholder="Search name" />
+						 placeholder=<spring:message code="filterByName"/> class="form-control"/>
 						<input
-						type="submit" id="searchsubmit" value="Filter by name"
+						type="submit" id="searchsubmit" value=<spring:message code="filterByName"/>
 						class="btn btn-primary" />
 				</form> 
 			</div>
 			<div class="pull-right">
-				<a class="btn btn-success" id="addComputer" href="addComputer">Add
-					Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-					onclick="$.fn.toggleEditMode();">Edit <i class="fa fa-edit"></i></a>
+				<a class="btn btn-success" id="addComputer" href="${contextPath}/computer/add"><spring:message code="addComputer"/></a> <a class="btn btn-default" id="editComputer" href="#"
+					onclick="$.fn.toggleEditMode();"><spring:message code="edit"/> <i class="fa fa-edit"></i></a>
 			</div>
 		</div>
 	</div>
@@ -57,12 +59,10 @@
 								class="fa fa-trash-o fa-lg"></i>
 						</a>
 					</span></th>
-					<th>Computer name</th>
-					<th>Introduced date</th>
-					<!-- Table header for Discontinued Date -->
-					<th>Discontinued date</th>
-					<!-- Table header for Company -->
-					<th>Company</th>
+					<th><spring:message code="computerName"/></th>
+					<th><spring:message code="introduced"/></th>
+					<th><spring:message code="discontinued"/></th>
+					<th><spring:message code="company"/></th>
 
 				</tr>
 			</thead>
@@ -73,7 +73,7 @@
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
 							class="cb" value="${item.id}"></td>
-						<td><a href="editComputer?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
+						<td><a href="${contextPath}/computer/edit?id=${item.id}" onclick=""><c:out value="${item.name}"/></a></td>
 						<td><c:out value="${item.introduced}"/></td>
 						<td><c:out value="${item.discontinued}"/></td>
 						<td><c:out value="${item.company}"/></td>
@@ -105,7 +105,7 @@
 	</footer>
 
 	<jsp:include page="script.jsp" flush="true" />
-	<script src="${pageContext.request.contextPath}/js/dashboard.js"></script>
+	<script src="${contextPath}/js/dashboard.js"></script>
 
 </body>
 </html>
