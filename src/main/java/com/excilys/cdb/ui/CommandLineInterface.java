@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import main.java.com.excilys.cdb.controller.CliController;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
@@ -15,11 +18,21 @@ import main.java.com.excilys.cdb.model.Page;
 /**
  * @author Aurelien Denoize
  */
+@Component
 public class CommandLineInterface {
 
-    CliController cliController = new CliController();
+    
+    CliController cliController;
+    
     Queue<String> args = new LinkedList<String>();;
 
+    
+    public CommandLineInterface(CliController cliController) {
+        super();
+        this.cliController = cliController;
+    }
+    
+    
     /**
      * Run the CLI.
      * @param arguments arguments of application
@@ -322,5 +335,7 @@ public class CommandLineInterface {
         System.out.println("cbdCli --list --computer");
         System.out.println("cbdCli --list --company");
     }
+
+    
 
 }

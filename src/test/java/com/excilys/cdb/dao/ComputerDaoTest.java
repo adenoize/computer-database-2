@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import main.java.com.excilys.cdb.config.AppConfig;
+import main.java.com.excilys.cdb.config.WebAppConfig;
 import main.java.com.excilys.cdb.dao.ComputerDao;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
@@ -26,7 +26,7 @@ import main.java.com.excilys.cdb.model.Page;
  * @author Aurelien Denoize
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = AppConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = WebAppConfig.class, loader = AnnotationConfigContextLoader.class)
 public class ComputerDaoTest {
 
     @Autowired

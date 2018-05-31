@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -14,10 +15,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
+import main.java.com.excilys.cdb.model.QComputer;
 
 /**
  * DAO about Computer.
@@ -43,14 +47,18 @@ public class ComputerDao {
 
     @Autowired
     private ComputerMapper computerMapper;
-
+    
+    EntityManager em;
+    JPAQueryFactory queryFactory;
     /**
      * Constructor of ComputerDao.
      * @param dataSource The datasource
      */
-    public ComputerDao(DataSource dataSource) {
+    public ComputerDao(DataSource dataSource, EntityManager entityManager) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
+        em = entityManager;
+        queryFactory = new JPAQueryFactory(em);
     }
 
     /**
@@ -60,7 +68,8 @@ public class ComputerDao {
      */
     public boolean create(Computer computer) {
 
-        int result = 0;        String name = computer.getName();
+        int result = 0;        
+        String name = computer.getName();
         Date introduced = null;
         Date discontinued = null;
         Long companyId = null;
@@ -85,8 +94,10 @@ public class ComputerDao {
                 companyId = null;
             }
 
-            result = jdbcTemplate.update(CREATE, name, introduced, discontinued, companyId);
-
+//            result = jdbcTemplate.update(CREATE, name, introduced, discontinued, companyId);
+            
+            em.persist(computer);
+     
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return false;

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import main.java.com.excilys.cdb.controller.CliController;
 import main.java.com.excilys.cdb.model.Company;
@@ -20,7 +21,8 @@ import main.java.com.excilys.cdb.model.Page;
  */
 public class CliControllerTest {
 
-    CliController cliController = new CliController();
+    @Autowired
+    CliController cliController;
 
     /**
      * Test method for
