@@ -17,6 +17,7 @@ local.properties
 
 src/main/resources/datasource.properties
 src/test/resources/datasource.properties
+src/main/resources/META-INF/persistence.xml
 
 # External tool builders
 .externalToolBuilders/
