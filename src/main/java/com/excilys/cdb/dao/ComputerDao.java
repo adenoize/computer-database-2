@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -120,19 +121,21 @@ public class ComputerDao {
      */
     public boolean removeById(Long id) {
 
-        int result = 0;
-        QComputer qComputer = QComputer.computer;
-
+        Computer computerToUpdate = em.find(Computer.class, id);
+        
         try {
+ 
+            em.getTransaction().begin();
+            em.remove(computerToUpdate);
+            em.getTransaction().commit();
 
-            queryFactory.delete(qComputer).where(qComputer.id.eq(id)).execute();
-
-        } catch (DataAccessException e) {
+        }  catch (Exception e ) {
             LOGGER.error(e.getMessage());
+            em.getTransaction().rollback();
             return false;
         }
 
-        return (result == 1);
+        return true;
 
     }
 
@@ -157,7 +160,6 @@ public class ComputerDao {
             
 
             computers = query.from(qComputer).limit(Constante.LIMIT_PAGE).offset(offset).fetch();
-//            computers = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset }, computerMapper);
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -185,7 +187,6 @@ public class ComputerDao {
 
         try {
 
-//          computers = jdbcTemplate.query(GET_PAGE, new Object[] {limit, offset }, computerMapper);
             computers = query.from(qComputer).limit(limit).offset(offset).fetch();
             
         } catch (DataAccessException e) {
@@ -214,10 +215,9 @@ public class ComputerDao {
         }
 
         try {
-
-//            computers = jdbcTemplate.query(GET_PAGE_SEARCH, new Object[] {"%" + search + "%", "%" + search + "%", limit, offset }, computerMapper);
-            computers = query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").or(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).limit(limit).offset(offset).fetch();
-           
+//            computers = query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").orAllOf(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).limit(limit).offset(offset).fetch();        
+            computers = query.from(qComputer).where(qComputer.company.isNull().or(qComputer.company.name.likeIgnoreCase("%" + search + "%").or(qComputer.name.likeIgnoreCase("%" + search + "%")))).limit(limit).offset(offset).fetch();        
+        
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -238,9 +238,6 @@ public class ComputerDao {
         
         try {
 
-//            computer = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, computerMapper);
-            
-//            computer = query.from(qComputer).where();
             computer = query.from(qComputer).where(qComputer.id.eq(id)).fetchOne();
 
         } catch (DataAccessException e) {
@@ -263,7 +260,6 @@ public class ComputerDao {
 
         try {
 
-//            count = jdbcTemplate.queryForObject(COUNT, Integer.class);
             count = (int) query.from(qComputer).fetchCount();
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -285,9 +281,6 @@ public class ComputerDao {
         final QComputer qComputer = QComputer.computer;
 
         try {
-
-//            count = jdbcTemplate.queryForObject(COUNT_PAGE_SEARCH,
-//                    new Object[] {"%" + search + "%", "%" + search + "%" }, Integer.class);
             count = (int) query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").or(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).fetchCount();
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -317,8 +310,6 @@ public class ComputerDao {
 
         try {
 
-//            computers = jdbcTemplate.query(FIND_BY_COMPANYID, new Object[] {companyId, Constante.LIMIT_PAGE, offset },
-//                    computerMapper);
             computers = query.from(qComputer).where(qComputer.company.id.eq(companyId)).limit(Constante.LIMIT_PAGE).offset(offset).fetch();
 
         } catch (DataAccessException e) {
@@ -341,7 +332,6 @@ public class ComputerDao {
 
         try {
 
-//            count = jdbcTemplate.queryForObject(COUNT_BY_COMPANYID, new Object[] {companyId }, Integer.class);
             count = (int) query.from(qComputer).where(qComputer.company.id.eq(companyId)).fetchCount();
                     
         } catch (DataAccessException e) {

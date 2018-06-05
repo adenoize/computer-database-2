@@ -41,35 +41,19 @@ import main.java.com.excilys.cdb.model.QComputer;
 @Repository
 public class CompanyDao {
 
-//    private JdbcTemplate jdbcTemplate;
-//
-//    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
-//
-//    private static final String FIND_ALL = "SELECT id, name FROM company";
-//    private static final String GET_PAGE = "SELECT id, name FROM company LIMIT ? OFFSET ?";
-//    private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
-//    private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
-//    private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
-//
-//    private PlatformTransactionManager transactionManager;
-//
-//    @Autowired
-//    private CompanyMapper companyMapper;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
-    EntityManager em;
-    JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+    private EntityManager em;
 
     /**
      * Constructor of CompanyDao.
      * @param dataSource The datasource
      * @param transactionManager The patformTransactionManager
      */
-    public CompanyDao(DataSource dataSource, PlatformTransactionManager transactionManager,
-            EntityManager entityManager) {
+    public CompanyDao(EntityManager entityManager) {
 
-//        this.transactionManager = transactionManager;
         this.em = entityManager;
-//        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     /**
@@ -84,15 +68,7 @@ public class CompanyDao {
         }
 
         List<Company> companies = new ArrayList<>();
-        //
-        // try {
-        //
-        // companies = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE,
-        // offset }, companyMapper);
-        //
-        // } catch (DataAccessException e) {
-        // LOGGER.error(e.getMessage());
-        // }
+
 
         final JPAQuery<Company> query = new JPAQuery<>(em);
         final QCompany qCompany = QCompany.company;
@@ -110,15 +86,6 @@ public class CompanyDao {
     public Optional<Company> findById(Long id) throws NoSuchElementException {
         Company company = null;
 
-        // try {
-        // company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id },
-        // companyMapper);
-        // } catch (EmptyResultDataAccessException e) {
-        // return Optional.empty();
-        // } catch (DataAccessException e) {
-        // LOGGER.warn(e.getMessage());
-        // return Optional.empty();
-        // }
         final JPAQuery<Company> query = new JPAQuery<>(em);
         final QCompany qCompany = QCompany.company;
 
@@ -132,17 +99,6 @@ public class CompanyDao {
      * @return the company
      */
     public List<Company> findAll() {
-        // List<Company> companies = new ArrayList<>();
-        //
-        // try {
-        //
-        // companies = jdbcTemplate.query(FIND_ALL, companyMapper);
-        //
-        // } catch (DataAccessException e) {
-        // LOGGER.error(e.getMessage());
-        // }
-        //
-        // return companies;
 
         final JPAQuery<Company> query = new JPAQuery<>(em);
         final QCompany company = QCompany.company;
@@ -157,24 +113,30 @@ public class CompanyDao {
      * @throws DatabaseException Database exception
      */
     public void removeById(Long id) throws DatabaseException {
+        
+        final QComputer qComputer = QComputer.computer;
+        final QCompany qCompany = QCompany.company;
+        
+        try {
 
-        // TransactionDefinition def = new DefaultTransactionDefinition();
-        // TransactionStatus status = transactionManager.getTransaction(def);
-        //
-        // try {
-        //
-        // jdbcTemplate.update(REMOVE_COMPUTER_BY_COMPANY, id);
-        // jdbcTemplate.update(REMOVE_BY_ID, id);
-        // transactionManager.commit(status);
-        // } catch (DataAccessException e) {
-        // transactionManager.rollback(status);
-        // }
-
-        Query queryComputer = em.createQuery("DELETE FROM Computer c WHERE c.company_id = :id");
-        queryComputer.setParameter("id", id).executeUpdate();
-
-        Query queryCompany = em.createQuery("DELETE FROM Company c WHERE c.id = :id");
-        queryCompany.setParameter("id", id).executeUpdate();
+            em.getTransaction().begin();
+            JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+            
+            queryFactory.delete(qComputer)
+            .where(qComputer.company.id.eq(id))
+            .execute();
+            
+            queryFactory.delete(qCompany)
+            .where(qCompany.id.eq(id))
+            .execute();
+            em.getTransaction().commit();
+            
+        } catch (Exception e ) {
+            LOGGER.warn(e.getMessage());
+            em.getTransaction().rollback();
+        }
+        
+       
 
     }
 
