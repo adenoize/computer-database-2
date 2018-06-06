@@ -215,8 +215,7 @@ public class ComputerDao {
         }
 
         try {
-//            computers = query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").orAllOf(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).limit(limit).offset(offset).fetch();        
-            computers = query.from(qComputer).where(qComputer.company.isNull().or(qComputer.company.name.likeIgnoreCase("%" + search + "%").or(qComputer.name.likeIgnoreCase("%" + search + "%")))).limit(limit).offset(offset).fetch();        
+            computers = query.from(qComputer).where(qComputer.company.name.likeIgnoreCase("%" + search + "%").or(qComputer.name.likeIgnoreCase("%" + search + "%"))).limit(limit).offset(offset).fetch();        
         
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
