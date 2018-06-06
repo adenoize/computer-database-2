@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.TransactionRequiredException;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -14,10 +17,17 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
+import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Computer;
 import main.java.com.excilys.cdb.model.Page;
+import main.java.com.excilys.cdb.model.QCompany;
+import main.java.com.excilys.cdb.model.QComputer;
 
 /**
  * DAO about Computer.
@@ -43,14 +53,18 @@ public class ComputerDao {
 
     @Autowired
     private ComputerMapper computerMapper;
-
+    
+    private EntityManager em;
+    private JPAQueryFactory queryFactory;
     /**
      * Constructor of ComputerDao.
      * @param dataSource The datasource
      */
-    public ComputerDao(DataSource dataSource) {
+    public ComputerDao(DataSource dataSource, EntityManager entityManager) {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
+        em = entityManager;
+        queryFactory = new JPAQueryFactory(em);
     }
 
     /**
@@ -60,39 +74,18 @@ public class ComputerDao {
      */
     public boolean create(Computer computer) {
 
-        int result = 0;        String name = computer.getName();
-        Date introduced = null;
-        Date discontinued = null;
-        Long companyId = null;
-
         try {
 
-            try {
-                introduced = Date.valueOf(computer.getIntroduced());
-            } catch (NullPointerException e) {
-                introduced = null;
-            }
-
-            try {
-                discontinued = Date.valueOf(computer.getDiscontinued());
-            } catch (NullPointerException e) {
-                discontinued = null;
-            }
-
-            if (computer.getCompany() != null) {
-                companyId = computer.getCompany().getId();
-            } else {
-                companyId = null;
-            }
-
-            result = jdbcTemplate.update(CREATE, name, introduced, discontinued, companyId);
-
-        } catch (DataAccessException e) {
+            em.getTransaction().begin();
+            em.persist(computer);
+            em.getTransaction().commit();
+            
+        } catch (Exception e ) {
             LOGGER.error(e.getMessage());
+            em.getTransaction().rollback();
             return false;
         }
-
-        return (result == 1);
+        return true;
     }
 
     /**
@@ -102,47 +95,23 @@ public class ComputerDao {
      */
     public boolean update(Computer computer) {
 
-        int result = 0;
-        Long id = null;
-        String name = computer.getName();
-        Date introduced = null;
-        Date discontinued = null;
-        Long companyId = null;
-
         try {
 
-            if (computer.getId() != null) {
-                id = computer.getId();
-            } else {
-                return false;
-            }
+            Computer computerToUpdate = em.find(Computer.class, computer.getId());
+            em.getTransaction().begin();
+            computerToUpdate.setName(computer.getName());
+            computerToUpdate.setIntroduced(computer.getIntroduced());
+            computerToUpdate.setDiscontinued(computer.getDiscontinued());
+            computerToUpdate.setCompany(computer.getCompany());
+            em.getTransaction().commit();
 
-            try {
-                introduced = Date.valueOf(computer.getIntroduced());
-            } catch (NullPointerException e) {
-                introduced = null;
-            }
-
-            try {
-                discontinued = Date.valueOf(computer.getDiscontinued());
-            } catch (NullPointerException e) {
-                discontinued = null;
-            }
-
-            if (computer.getCompany() != null && computer.getCompany().getId() != null) {
-                companyId = computer.getCompany().getId();
-            } else {
-                companyId = null;
-            }
-
-            result = jdbcTemplate.update(UPDATE, name, introduced, discontinued, companyId, id);
-
-        } catch (DataAccessException e) {
+        }  catch (Exception e ) {
             LOGGER.error(e.getMessage());
+            em.getTransaction().rollback();
             return false;
         }
 
-        return (result == 1);
+        return true;
     }
 
     /**
@@ -152,18 +121,21 @@ public class ComputerDao {
      */
     public boolean removeById(Long id) {
 
-        int result = 0;
-
+        Computer computerToUpdate = em.find(Computer.class, id);
+        
         try {
+ 
+            em.getTransaction().begin();
+            em.remove(computerToUpdate);
+            em.getTransaction().commit();
 
-            result = jdbcTemplate.update(REMOVE, id);
-
-        } catch (DataAccessException e) {
+        }  catch (Exception e ) {
             LOGGER.error(e.getMessage());
+            em.getTransaction().rollback();
             return false;
         }
 
-        return (result == 1);
+        return true;
 
     }
 
@@ -176,14 +148,18 @@ public class ComputerDao {
     public Page<Computer> getPage(int offset) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
-
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
+        
         if (offset < 0) {
             throw new IllegalArgumentException();
         }
 
         try {
 
-            computers = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset }, computerMapper);
+            
+
+            computers = query.from(qComputer).limit(Constante.LIMIT_PAGE).offset(offset).fetch();
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -202,15 +178,17 @@ public class ComputerDao {
     public Page<Computer> getPage(int offset, int limit) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
-
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
+        
         if (limit < 0 || offset < 0) {
             throw new IllegalArgumentException();
         }
 
         try {
 
-            computers = jdbcTemplate.query(GET_PAGE, new Object[] {limit, offset }, computerMapper);
-
+            computers = query.from(qComputer).limit(limit).offset(offset).fetch();
+            
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -227,17 +205,19 @@ public class ComputerDao {
      * @return Page of computers
      */
     public Page<Computer> getPage(int offset, int limit, String search) throws IllegalArgumentException {
+        
         List<Computer> computers = new ArrayList<Computer>();
-
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
+        
         if (limit < 0 || offset < 0) {
             throw new IllegalArgumentException();
         }
 
         try {
-
-            computers = jdbcTemplate.query(GET_PAGE_SEARCH,
-                    new Object[] {"%" + search + "%", "%" + search + "%", limit, offset }, computerMapper);
-
+//            computers = query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").orAllOf(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).limit(limit).offset(offset).fetch();        
+            computers = query.from(qComputer).where(qComputer.company.isNull().or(qComputer.company.name.likeIgnoreCase("%" + search + "%").or(qComputer.name.likeIgnoreCase("%" + search + "%")))).limit(limit).offset(offset).fetch();        
+        
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
         }
@@ -253,10 +233,12 @@ public class ComputerDao {
     public Optional<Computer> findById(Long id) {
 
         Computer computer = null;
-
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
+        
         try {
 
-            computer = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, computerMapper);
+            computer = query.from(qComputer).where(qComputer.id.eq(id)).fetchOne();
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -273,11 +255,12 @@ public class ComputerDao {
     public int count() {
 
         int count = 0;
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
 
         try {
 
-            count = jdbcTemplate.queryForObject(COUNT, Integer.class);
-
+            count = (int) query.from(qComputer).fetchCount();
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;
@@ -294,12 +277,11 @@ public class ComputerDao {
     public int count(String search) {
 
         int count = 0;
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
 
         try {
-
-            count = jdbcTemplate.queryForObject(COUNT_PAGE_SEARCH,
-                    new Object[] {"%" + search + "%", "%" + search + "%" }, Integer.class);
-
+            count = (int) query.from(qComputer).where(qComputer.name.likeIgnoreCase("%" + search + "%").or(qComputer.company.name.likeIgnoreCase("%" + search + "%"))).fetchCount();
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;
@@ -309,24 +291,26 @@ public class ComputerDao {
     }
 
     /**
-     * Retrieve the computer with the given company id.
-     * @param computerId the id of computer
+     * Retrieve the computers with the given company id.
+     * @param companyId the id of computer
      * @param offset index for pagination
      * @throws IllegalArgumentException if offset is negative
      * @return the computer
      */
-    public Page<Computer> findByComputerId(Long computerId, int offset) throws IllegalArgumentException {
+    public Page<Computer> findByComputerId(Long companyId, int offset) throws IllegalArgumentException {
 
         List<Computer> computers = new ArrayList<Computer>();
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
 
+        
         if (offset < 0) {
             throw new IllegalArgumentException();
         }
 
         try {
 
-            computers = jdbcTemplate.query(FIND_BY_COMPANYID, new Object[] {computerId, Constante.LIMIT_PAGE, offset },
-                    computerMapper);
+            computers = query.from(qComputer).where(qComputer.company.id.eq(companyId)).limit(Constante.LIMIT_PAGE).offset(offset).fetch();
 
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
@@ -340,14 +324,16 @@ public class ComputerDao {
      * @param companyId the computer id
      * @return the number of computers
      */
-    public int countByComputerId(Long companyId) {
+    public int countByCompanyId(Long companyId) {
 
         int count = 0;
+        final JPAQuery<Computer> query = new JPAQuery<>(em);
+        final QComputer qComputer = QComputer.computer;
 
         try {
 
-            count = jdbcTemplate.queryForObject(COUNT_BY_COMPANYID, new Object[] {companyId }, Integer.class);
-
+            count = (int) query.from(qComputer).where(qComputer.company.id.eq(companyId)).fetchCount();
+                    
         } catch (DataAccessException e) {
             LOGGER.error(e.getMessage());
             return 0;

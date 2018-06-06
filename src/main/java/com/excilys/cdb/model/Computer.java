@@ -1,17 +1,39 @@
 package main.java.com.excilys.cdb.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Class Computer. Represent all informations about computer.
  * @author aurel
  */
-public class Computer {
+@Entity(name="computer")
+public class Computer implements Serializable{
 
+    private static final long serialVersionUID = -7332625631460078858L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "introduced")
     private LocalDate introduced;
+    @Column(name = "discontinued")
     private LocalDate discontinued;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name="company_id", foreignKey = @ForeignKey(name="fk_computer_company_1"))
     private Company company;
 
     /**

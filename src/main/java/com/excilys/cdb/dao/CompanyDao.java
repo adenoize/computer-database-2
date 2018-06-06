@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -19,11 +23,16 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import main.java.com.excilys.cdb.constante.Constante;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.mapper.CompanyMapper;
 import main.java.com.excilys.cdb.model.Company;
 import main.java.com.excilys.cdb.model.Page;
+import main.java.com.excilys.cdb.model.QCompany;
+import main.java.com.excilys.cdb.model.QComputer;
 
 /**
  * DAO about company.
@@ -32,30 +41,19 @@ import main.java.com.excilys.cdb.model.Page;
 @Repository
 public class CompanyDao {
 
-    private JdbcTemplate jdbcTemplate;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDao.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDao.class);
-
-    private static final String FIND_ALL = "SELECT id, name FROM company";
-    private static final String GET_PAGE = "SELECT id, name FROM company LIMIT ? OFFSET ?";
-    private static final String FIND_BY_ID = "SELECT id, name FROM company WHERE id = ?";
-    private static final String REMOVE_BY_ID = "DELETE FROM company where id = ?";
-    private static final String REMOVE_COMPUTER_BY_COMPANY = "DELETE FROM computer WHERE company_id = ?";
-
-    private PlatformTransactionManager transactionManager;
-
-    @Autowired
-    private CompanyMapper companyMapper;
+    private EntityManager em;
 
     /**
      * Constructor of CompanyDao.
      * @param dataSource The datasource
      * @param transactionManager The patformTransactionManager
      */
-    public CompanyDao(DataSource dataSource, PlatformTransactionManager transactionManager) {
+    public CompanyDao(EntityManager entityManager) {
 
-        this.transactionManager = transactionManager;
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        this.em = entityManager;
     }
 
     /**
@@ -71,14 +69,11 @@ public class CompanyDao {
 
         List<Company> companies = new ArrayList<>();
 
-        try {
 
-            companies = jdbcTemplate.query(GET_PAGE, new Object[] {Constante.LIMIT_PAGE, offset }, companyMapper);
+        final JPAQuery<Company> query = new JPAQuery<>(em);
+        final QCompany qCompany = QCompany.company;
 
-        } catch (DataAccessException e) {
-            LOGGER.error(e.getMessage());
-        }
-
+        companies = query.from(qCompany).limit(Constante.LIMIT_PAGE).offset(offset).fetch();
         return new Page<Company>(companies);
     }
 
@@ -91,14 +86,11 @@ public class CompanyDao {
     public Optional<Company> findById(Long id) throws NoSuchElementException {
         Company company = null;
 
-        try {
-            company = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id }, companyMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (DataAccessException e) {
-            LOGGER.warn(e.getMessage());
-            return Optional.empty();
-        }
+        final JPAQuery<Company> query = new JPAQuery<>(em);
+        final QCompany qCompany = QCompany.company;
+
+        company = query.from(qCompany).where(qCompany.id.eq(id)).fetchOne();
+        
         return Optional.ofNullable(company);
     }
 
@@ -107,17 +99,12 @@ public class CompanyDao {
      * @return the company
      */
     public List<Company> findAll() {
-        List<Company> companies = new ArrayList<>();
 
-        try {
+        final JPAQuery<Company> query = new JPAQuery<>(em);
+        final QCompany company = QCompany.company;
 
-            companies = jdbcTemplate.query(FIND_ALL, companyMapper);
+        return query.from(company).fetch();
 
-        } catch (DataAccessException e) {
-            LOGGER.error(e.getMessage());
-        }
-
-        return companies;
     }
 
     /**
@@ -126,18 +113,31 @@ public class CompanyDao {
      * @throws DatabaseException Database exception
      */
     public void removeById(Long id) throws DatabaseException {
-
-        TransactionDefinition def = new DefaultTransactionDefinition();
-        TransactionStatus status = transactionManager.getTransaction(def);
-
+        
+        final QComputer qComputer = QComputer.computer;
+        final QCompany qCompany = QCompany.company;
+        
         try {
 
-            jdbcTemplate.update(REMOVE_COMPUTER_BY_COMPANY, id);
-            jdbcTemplate.update(REMOVE_BY_ID, id);
-            transactionManager.commit(status);
-        } catch (DataAccessException e) {
-            transactionManager.rollback(status);
+            em.getTransaction().begin();
+            JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+            
+            queryFactory.delete(qComputer)
+            .where(qComputer.company.id.eq(id))
+            .execute();
+            
+            queryFactory.delete(qCompany)
+            .where(qCompany.id.eq(id))
+            .execute();
+            em.getTransaction().commit();
+            
+        } catch (Exception e ) {
+            LOGGER.warn(e.getMessage());
+            em.getTransaction().rollback();
         }
+        
+       
+
     }
 
 }

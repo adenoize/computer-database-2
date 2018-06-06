@@ -9,10 +9,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.stereotype.Component;
 
-import main.java.com.excilys.cdb.config.AppConfig;
+import main.java.com.excilys.cdb.config.WebAppConfig;
 import main.java.com.excilys.cdb.exception.DatabaseException;
 import main.java.com.excilys.cdb.exception.ValidatorException;
 import main.java.com.excilys.cdb.model.Company;
@@ -25,18 +26,19 @@ import main.java.com.excilys.cdb.validator.ComputerValidator;
 /**
  * @author Aurelien Denoize
  */
+@Component
 public class CliController {
 
     static final Logger LOGGER = LoggerFactory.getLogger(CliController.class);
 
-    private AbstractApplicationContext context;
+    
     private ComputerService computerService;
     private CompanyService companyService;
 
-    {
-        context = new AnnotationConfigApplicationContext(AppConfig.class);
-        computerService = (ComputerService) context.getBean("computerService");
-        companyService = (CompanyService) context.getBean("companyService");
+    public CliController(ComputerService computerService, CompanyService companyService) {
+        super();
+        this.computerService = computerService;
+        this.companyService = companyService;
     }
 
     /**
@@ -114,6 +116,12 @@ public class CliController {
         }
         return computer.toString();
     }
+
+    
+
+   
+
+
 
     /**
      * Update a Computer.
@@ -305,6 +313,6 @@ public class CliController {
             LOGGER.warn("Company with the id= " + id + " not found.");
             return Optional.empty();
         }
-    }
+    }   
 
 }

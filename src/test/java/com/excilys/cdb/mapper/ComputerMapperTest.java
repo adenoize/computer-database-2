@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import main.java.com.excilys.cdb.config.AppConfig;
+import main.java.com.excilys.cdb.config.WebAppConfig;
 import main.java.com.excilys.cdb.mapper.ComputerMapper;
 import main.java.com.excilys.cdb.model.Computer;
 
@@ -25,7 +25,7 @@ import main.java.com.excilys.cdb.model.Computer;
  * @author Aurelien Denoize
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = WebAppConfig.class)
 public class ComputerMapperTest {
 
     ResultSet resultSet;
