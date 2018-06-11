@@ -1,0 +1,4 @@
+com/excilys/cdb/persistence/dao/UserDao.class
+com/excilys/cdb/persistence/config/PersistenceConfig.class
+com/excilys/cdb/persistence/dao/ComputerDao.class
+com/excilys/cdb/persistence/dao/CompanyDao.class

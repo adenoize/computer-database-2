@@ -1,3 +1,7 @@
+com/excilys/cdb/service/service/UserAuthService.class
 com/excilys/cdb/service/exception/DatabaseException.class
 com/excilys/cdb/service/config/ServiceConfig.class
+com/excilys/cdb/service/validator/ComputerValidator.class
+com/excilys/cdb/service/service/CompanyService.class
 com/excilys/cdb/service/exception/ValidatorException.class
+com/excilys/cdb/service/service/ComputerService.class

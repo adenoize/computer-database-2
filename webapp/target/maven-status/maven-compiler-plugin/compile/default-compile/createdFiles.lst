@@ -1,0 +1,9 @@
+com/excilys/cdb/webapp/config/ApplicationInitializer.class
+com/excilys/cdb/webapp/controller/DashboardController.class
+com/excilys/cdb/webapp/config/WebAppConfig.class
+com/excilys/cdb/webapp/config/ApplicationContextProvider.class
+com/excilys/cdb/webapp/config/SecurityConfiguration.class
+com/excilys/cdb/webapp/controller/ExceptionHandlerController.class
+com/excilys/cdb/webapp/controller/ComputerController.class
+com/excilys/cdb/webapp/taglib/Paginator.class
+com/excilys/cdb/webapp/config/SecurityWebApplicationInitializer.class

@@ -1,2 +1,13 @@
 com/excilys/cdb/core/model/QCompany.class
 com/excilys/cdb/core/model/QComputer.class
+com/excilys/cdb/core/dto/ComputerDTO.class
+com/excilys/cdb/core/validator/DatePeriod.class
+com/excilys/cdb/core/model/Company.class
+com/excilys/cdb/core/dto/CompanyDTO.class
+com/excilys/cdb/core/model/QUser.class
+com/excilys/cdb/core/model/Computer.class
+com/excilys/cdb/core/model/User.class
+com/excilys/cdb/core/config/CoreConfig.class
+com/excilys/cdb/core/dto/PageDTO.class
+com/excilys/cdb/core/model/Page.class
+com/excilys/cdb/core/validator/DatePeriodValidator.class

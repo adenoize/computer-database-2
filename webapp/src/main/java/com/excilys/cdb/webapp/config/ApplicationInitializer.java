@@ -10,42 +10,25 @@ public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherSe
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-      return new Class[] { ServiceConfig.class };
+        return new Class[] { ServiceConfig.class, SecurityConfiguration.class };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-      return new Class[] { WebAppConfig.class };
+        return new Class[] { WebAppConfig.class };
     }
 
     @Override
     protected String[] getServletMappings() {
-      return new String[] {"/"};
+        return new String[] { "/" };
     }
 
     @Override
     protected DispatcherServlet createDispatcherServlet(WebApplicationContext servletAppContext) {
-        final DispatcherServlet dispatcherServlet = (DispatcherServlet) super.createDispatcherServlet(servletAppContext);
+        final DispatcherServlet dispatcherServlet = (DispatcherServlet) super.createDispatcherServlet(
+                servletAppContext);
         dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
         return dispatcherServlet;
     }
 
-  }
-//implements WebApplicationInitializer {
-//
-//    @Override
-//    public void onStartup(ServletContext servletContext) throws ServletException {
-//        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-//        context.register(WebAppConfig.class);
-//        context.setServletContext(servletContext);
-//
-//        ContextLoaderListener contextLoaderListener = new ContextLoaderListener(context);
-//        servletContext.addListener(contextLoaderListener);
-//
-//        Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(context));
-//        servlet.setLoadOnStartup(1);
-//        servlet.addMapping("/");
-//        servlet.setInitParameter("throwExceptionIfNoHandlerFound", "true");
-//    }
-//
-//}
+}

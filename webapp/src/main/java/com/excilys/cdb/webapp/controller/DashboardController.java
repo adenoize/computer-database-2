@@ -3,10 +3,16 @@ package com.excilys.cdb.webapp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +32,20 @@ public class DashboardController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
 
-    @Autowired
+  
     private ComputerService computerService;
+    
+
+    /**
+     * @param computerService
+     */
+    public DashboardController(ComputerService computerService) {
+        super();
+        this.computerService = computerService;
+    }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String getDashboard(@RequestParam(value = "page", required = false) String page, @RequestParam(value = "search", required = false) String search, ModelMap model) {
-
-        LOGGER.debug("access to /dashboard");
         
         int limit = 10;
         int currPage = 1;
@@ -109,5 +122,6 @@ public class DashboardController {
 
         return "redirect:dashboard";
     }
-
+    
+    
 }

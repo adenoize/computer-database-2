@@ -4,3 +4,4 @@
 /home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/validator/ComputerValidator.java
 /home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/exception/ValidatorException.java
 /home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/config/ServiceConfig.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/service/UserAuthService.java

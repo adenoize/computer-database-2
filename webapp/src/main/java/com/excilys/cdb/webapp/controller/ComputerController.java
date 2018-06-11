@@ -37,14 +37,23 @@ public class ComputerController {
 
     private ComputerValidator computerValidator = ComputerValidator.INSTANCE;
 
-    @Autowired
+
     private ComputerService computerService;
-
-    @Autowired
     private CompanyService companyService;
-
-    @Autowired
     private ComputerDTOMapper computerDTOMapper;
+    
+    /**
+     * @param computerService
+     * @param companyService
+     * @param computerDTOMapper
+     */
+    public ComputerController(ComputerService computerService, CompanyService companyService,
+            ComputerDTOMapper computerDTOMapper) {
+        super();
+        this.computerService = computerService;
+        this.companyService = companyService;
+        this.computerDTOMapper = computerDTOMapper;
+    }
 
     /**
      * @return The JSP page
@@ -187,4 +196,6 @@ public class ComputerController {
             return "editComputer";
         }
     }
+
+    
 }

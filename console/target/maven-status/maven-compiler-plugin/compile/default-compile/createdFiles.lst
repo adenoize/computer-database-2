@@ -1,0 +1,3 @@
+com/excilys/cdb/console/ui/CommandLineInterface.class
+com/excilys/cdb/console/config/ConsoleConfig.class
+com/excilys/cdb/console/controller/CliController.class

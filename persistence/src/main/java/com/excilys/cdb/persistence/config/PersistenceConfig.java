@@ -42,7 +42,7 @@ public class PersistenceConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setAnnotatedClasses(Company.class, Computer.class);
-        sessionFactory.setPackagesToScan("com.excilys.formation.core.entities");
+        sessionFactory.setPackagesToScan("com.excilys.cdb.core.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

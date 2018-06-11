@@ -1,0 +1,9 @@
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/SecurityWebApplicationInitializer.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/ExceptionHandlerController.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/ApplicationInitializer.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/ComputerController.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/SecurityConfiguration.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/DashboardController.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/ApplicationContextProvider.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/WebAppConfig.java
+/home/aurel/workspace/cdb/webapp/src/main/java/com/excilys/cdb/webapp/taglib/Paginator.java
