@@ -1,0 +1,3 @@
+com/excilys/cdb/service/exception/DatabaseException.class
+com/excilys/cdb/service/config/ServiceConfig.class
+com/excilys/cdb/service/exception/ValidatorException.class

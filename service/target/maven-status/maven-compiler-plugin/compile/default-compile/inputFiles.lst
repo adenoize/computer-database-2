@@ -1,0 +1,6 @@
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/exception/DatabaseException.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/service/ComputerService.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/service/CompanyService.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/validator/ComputerValidator.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/exception/ValidatorException.java
+/home/aurel/workspace/cdb/service/src/main/java/com/excilys/cdb/service/config/ServiceConfig.java

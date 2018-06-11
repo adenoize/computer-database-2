@@ -1,0 +1,11 @@
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/config/CoreConfig.java
+/home/aurel/workspace/cdb/core/target/generated-sources/java/com/excilys/cdb/core/model/QComputer.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/dto/CompanyDTO.java
+/home/aurel/workspace/cdb/core/target/generated-sources/java/com/excilys/cdb/core/model/QCompany.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/validator/DatePeriodValidator.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/model/Company.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/dto/ComputerDTO.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/model/Page.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/dto/PageDTO.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/model/Computer.java
+/home/aurel/workspace/cdb/core/src/main/java/com/excilys/cdb/core/validator/DatePeriod.java
