@@ -15,9 +15,7 @@ local.properties
 .loadpath
 .recommenders
 
-src/main/resources/datasource.properties
-src/test/resources/datasource.properties
-src/main/resources/META-INF/persistence.xml
+/persistence/src/main/resources/datasource.properties
 
 # External tool builders
 .externalToolBuilders/
